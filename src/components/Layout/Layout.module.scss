@@ -1,0 +1,27 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	padding: 1rem;
+	box-sizing: border-box;
+
+	//desktop
+	@media (min-width: 1200px) {
+		padding: 5rem;
+	}
+
+	//laptop
+	@media (min-width: 992px) {
+		padding: 4rem;
+	}
+
+	//tablet
+	@media (min-width: 768px) {
+		padding: 3rem;
+	}
+
+	//mobile
+	@media (min-width: 576px) {
+		padding: 2rem;
+	}
+}
