@@ -6,4 +6,8 @@ const apiClient = create({
 	baseURL: BASE_URL,
 });
 
-export default apiClient;
+const newVisit = (body) => apiClient.post(`/NewVisit`, body);
+
+export { newVisit };
+
+// export default apiClient;

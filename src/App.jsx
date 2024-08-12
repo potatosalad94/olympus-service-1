@@ -1,9 +1,17 @@
-import "./App.css";
+import Landing from "@views/landing/Landing";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import Layout from "@components/Layout/Layout";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
+
+const router = createBrowserRouter([
+	{
+		path: "/",
+		element: <Landing />,
+	},
+]);
 
 function App() {
-	return <Layout>test</Layout>;
+	return <RouterProvider router={router} />;
 }
 
 export default App;
