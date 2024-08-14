@@ -6,8 +6,15 @@ const apiClient = create({
 	baseURL: BASE_URL,
 });
 
+// const serviceInfo = (body) => apiClient.get(`/ServiceInfo/`, body);
+
+const serviceInfo = (serviceName, language) =>
+	apiClient.get(
+		`/ServiceInfo?serviceName=${serviceName}&language=${language}`
+	);
+
 const newVisit = (body) => apiClient.post(`/NewVisit`, body);
 
-export { newVisit };
+export { serviceInfo, newVisit };
 
 // export default apiClient;

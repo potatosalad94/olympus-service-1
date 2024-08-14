@@ -7,6 +7,8 @@ const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Landing />,
+
+		//TODO >> add not found page as per react-router 6 tutorial
 	},
 ]);
 
