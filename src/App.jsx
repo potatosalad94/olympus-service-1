@@ -8,12 +8,12 @@ const router = createBrowserRouter([
 		path: "/",
 		element: <Landing />,
 
-		//TODO >> add not found page as per react-router 6 tutorial
+		//TODO >> add not found page as per react-router 6 tutorial: https://reactrouter.com/en/main/start/tutorial
 	},
 ]);
 
-function App() {
+const App = () => {
 	return <RouterProvider router={router} />;
-}
+};
 
 export default App;
