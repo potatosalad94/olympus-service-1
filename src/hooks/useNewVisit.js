@@ -18,7 +18,7 @@ const useNewVisit = (serviceName, enabled) => {
 			connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
 			networkInformationEffectiveType: effectiveType,
 			...(storedVisitorId && { visitorId: storedVisitorId }),
-			testResponse: 15, //! TEST PURPOSES
+			testResponse: 17, //! TEST PURPOSES
 
 			//TODO
 			// batteryLevel, //float (between 0.0 and 1.0)
