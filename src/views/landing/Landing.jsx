@@ -2,7 +2,7 @@ import { queryKeys } from "@/app-keys-factory";
 import Input from "@/components/Input/Input";
 import useConnectionInfo from "@/hooks/useConnectionInfo";
 import useServiceInfo from "@/hooks/useServiceInfo";
-import serviceImg from "@/images/service_1.png";
+// import serviceImg from "@/images/service_1.png";
 import { newVisit } from "@api/client";
 import Layout from "@components/Layout/Layout";
 import useApi from "@hooks/useApi";
@@ -16,95 +16,83 @@ import useNewVisit from "@/hooks/useNewVisit";
 const serviceName = "Service_1";
 
 const Landing = () => {
-	// * ====== SERVICE INFO CALL ======
-	const { data: serviceInfoData, isFetching: isFetchingServiceInfo } =
-		useServiceInfo(serviceName);
+	// // * ====== SERVICE INFO CALL ======
+	// const { data: serviceInfoData, isFetching: isFetchingServiceInfo } =
+	// 	useServiceInfo(serviceName);
 
-	const {
-		websiteChargingDescription,
-		websiteServiceDescription,
-		websiteTermsAndConditions,
-	} = serviceInfoData || {};
+	// const {
+	// 	websiteChargingDescription,
+	// 	websiteServiceDescription,
+	// 	websiteTermsAndConditions,
+	// } = serviceInfoData || {};
 
 	// * ====== NEW VIST CALL ======
 
 	const { data: newVisitData, isFetching: isFetchingNewVisit } = useNewVisit(
 		serviceName,
-		!!serviceInfoData
+		true,
+		16 // 3rd parameter as testResponse
 	);
 
 	const { css, content, msisdn, heRequired } = newVisitData || {};
 
-    //! doublons: 
-    // acknowledgment
-    // bottomPriceDescription
-    // exitButton
-    // image
-    // otpConfirmTimer
-    // phoneEntryBox
-    // serviceDescription
-    // termsAndConditions
-    // topPriceDescription
-    // userInstructions
+	//! doublons:
+	// acknowledgment
+	// bottomPriceDescription
+	// exitButton
+	// image
+	// otpConfirmTimer
+	// phoneEntryBox
+	// serviceDescription
+	// termsAndConditions
+	// topPriceDescription
+	// userInstructions
 
+	const { clickableZone, termsV } = css ?? {};
 
 	const {
 		acknowledgment,
-		bottomPriceDescription: showPriceDesc,
-		clickableZone,
+		bottomPriceDescription,
+		cta,
 		exitButton,
-		image: showImage,
+		image,
+		imageSteps,
 		newOtpRequest,
 		otpConfirmTimer,
 		phoneEntryBox,
-		popup,
-		serviceDescription: showServiceDesc,
-		termsAndConditions,
-		termsV,
-		topPriceDescription,
-		userInstructions,
-	} = css ?? {};
-
-	const {
-		// acknowledgment,
-		bottomPriceDescription,
-		cta,
-		// exitButton,
-		image: serviceImage,
-		// otpConfirmTimer,
-		// phoneEntryBox,
 		popupCta,
 		popupInstructions,
 		serviceDescription,
-		// termsAndConditions,
-		// topPriceDescription,
-		// userInstructions,
-	} = content;
+		termsAndConditions,
+		topPriceDescription,
+		userInstructions,
+	} = content || {};
+
 	console.log("🚀 ~ content >>", content);
 	console.log("🚀 ~ css >>", css);
 	console.log("=============");
 
 	// * ===========================
 
-	if (isFetchingServiceInfo || isFetchingNewVisit) return "Loading"; //TODO >> better loading spinner / skeleton to implement
+	if (isFetchingNewVisit) return "Loading"; //TODO >> better loading spinner / skeleton to implement
 
 	if (heRequired) return <div> Should do a HE redirect + call Post HE</div>;
 
 	return (
 		<Layout
-			headerPrice={showPriceDesc ? websiteChargingDescription : ""}
-			terms={websiteTermsAndConditions}
+			headerPrice={topPriceDescription ?? ""}
+			terms={termsAndConditions}
 			termsVisibility={termsV}
 		>
-			{showImage && (
+			{image && (
 				<div className={styles.logo_container}>
-					<img src={serviceImg} alt="" />
+					<img src={image} alt="" />
 				</div>
 			)}
 
-			{showServiceDesc && (
+			{serviceDescription && (
 				<div className={styles.catch_container}>
-					{/* <p>{websiteServiceDescription}</p> // TODO >> should now take content from content object */}
+					<p>{serviceDescription}</p>
 				</div>
 			)}
 
@@ -131,9 +119,9 @@ const Landing = () => {
 				/>
 			</div>
 
-			{showPriceDesc && (
+			{bottomPriceDescription && (
 				<div className={styles.price_wrapper}>
-					{/* <p>{websiteChargingDescription}</p> // TODO >> should now take content from content object */}
+					<p>{bottomPriceDescription}</p>
 				</div>
 			)}
 		</Layout>

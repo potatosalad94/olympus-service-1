@@ -6,7 +6,7 @@ import useConnectionInfo from "./useConnectionInfo";
 import { useEffect } from "react";
 import useVisitorId from "./useVisitorId";
 
-const useNewVisit = (serviceName, enabled) => {
+const useNewVisit = (serviceName, enabled = true, testResponse = 1) => {
 	const { type, effectiveType } = useConnectionInfo();
 	const { visitorId: storedVisitorId, updateVisitorId } = useVisitorId();
 
@@ -18,7 +18,7 @@ const useNewVisit = (serviceName, enabled) => {
 			connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
 			networkInformationEffectiveType: effectiveType,
 			...(storedVisitorId && { visitorId: storedVisitorId }),
-			testResponse: 15, //! TEST PURPOSES
+			testResponse, //! TEST PURPOSES
 
 			//TODO
 			// batteryLevel, //float (between 0.0 and 1.0)
