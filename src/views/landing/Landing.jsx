@@ -51,7 +51,7 @@ const Landing = () => {
 	return (
 		<Layout
 			headerPrice={topPriceDescription ?? ""}
-			terms={termsAndConditions}
+			terms={termsAndConditions ?? ""}
 			termsVisibility={termsV}
 			lang={currentLanguage}
 		>
