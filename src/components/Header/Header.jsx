@@ -1,11 +1,11 @@
 import LanguageDropdown from "../LanguageDropdown/LanguageDropdown";
 import styles from "./Header.module.scss";
 
-const Header = ({ text }) => {
+const Header = ({ text, lang }) => {
 	return (
 		<div className={styles.container}>
 			<p>{text}</p>
-			<LanguageDropdown />
+			<LanguageDropdown lang={lang} />
 		</div>
 	);
 };

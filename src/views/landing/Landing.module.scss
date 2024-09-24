@@ -1,9 +1,20 @@
 .logo_container {
 	display: flex;
 	justify-content: center;
+	position: relative;
+
+	i {
+		color: white;
+		font-size: 5rem;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
 
 	img {
 		width: 100%;
+		max-width: 500px;
 	}
 }
 
@@ -29,6 +40,7 @@
 
 		p {
 			margin: 20px 0;
+			text-align: center;
 		}
 	}
 

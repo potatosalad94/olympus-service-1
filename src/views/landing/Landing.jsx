@@ -1,54 +1,24 @@
-import { queryKeys } from "@/app-keys-factory";
 import Input from "@/components/Input/Input";
-import useConnectionInfo from "@/hooks/useConnectionInfo";
-import useServiceInfo from "@/hooks/useServiceInfo";
-// import serviceImg from "@/images/service_1.png";
-import { newVisit } from "@api/client";
+import useNewVisit from "@/hooks/useNewVisit";
 import Layout from "@components/Layout/Layout";
-import useApi from "@hooks/useApi";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import styles from "./Landing.module.scss";
-import useVisitorId from "@/hooks/useVisitorId";
-import { useEffect } from "react";
-import useNewVisit from "@/hooks/useNewVisit";
 
 const serviceName = "Service_1";
 
 const Landing = () => {
-	// // * ====== SERVICE INFO CALL ======
-	// const { data: serviceInfoData, isFetching: isFetchingServiceInfo } =
-	// 	useServiceInfo(serviceName);
-
-	// const {
-	// 	websiteChargingDescription,
-	// 	websiteServiceDescription,
-	// 	websiteTermsAndConditions,
-	// } = serviceInfoData || {};
-
 	// * ====== NEW VIST CALL ======
 
 	const { data: newVisitData, isFetching: isFetchingNewVisit } = useNewVisit(
 		serviceName,
-		true,
-		16 // 3rd parameter as testResponse
+		true
+		// 1 // testResponse
 	);
 
-	const { css, content, msisdn, heRequired } = newVisitData || {};
+	const { css, content, msisdn, heRequired, currentLanguage } =
+		newVisitData || {};
 
-	//! doublons:
-	// acknowledgment
-	// bottomPriceDescription
-	// exitButton
-	// image
-	// otpConfirmTimer
-	// phoneEntryBox
-	// serviceDescription
-	// termsAndConditions
-	// topPriceDescription
-	// userInstructions
-
-	const { clickableZone, termsV } = css ?? {};
+	const { clickableZone, termsV, playButton } = css ?? {};
 
 	const {
 		acknowledgment,
@@ -83,9 +53,18 @@ const Landing = () => {
 			headerPrice={topPriceDescription ?? ""}
 			terms={termsAndConditions}
 			termsVisibility={termsV}
+			lang={currentLanguage}
 		>
 			{image && (
-				<div className={styles.logo_container}>
+				<div
+					role={"button"}
+					tabIndex={0}
+					className={styles.logo_container}
+					onClick={
+						playButton ? () => alert("CLICKED ON IMAGE") : undefined
+					}
+				>
+					{playButton && <i className="pi pi-play-circle"></i>}
 					<img src={image} alt="" />
 				</div>
 			)}
@@ -100,23 +79,26 @@ const Landing = () => {
 				<form>
 					{phoneEntryBox && (
 						<>
-							<p>Enter your mobile number to continue</p>
-							<Input />
+							{/* <p>Enter your mobile number to continue</p> */}
+							<Input defaultValue={phoneEntryBox} />
 						</>
 					)}
 
 					<Button
 						label={cta}
 						size={clickableZone === "Large" ? "large" : undefined}
+						onClick={() => alert("clicked CTA")}
 					/>
 				</form>
-				<Button
-					type={"button"}
-					label="Exit"
-					className={styles.exitBtn}
-					onClick={() => window.close()}
-					size="small"
-				/>
+				{exitButton && (
+					<Button
+						type={"button"}
+						label={exitButton}
+						className={styles.exitBtn}
+						onClick={() => window.close()}
+						size="small"
+					/>
+				)}
 			</div>
 
 			{bottomPriceDescription && (

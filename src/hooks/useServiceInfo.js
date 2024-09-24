@@ -3,6 +3,8 @@ import useApi from "./useApi";
 import { queryKeys } from "@/app-keys-factory";
 import { useQuery } from "@tanstack/react-query";
 
+//! NOT USED AT THE MOMENT
+
 const useServiceInfo = (serviceName, language) => {
 	const serviceInfoApi = useApi(serviceInfo);
 

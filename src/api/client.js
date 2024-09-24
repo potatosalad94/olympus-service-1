@@ -11,4 +11,6 @@ const serviceInfo = (serviceName) =>
 
 const newVisit = (body) => apiClient.post(`/NewVisit`, body);
 
-export { serviceInfo, newVisit };
+const changeLanguage = (body) => apiClient.post(`/LanguageChange`, body);
+
+export { serviceInfo, newVisit, changeLanguage };
