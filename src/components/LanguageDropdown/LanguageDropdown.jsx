@@ -1,11 +1,12 @@
-import { Dropdown } from "primereact/dropdown";
-import { useState } from "react";
-import styles from "./LanguageDropdown.module.scss";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import useApi from "@/hooks/useApi";
 import { changeLanguage } from "@/api/client";
-import useVisitorId from "@/hooks/useVisitorId";
 import { queryKeys } from "@/app-keys-factory";
+import useApi from "@/hooks/useApi";
+import useVisitorId from "@/hooks/useVisitorId";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Dropdown } from "primereact/dropdown";
+import { Toast } from "primereact/toast";
+import { useRef, useState } from "react";
+import styles from "./LanguageDropdown.module.scss";
 
 const languages = [
 	{ name: "English", code: "En" },
@@ -15,6 +16,8 @@ const languages = [
 const LanguageDropdown = ({ lang }) => {
 	const { visitorId } = useVisitorId();
 	const queryClient = useQueryClient();
+
+	const toast = useRef(null);
 
 	const [selectedLanguage, setSelectedLanguage] = useState(() =>
 		languages.find((item) => item.code === lang)
@@ -29,19 +32,36 @@ const LanguageDropdown = ({ lang }) => {
 				language,
 			});
 		},
+
 		onSuccess: (response) =>
 			queryClient.setQueryData(queryKeys.newVisit, response.data),
-		// onError: () =>  //TODO >> add toast library to show error message
+
+		onError: () =>
+			toast.current.show({
+				severity: "error",
+				summary: "Error",
+				detail: "Something wrong happened",
+				life: 3000,
+			}),
 	});
 
 	return (
 		<>
+			<div
+				onClick={(e) => {
+					e.stopPropagation(); // Stops the click event from propagating to the toast
+				}}
+			>
+				<Toast ref={toast} />
+			</div>
+
 			<Dropdown
 				value={selectedLanguage}
 				onChange={(e) => {
 					mutation.mutate(e.value.code);
 					setSelectedLanguage(e.value);
 				}}
+				onClick={(e) => e.stopPropagation()}
 				options={languages}
 				optionLabel="name"
 				className={styles.dropdown}

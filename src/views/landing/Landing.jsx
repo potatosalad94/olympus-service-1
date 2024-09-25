@@ -2,11 +2,35 @@ import Input from "@/components/Input/Input";
 import useNewVisit from "@/hooks/useNewVisit";
 import Layout from "@components/Layout/Layout";
 import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
 import styles from "./Landing.module.scss";
+import { useCallback, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { joiResolver } from "@hookform/resolvers/joi";
+import Joi from "joi";
 
 const serviceName = "Service_1";
 
 const Landing = () => {
+	const [showModal, setShowModal] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [timeoutId, setTimeoutId] = useState(null);
+
+	const handleShowModal = useCallback(() => {
+		setIsLoading(true);
+
+		if (timeoutId) {
+			clearTimeout(timeoutId);
+		}
+
+		const newTimeoutId = setTimeout(() => {
+			setIsLoading(false);
+			setShowModal(true);
+		}, 1000);
+
+		setTimeoutId(newTimeoutId);
+	}, [timeoutId]);
+
 	// * ====== NEW VIST CALL ======
 
 	const { data: newVisitData, isFetching: isFetchingNewVisit } = useNewVisit(
@@ -18,7 +42,7 @@ const Landing = () => {
 	const { css, content, msisdn, heRequired, currentLanguage } =
 		newVisitData || {};
 
-	const { clickableZone, termsV, playButton } = css ?? {};
+	const { clickableZone, termsV, playButton, closableModal } = css ?? {};
 
 	const {
 		acknowledgment,
@@ -27,20 +51,67 @@ const Landing = () => {
 		exitButton,
 		image,
 		imageSteps,
-		newOtpRequest,
-		otpConfirmTimer,
 		phoneEntryBox,
-		popupCta,
-		popupInstructions,
 		serviceDescription,
 		termsAndConditions,
 		topPriceDescription,
 		userInstructions,
+		// newOtpRequest,
+		// otpConfirmTimer,
+		// popupCta,
+		// popupInstructions,
 	} = content || {};
 
-	console.log("🚀 ~ content >>", content);
-	console.log("🚀 ~ css >>", css);
-	console.log("=============");
+	// * react-hook-form
+
+	const {
+		formState: { errors },
+		handleSubmit,
+		control,
+	} = useForm({
+		resolver: joiResolver(
+			Joi.object({
+				contact: Joi.string()
+					.when(Joi.ref("$phoneEntryBox"), {
+						is: "", // If phoneEntryBox is an empty string
+						then: Joi.optional(), // Make contact optional
+						otherwise: Joi.string()
+							.required()
+							.regex(new RegExp(`^${phoneEntryBox}\\d{8}$`))
+							.messages({
+								"string.empty": "Phone number can't be empty",
+								"string.pattern.base":
+									"Phone number needs to contain numbers only",
+							}),
+					})
+					.label("Phone number"),
+			})
+		),
+		mode: "onSubmit",
+		context: { phoneEntryBox }, // Pass phoneEntryBox as context
+		// defaultValues: editMode
+		//     ? {
+		//             description,
+		//             type: {
+		//                 label: capitalize(type), //type?.charAt(0) + type?.slice(1).toLowerCase(),
+		//                 value: type,
+		//             },
+		//             dialCode: { label: code, value: code },
+		//             phone,
+		//       }
+		//     : {
+		//             description: "",
+		//             type: null,
+		//             dialCode: null,
+		//             phone: "",
+		//       },
+	});
+
+	console.log("🚀 ~ errors >>", errors);
+
+	const handleCtaClick = (data) => {
+		console.log("THE DATA >>", data);
+	};
 
 	// * ===========================
 
@@ -54,40 +125,121 @@ const Landing = () => {
 			terms={termsAndConditions ?? ""}
 			termsVisibility={termsV}
 			lang={currentLanguage}
+			onRootClick={() => {
+				if (showModal) {
+					return;
+				} else {
+					setShowModal(true);
+				}
+			}}
 		>
+			{imageSteps && (
+				<div className={styles.logo_container}>
+					<img src={imageSteps} alt="steps" />
+				</div>
+			)}
+
 			{image && (
-				<div
-					role={"button"}
-					tabIndex={0}
-					className={styles.logo_container}
-					onClick={
-						playButton ? () => alert("CLICKED ON IMAGE") : undefined
-					}
-				>
-					{playButton && <i className="pi pi-play-circle"></i>}
-					<img src={image} alt="" />
+				<div className={styles.logo_container}>
+					<Button
+						unstyled
+						className={styles.image_button}
+						onClick={
+							playButton
+								? (e) => {
+										e.stopPropagation();
+										handleShowModal();
+								  }
+								: undefined
+						}
+					>
+						{playButton && !isLoading && (
+							<i className="pi pi-play-circle"></i>
+						)}
+						{isLoading && (
+							<i
+								className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}
+							></i>
+						)}
+						<img src={image} alt="" />
+					</Button>
+
+					{/* <button
+						// role={"button"}
+						// tabIndex={0}
+						className={styles.image_button}
+						onClick={
+							playButton
+								? (e) => {
+										e.stopPropagation();
+										handleShowModal();
+								  }
+								: undefined
+						}
+					>
+						{playButton && !isLoading && (
+							<i className="pi pi-play-circle"></i>
+						)}
+						{isLoading && (
+							<i
+								className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}
+							></i>
+						)}
+						<img src={image} alt="" />
+					</button> */}
 				</div>
 			)}
 
 			{serviceDescription && (
-				<div className={styles.catch_container}>
+				<div className={styles.desc}>
 					<p>{serviceDescription}</p>
 				</div>
 			)}
 
 			<div className={styles.main}>
-				<form>
+				<form
+					onSubmit={handleSubmit((data) => handleCtaClick(data))}
+					noValidate
+				>
 					{phoneEntryBox && (
 						<>
-							{/* <p>Enter your mobile number to continue</p> */}
-							<Input defaultValue={phoneEntryBox} />
+							{userInstructions && <p>{userInstructions}</p>}
+
+							<Controller
+								name="contact"
+								control={control}
+								defaultValue=""
+								// rules={{ required: 'Phone number is required' }}
+								render={({ field, fieldState }) => (
+									<Input
+										{...field}
+										defaultValue={phoneEntryBox}
+										error={fieldState.error}
+										onClick={(e) => e.stopPropagation()}
+									/>
+								)}
+							/>
+
+							{/* <Input
+								defaultValue={phoneEntryBox}
+								value={""} // TODO
+								onClick={(e) => {
+									e.stopPropagation();
+									// alert("INPUT CLICK");
+								}}
+								onChange={""} // TODO
+								error={errors.contact}
+							/> */}
 						</>
 					)}
 
 					<Button
 						label={cta}
 						size={clickableZone === "Large" ? "large" : undefined}
-						onClick={() => alert("clicked CTA")}
+						onClick={(e) => {
+							e.stopPropagation();
+							alert("clicked CTA"); //TODO >> to be handled by react-hook-form
+						}}
 					/>
 				</form>
 				{exitButton && (
@@ -95,7 +247,10 @@ const Landing = () => {
 						type={"button"}
 						label={exitButton}
 						className={styles.exitBtn}
-						onClick={() => window.close()}
+						onClick={(e) => {
+							e.stopPropagation();
+							window.close();
+						}}
 						size="small"
 					/>
 				)}
@@ -106,6 +261,30 @@ const Landing = () => {
 					<p>{bottomPriceDescription}</p>
 				</div>
 			)}
+
+			{acknowledgment && (
+				<div className={styles.acknowledgment_container}>
+					<i className={styles.acknowledgment}>{acknowledgment}</i>
+				</div>
+			)}
+
+			<Dialog
+				visible={showModal}
+				style={{ width: "70vw" }}
+				onHide={() => {
+					if (!showModal) return;
+					setShowModal(false);
+				}}
+				closable={closableModal}
+				draggable={false}
+				showHeader={closableModal}
+				contentClassName={!closableModal ? styles.no_header : undefined}
+			>
+				<div>
+					blabla
+					{/* //TODO >> add userInstructions + phoneEntryBox + cta */}
+				</div>
+			</Dialog>
 		</Layout>
 	);
 };

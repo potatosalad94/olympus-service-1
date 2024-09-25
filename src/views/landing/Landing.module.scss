@@ -1,7 +1,12 @@
 .logo_container {
 	display: flex;
 	justify-content: center;
-	position: relative;
+
+	.image_button {
+		position: relative;
+		border: none;
+		background: none;
+	}
 
 	i {
 		color: white;
@@ -12,13 +17,27 @@
 		transform: translate(-50%, -50%);
 	}
 
+	.rotating_icon {
+		transform: translate(-50%, -50%) rotate(0deg);
+		animation: rotate 2s linear infinite;
+	}
+
+	@keyframes rotate {
+		from {
+			transform: translate(-50%, -50%) rotate(0deg);
+		}
+		to {
+			transform: translate(-50%, -50%) rotate(360deg);
+		}
+	}
+
 	img {
 		width: 100%;
 		max-width: 500px;
 	}
 }
 
-.catch_container {
+.desc {
 	display: flex;
 	justify-content: center;
 
@@ -62,4 +81,19 @@
 	display: flex;
 	justify-content: center;
 	margin-top: 50px;
+}
+
+.acknowledgment_container {
+	display: flex;
+	justify-content: center;
+	.acknowledgment {
+		font-size: 12px;
+		text-align: center;
+		color: #9d9d9d;
+	}
+}
+
+.no_header {
+	padding: 2rem 1.5rem;
+	border-radius: 6px;
 }
