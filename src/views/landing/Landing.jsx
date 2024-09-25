@@ -11,6 +11,37 @@ import Joi from "joi";
 
 const serviceName = "Service_1";
 
+const formSchema = Joi.object({
+	contact: Joi.string()
+		.when(Joi.ref("$phoneEntryBox"), {
+			is: "",
+			then: Joi.optional(),
+			otherwise: Joi.string()
+				.required()
+				.custom((value, helpers) => {
+					const { phoneEntryBox } = helpers.prefs.context;
+					const numericValue = Number(value.replace(/\s/g, "")); // Convert to number, removing spaces
+
+					if (isNaN(numericValue)) {
+						return helpers.error("number.base");
+					}
+
+					const regex = new RegExp(`^${phoneEntryBox}\\d{8}$`);
+					if (!regex.test(String(numericValue))) {
+						return helpers.error("string.pattern.base");
+					}
+
+					return value; // Return original value to preserve formatting
+				})
+				.messages({
+					"string.empty": "Phone number can't be empty",
+					"number.base": "Phone number must contain only numbers",
+					"string.pattern.base": "Phone number format is invalid",
+				}),
+		})
+		.label("Phone number"),
+});
+
 const Landing = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -70,22 +101,23 @@ const Landing = () => {
 		control,
 	} = useForm({
 		resolver: joiResolver(
-			Joi.object({
-				contact: Joi.string()
-					.when(Joi.ref("$phoneEntryBox"), {
-						is: "", // If phoneEntryBox is an empty string
-						then: Joi.optional(), // Make contact optional
-						otherwise: Joi.string()
-							.required()
-							.regex(new RegExp(`^${phoneEntryBox}\\d{8}$`))
-							.messages({
-								"string.empty": "Phone number can't be empty",
-								"string.pattern.base":
-									"Phone number needs to contain numbers only",
-							}),
-					})
-					.label("Phone number"),
-			})
+			formSchema
+			// Joi.object({
+			// 	contact: Joi.string()
+			// 		.when(Joi.ref("$phoneEntryBox"), {
+			// 			is: "", // If phoneEntryBox is an empty string
+			// 			then: Joi.optional(), // Make contact optional
+			// 			otherwise: Joi.string()
+			// 				.required()
+			// 				.regex(new RegExp(`^${phoneEntryBox}\\d{8}$`))
+			// 				.messages({
+			// 					"string.empty": "Phone number can't be empty",
+			// 					"string.pattern.base":
+			// 						"Phone number needs to contain numbers only",
+			// 				}),
+			// 		})
+			// 		.label("Phone number"),
+			// })
 		),
 		mode: "onSubmit",
 		context: { phoneEntryBox }, // Pass phoneEntryBox as context
