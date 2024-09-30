@@ -1,11 +1,11 @@
+import Input from "@/components/Input/Input";
+import formSchema from "@/formSchema";
+import { joiResolver } from "@hookform/resolvers/joi";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { Controller, useForm } from "react-hook-form";
-import Input from "../Input/Input";
-import styles from "./FormComponent.module.scss";
-import { joiResolver } from "@hookform/resolvers/joi";
-import formSchema from "@/formSchema";
 import { forwardRef, useImperativeHandle } from "react";
+import { Controller, useForm } from "react-hook-form";
+import styles from "./FormComponent.module.scss";
 
 const FormComponent = forwardRef(
 	(
@@ -20,29 +20,45 @@ const FormComponent = forwardRef(
 		},
 		ref
 	) => {
-		const { handleSubmit, control, reset } = useForm({
+		const {
+			reset,
+			control: mainControl,
+			handleSubmit: mainHandleSubmit,
+			formState: { errors: mainErrors },
+		} = useForm({
 			resolver: joiResolver(formSchema),
+			context: { phoneEntryBox },
 			mode: "onSubmit",
-			context: { phoneEntryBox }, // Pass phoneEntryBox as context
 		});
 
-		useImperativeHandle(ref, () => ({
-			reset,
-		}));
+		const {
+			control: dialogControl,
+			handleSubmit: dialogHandleSubmit,
+			formState: { errors: dialogErrors },
+		} = useForm({
+			resolver: joiResolver(formSchema),
+			context: { phoneEntryBox },
+			mode: "onSubmit",
+		});
 
 		const onSubmit = (data) => {
 			console.log(data);
 			// Handle form submission
 		};
 
-		const renderFormContent = () => (
-			<>
+		useImperativeHandle(ref, () => ({
+			reset,
+		}));
+
+		const renderFormContent = (control, errors) => (
+			<div className={styles.form_container}>
 				{phoneEntryBox && (
 					<>
 						{userInstructions && <p>{userInstructions}</p>}
 						<Controller
 							name="contact"
 							control={control}
+							defaultValue=""
 							render={({ field, fieldState }) => (
 								<Input
 									{...field}
@@ -60,15 +76,16 @@ const FormComponent = forwardRef(
 					size={clickableZone === "Large" ? "large" : undefined}
 					onClick={(e) => {
 						e.stopPropagation();
-						alert("clicked CTA"); //TODO >> to be handled by react-hook-form
 					}}
 				/>
-			</>
+			</div>
 		);
 
 		return (
-			<form onSubmit={handleSubmit(onSubmit)} noValidate>
-				{renderFormContent()}
+			<>
+				<form onSubmit={mainHandleSubmit(onSubmit)} noValidate>
+					{renderFormContent(mainControl, mainErrors)}
+				</form>
 
 				<Dialog
 					visible={showModal}
@@ -81,9 +98,11 @@ const FormComponent = forwardRef(
 						!closableModal ? styles.no_header : undefined
 					}
 				>
-					<div>{renderFormContent()}</div>
+					<form onSubmit={dialogHandleSubmit(onSubmit)} noValidate>
+						{renderFormContent(dialogControl, dialogErrors)}
+					</form>
 				</Dialog>
-			</form>
+			</>
 		);
 	}
 );
