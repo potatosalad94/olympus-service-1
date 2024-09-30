@@ -14,24 +14,25 @@ const serviceName = "Service_1";
 const formSchema = Joi.object({
 	contact: Joi.string()
 		.when(Joi.ref("$phoneEntryBox"), {
-			is: "",
+			is: null,
 			then: Joi.optional(),
 			otherwise: Joi.string()
 				.required()
 				.custom((value, helpers) => {
 					const { phoneEntryBox } = helpers.prefs.context;
-					const numericValue = Number(value.replace(/\s/g, "")); // Convert to number, removing spaces
+					const numericValue = value.replace(/\s/g, ""); // Remove spaces, but keep as string
 
-					if (isNaN(numericValue)) {
+					if (!/^\d+$/.test(numericValue)) {
 						return helpers.error("number.base");
 					}
 
 					const regex = new RegExp(`^${phoneEntryBox}\\d{8}$`);
-					if (!regex.test(String(numericValue))) {
+
+					if (!regex.test(numericValue)) {
 						return helpers.error("string.pattern.base");
 					}
 
-					return value; // Return original value to preserve formatting
+					return numericValue; // Return original value without spaces
 				})
 				.messages({
 					"string.empty": "Phone number can't be empty",
@@ -99,47 +100,14 @@ const Landing = () => {
 		formState: { errors },
 		handleSubmit,
 		control,
+		watch,
 	} = useForm({
-		resolver: joiResolver(
-			formSchema
-			// Joi.object({
-			// 	contact: Joi.string()
-			// 		.when(Joi.ref("$phoneEntryBox"), {
-			// 			is: "", // If phoneEntryBox is an empty string
-			// 			then: Joi.optional(), // Make contact optional
-			// 			otherwise: Joi.string()
-			// 				.required()
-			// 				.regex(new RegExp(`^${phoneEntryBox}\\d{8}$`))
-			// 				.messages({
-			// 					"string.empty": "Phone number can't be empty",
-			// 					"string.pattern.base":
-			// 						"Phone number needs to contain numbers only",
-			// 				}),
-			// 		})
-			// 		.label("Phone number"),
-			// })
-		),
+		resolver: joiResolver(formSchema),
 		mode: "onSubmit",
 		context: { phoneEntryBox }, // Pass phoneEntryBox as context
-		// defaultValues: editMode
-		//     ? {
-		//             description,
-		//             type: {
-		//                 label: capitalize(type), //type?.charAt(0) + type?.slice(1).toLowerCase(),
-		//                 value: type,
-		//             },
-		//             dialCode: { label: code, value: code },
-		//             phone,
-		//       }
-		//     : {
-		//             description: "",
-		//             type: null,
-		//             dialCode: null,
-		//             phone: "",
-		//       },
 	});
 
-	console.log("🚀 ~ errors >>", errors);
+	// console.log("🚀 ~ errors >>", errors);
 
 	const handleCtaClick = (data) => {
 		console.log("THE DATA >>", data);

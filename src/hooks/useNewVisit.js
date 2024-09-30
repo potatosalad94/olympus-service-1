@@ -16,7 +16,7 @@ const useNewVisit = (serviceName, enabled = true, testResponse) => {
 		const response = await newVisitApi.request({
 			serviceName, //~ MANDATORY
 			connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
-			networkInformationEffectiveType: effectiveType,
+			// networkInformationEffectiveType: effectiveType, //TODO >> to add later with the rest of all the other optional parameters
 			...(storedVisitorId && { visitorId: storedVisitorId }),
 			...(testResponse && { testResponse: testResponse }), //! TEST PURPOSES
 

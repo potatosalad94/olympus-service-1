@@ -10,6 +10,7 @@ const router = createBrowserRouter([
 		element: <Landing />,
 
 		//TODO >> add not found page as per react-router 6 tutorial: https://reactrouter.com/en/main/start/tutorial
+		//TODO >> ajouter un error boundary
 	},
 ]);
 
