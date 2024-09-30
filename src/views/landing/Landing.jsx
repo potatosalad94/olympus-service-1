@@ -1,49 +1,15 @@
-import Input from "@/components/Input/Input";
+import FormComponent from "@/components/FormComponent/FormComponent";
 import useNewVisit from "@/hooks/useNewVisit";
 import Layout from "@components/Layout/Layout";
 import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
+import { useCallback, useRef, useState } from "react";
 import styles from "./Landing.module.scss";
-import { useCallback, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { joiResolver } from "@hookform/resolvers/joi";
-import Joi from "joi";
 
 const serviceName = "Service_1";
 
-const formSchema = Joi.object({
-	contact: Joi.string()
-		.when(Joi.ref("$phoneEntryBox"), {
-			is: null,
-			then: Joi.optional(),
-			otherwise: Joi.string()
-				.required()
-				.custom((value, helpers) => {
-					const { phoneEntryBox } = helpers.prefs.context;
-					const numericValue = value.replace(/\s/g, ""); // Remove spaces, but keep as string
-
-					if (!/^\d+$/.test(numericValue)) {
-						return helpers.error("number.base");
-					}
-
-					const regex = new RegExp(`^${phoneEntryBox}\\d{8}$`);
-
-					if (!regex.test(numericValue)) {
-						return helpers.error("string.pattern.base");
-					}
-
-					return numericValue; // Return original value without spaces
-				})
-				.messages({
-					"string.empty": "Phone number can't be empty",
-					"number.base": "Phone number must contain only numbers",
-					"string.pattern.base": "Phone number format is invalid",
-				}),
-		})
-		.label("Phone number"),
-});
-
 const Landing = () => {
+	const formRef = useRef(null);
+
 	const [showModal, setShowModal] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [timeoutId, setTimeoutId] = useState(null);
@@ -58,6 +24,7 @@ const Landing = () => {
 		const newTimeoutId = setTimeout(() => {
 			setIsLoading(false);
 			setShowModal(true);
+			formRef.current.reset();
 		}, 1000);
 
 		setTimeoutId(newTimeoutId);
@@ -94,28 +61,14 @@ const Landing = () => {
 		// popupInstructions,
 	} = content || {};
 
-	// * react-hook-form
-
-	const {
-		formState: { errors },
-		handleSubmit,
-		control,
-		watch,
-	} = useForm({
-		resolver: joiResolver(formSchema),
-		mode: "onSubmit",
-		context: { phoneEntryBox }, // Pass phoneEntryBox as context
-	});
-
-	// console.log("🚀 ~ errors >>", errors);
-
-	const handleCtaClick = (data) => {
-		console.log("THE DATA >>", data);
-	};
-
-	// * ===========================
-
-	if (isFetchingNewVisit) return "Loading"; //TODO >> better loading spinner / skeleton to implement
+	if (isFetchingNewVisit)
+		return (
+			<div className={styles.loading_container}>
+				<i
+					className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon} ${styles.page_spinner}`}
+				></i>
+			</div>
+		);
 
 	if (heRequired) return <div> Should do a HE redirect + call Post HE</div>;
 
@@ -130,6 +83,7 @@ const Landing = () => {
 					return;
 				} else {
 					setShowModal(true);
+					formRef.current.reset();
 				}
 			}}
 		>
@@ -163,30 +117,6 @@ const Landing = () => {
 						)}
 						<img src={image} alt="" />
 					</Button>
-
-					{/* <button
-						// role={"button"}
-						// tabIndex={0}
-						className={styles.image_button}
-						onClick={
-							playButton
-								? (e) => {
-										e.stopPropagation();
-										handleShowModal();
-								  }
-								: undefined
-						}
-					>
-						{playButton && !isLoading && (
-							<i className="pi pi-play-circle"></i>
-						)}
-						{isLoading && (
-							<i
-								className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}
-							></i>
-						)}
-						<img src={image} alt="" />
-					</button> */}
 				</div>
 			)}
 
@@ -197,51 +127,17 @@ const Landing = () => {
 			)}
 
 			<div className={styles.main}>
-				<form
-					onSubmit={handleSubmit((data) => handleCtaClick(data))}
-					noValidate
-				>
-					{phoneEntryBox && (
-						<>
-							{userInstructions && <p>{userInstructions}</p>}
+				<FormComponent
+					ref={formRef}
+					phoneEntryBox={phoneEntryBox}
+					userInstructions={userInstructions}
+					cta={cta}
+					clickableZone={clickableZone}
+					showModal={showModal}
+					setShowModal={setShowModal}
+					closableModal={closableModal}
+				/>
 
-							<Controller
-								name="contact"
-								control={control}
-								defaultValue=""
-								// rules={{ required: 'Phone number is required' }}
-								render={({ field, fieldState }) => (
-									<Input
-										{...field}
-										defaultValue={phoneEntryBox}
-										error={fieldState.error}
-										onClick={(e) => e.stopPropagation()}
-									/>
-								)}
-							/>
-
-							{/* <Input
-								defaultValue={phoneEntryBox}
-								value={""} // TODO
-								onClick={(e) => {
-									e.stopPropagation();
-									// alert("INPUT CLICK");
-								}}
-								onChange={""} // TODO
-								error={errors.contact}
-							/> */}
-						</>
-					)}
-
-					<Button
-						label={cta}
-						size={clickableZone === "Large" ? "large" : undefined}
-						onClick={(e) => {
-							e.stopPropagation();
-							alert("clicked CTA"); //TODO >> to be handled by react-hook-form
-						}}
-					/>
-				</form>
 				{exitButton && (
 					<Button
 						type={"button"}
@@ -267,24 +163,6 @@ const Landing = () => {
 					<i className={styles.acknowledgment}>{acknowledgment}</i>
 				</div>
 			)}
-
-			<Dialog
-				visible={showModal}
-				style={{ width: "70vw" }}
-				onHide={() => {
-					if (!showModal) return;
-					setShowModal(false);
-				}}
-				closable={closableModal}
-				draggable={false}
-				showHeader={closableModal}
-				contentClassName={!closableModal ? styles.no_header : undefined}
-			>
-				<div>
-					blabla
-					{/* //TODO >> add userInstructions + phoneEntryBox + cta */}
-				</div>
-			</Dialog>
 		</Layout>
 	);
 };
