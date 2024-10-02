@@ -3,9 +3,13 @@ import formSchema from "@/formSchema";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./FormComponent.module.scss";
+import useApi from "@/hooks/useApi";
+import { otpRequest } from "@/api/client";
+import { useMutation } from "@tanstack/react-query";
+import { Toast } from "primereact/toast";
 
 const FormComponent = forwardRef(
 	(
@@ -17,9 +21,34 @@ const FormComponent = forwardRef(
 			showModal,
 			setShowModal,
 			closableModal,
+			visitorId,
 		},
 		ref
 	) => {
+		const toast = useRef(null);
+
+		const otpApi = useApi(otpRequest);
+
+		const mutation = useMutation({
+			mutationFn: (msisdn) => {
+				return otpApi.request({
+					visitorId,
+					msisdn,
+				});
+			},
+
+			onSuccess: (response) => console.log("RESPONSE >>", response),
+			// queryClient.setQueryData(queryKeys.newVisit, response.data),
+
+			onError: () =>
+				toast.current.show({
+					severity: "error",
+					summary: "Error",
+					detail: "Something wrong happened",
+					life: 3000,
+				}),
+		});
+
 		const {
 			reset,
 			control: mainControl,
@@ -41,9 +70,8 @@ const FormComponent = forwardRef(
 			mode: "onSubmit",
 		});
 
-		const onSubmit = (data) => {
-			console.log(data);
-			// Handle form submission
+		const onSubmit = ({ contact }) => {
+			mutation.mutate(contact);
 		};
 
 		useImperativeHandle(ref, () => ({
@@ -83,6 +111,14 @@ const FormComponent = forwardRef(
 
 		return (
 			<>
+				<div
+					onClick={(e) => {
+						e.stopPropagation(); // Stops the click event from propagating to the toast
+					}}
+				>
+					<Toast ref={toast} />
+				</div>
+
 				<form onSubmit={mainHandleSubmit(onSubmit)} noValidate>
 					{renderFormContent(mainControl, mainErrors)}
 				</form>

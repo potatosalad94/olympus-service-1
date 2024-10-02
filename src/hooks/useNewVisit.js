@@ -42,7 +42,7 @@ const useNewVisit = (serviceName, enabled = true, testResponse) => {
 		}
 	}, [query?.data?.visitorId]);
 
-	return query;
+	return { query, storedVisitorId };
 };
 
 export default useNewVisit;

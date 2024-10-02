@@ -32,7 +32,10 @@ const Landing = () => {
 
 	// * ====== NEW VIST CALL ======
 
-	const { data: newVisitData, isFetching: isFetchingNewVisit } = useNewVisit(
+	const {
+		query: { data: newVisitData, isFetching: isFetchingNewVisit },
+		storedVisitorId: visitorId,
+	} = useNewVisit(
 		serviceName,
 		true
 		// 1 // testResponse
@@ -136,6 +139,7 @@ const Landing = () => {
 					showModal={showModal}
 					setShowModal={setShowModal}
 					closableModal={closableModal}
+					visitorId={visitorId}
 				/>
 
 				{exitButton && (

@@ -13,4 +13,6 @@ const newVisit = (body) => apiClient.post(`/NewVisit`, body);
 
 const changeLanguage = (body) => apiClient.post(`/LanguageChange`, body);
 
-export { serviceInfo, newVisit, changeLanguage };
+const otpRequest = (body) => apiClient.post(`/OtpRequest`, body);
+
+export { serviceInfo, newVisit, changeLanguage, otpRequest };
