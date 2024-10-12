@@ -1,8 +1,8 @@
 import { Toast } from "primereact/toast";
-import { createContext, useContext, useRef } from "react";
+import { createContext, useRef } from "react";
 
 // create context
-const ToastContext = createContext(undefined);
+export const ToastContext = createContext(undefined);
 
 // wrap context provider to add functionality
 export const ToastContextProvider = ({ children }) => {
@@ -26,16 +26,4 @@ export const ToastContextProvider = ({ children }) => {
 			<div>{children}</div>
 		</ToastContext.Provider>
 	);
-};
-
-export const useToastContext = () => {
-	const context = useContext(ToastContext);
-
-	if (!context) {
-		throw new Error(
-			"useToastContext have to be used within ToastContextProvider"
-		);
-	}
-
-	return context;
 };

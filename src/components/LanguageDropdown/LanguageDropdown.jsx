@@ -6,8 +6,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dropdown } from "primereact/dropdown";
 import { useRef, useState } from "react";
 import styles from "./LanguageDropdown.module.scss";
-import { useToastContext } from "@/context/toast-context";
 import { errorToast } from "@/utils/toast-messages";
+import { useToastContext } from "@/hooks/useToastContext";
 
 const languages = [
 	{ name: "English", code: "En" },

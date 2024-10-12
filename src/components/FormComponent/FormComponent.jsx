@@ -9,8 +9,8 @@ import styles from "./FormComponent.module.scss";
 import useApi from "@/hooks/useApi";
 import { otpRequest } from "@/api/client";
 import { useMutation } from "@tanstack/react-query";
-import { useToastContext } from "@/context/toast-context";
 import { errorToast } from "@/utils/toast-messages";
+import { useToastContext } from "@/hooks/useToastContext";
 
 const FormComponent = forwardRef(
 	(
