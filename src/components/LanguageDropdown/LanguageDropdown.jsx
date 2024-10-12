@@ -4,9 +4,10 @@ import useApi from "@/hooks/useApi";
 import useVisitorId from "@/hooks/useVisitorId";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dropdown } from "primereact/dropdown";
-import { Toast } from "primereact/toast";
 import { useRef, useState } from "react";
 import styles from "./LanguageDropdown.module.scss";
+import { useToastContext } from "@/context/toast-context";
+import { errorToast } from "@/utils/toast-messages";
 
 const languages = [
 	{ name: "English", code: "En" },
@@ -14,6 +15,7 @@ const languages = [
 ];
 
 const LanguageDropdown = ({ lang }) => {
+	const { showToast } = useToastContext();
 	const { visitorId } = useVisitorId();
 	const queryClient = useQueryClient();
 
@@ -36,25 +38,11 @@ const LanguageDropdown = ({ lang }) => {
 		onSuccess: (response) =>
 			queryClient.setQueryData(queryKeys.newVisit, response.data),
 
-		onError: () =>
-			toast.current.show({
-				severity: "error",
-				summary: "Error",
-				detail: "Something wrong happened",
-				life: 3000,
-			}),
+		onError: () => showToast(errorToast()),
 	});
 
 	return (
 		<>
-			<div
-				onClick={(e) => {
-					e.stopPropagation(); // Stops the click event from propagating to the toast
-				}}
-			>
-				<Toast ref={toast} />
-			</div>
-
 			<Dropdown
 				value={selectedLanguage}
 				onChange={(e) => {

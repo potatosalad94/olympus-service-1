@@ -10,6 +10,7 @@ import useApi from "@/hooks/useApi";
 import { otpRequest } from "@/api/client";
 import { useMutation } from "@tanstack/react-query";
 import { useToastContext } from "@/context/toast-context";
+import { errorToast } from "@/utils/toast-messages";
 
 const FormComponent = forwardRef(
 	(
@@ -37,16 +38,9 @@ const FormComponent = forwardRef(
 				});
 			},
 
-			onSuccess: (response) => console.log("RESPONSE >>", response),
-			// queryClient.setQueryData(queryKeys.newVisit, response.data),
+			onSuccess: (response) => console.log("RESPONSE >>", response), //TODO >> redirect a la page OTP
 
-			onError: () =>
-				showToast({
-					severity: "error",
-					summary: "Error",
-					detail: "Something wrong happened",
-					life: 3000,
-				}),
+			onError: () => showToast(errorToast()),
 		});
 
 		const {
@@ -99,7 +93,6 @@ const FormComponent = forwardRef(
 									dialCode={"05"}
 									error={fieldState.error}
 									onClick={(e) => e.stopPropagation()}
-									value={field.value}
 								/>
 							)}
 						/>
