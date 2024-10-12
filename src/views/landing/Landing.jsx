@@ -41,8 +41,7 @@ const Landing = () => {
 		// 1 // testResponse
 	);
 
-	const { css, content, msisdn, heRequired, currentLanguage } =
-		newVisitData || {};
+	const { css, content, heRequired, currentLanguage } = newVisitData || {};
 
 	const { clickableZone, termsV, playButton, closableModal } = css ?? {};
 

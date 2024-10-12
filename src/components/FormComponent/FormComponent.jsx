@@ -29,7 +29,7 @@ const FormComponent = forwardRef(
 
 		const otpApi = useApi(otpRequest);
 
-		const mutation = useMutation({
+		const { mutate: requestOtp, isPending } = useMutation({
 			mutationFn: (msisdn) => {
 				return otpApi.request({
 					visitorId,
@@ -71,7 +71,7 @@ const FormComponent = forwardRef(
 		});
 
 		const onSubmit = ({ contact }) => {
-			mutation.mutate(contact);
+			requestOtp(contact);
 		};
 
 		useImperativeHandle(ref, () => ({
@@ -105,6 +105,7 @@ const FormComponent = forwardRef(
 					onClick={(e) => {
 						e.stopPropagation();
 					}}
+					loading={isPending}
 				/>
 			</div>
 		);
