@@ -8,14 +8,15 @@ const formSchema = Joi.object({
 			otherwise: Joi.string()
 				.required()
 				.custom((value, helpers) => {
-					const { phoneEntryBox } = helpers.prefs.context;
+					const { dialCode } = helpers.prefs.context;
+
 					const numericValue = value.replace(/\s/g, ""); // Remove spaces, but keep as string
 
 					if (!/^\d+$/.test(numericValue)) {
 						return helpers.error("number.base");
 					}
 
-					const regex = new RegExp(`^${phoneEntryBox}\\d{8}$`);
+					const regex = new RegExp(`^${dialCode}\\d{8}$`);
 
 					if (!regex.test(numericValue)) {
 						return helpers.error("string.pattern.base");

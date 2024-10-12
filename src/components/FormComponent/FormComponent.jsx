@@ -9,7 +9,7 @@ import styles from "./FormComponent.module.scss";
 import useApi from "@/hooks/useApi";
 import { otpRequest } from "@/api/client";
 import { useMutation } from "@tanstack/react-query";
-import { Toast } from "primereact/toast";
+import { useToastContext } from "@/context/toast-context";
 
 const FormComponent = forwardRef(
 	(
@@ -25,7 +25,7 @@ const FormComponent = forwardRef(
 		},
 		ref
 	) => {
-		const toast = useRef(null);
+		const { showToast } = useToastContext();
 
 		const otpApi = useApi(otpRequest);
 
@@ -41,7 +41,7 @@ const FormComponent = forwardRef(
 			// queryClient.setQueryData(queryKeys.newVisit, response.data),
 
 			onError: () =>
-				toast.current.show({
+				showToast({
 					severity: "error",
 					summary: "Error",
 					detail: "Something wrong happened",
@@ -54,9 +54,13 @@ const FormComponent = forwardRef(
 			control: mainControl,
 			handleSubmit: mainHandleSubmit,
 			formState: { errors: mainErrors },
+			watch,
 		} = useForm({
 			resolver: joiResolver(formSchema),
-			context: { phoneEntryBox },
+			context: { dialCode: "05" },
+			defaultValues: {
+				contact: phoneEntryBox,
+			},
 			mode: "onSubmit",
 		});
 
@@ -66,7 +70,10 @@ const FormComponent = forwardRef(
 			formState: { errors: dialogErrors },
 		} = useForm({
 			resolver: joiResolver(formSchema),
-			context: { phoneEntryBox },
+			context: { dialCode: "05" },
+			defaultValues: {
+				contact: phoneEntryBox,
+			},
 			mode: "onSubmit",
 		});
 
@@ -86,13 +93,13 @@ const FormComponent = forwardRef(
 						<Controller
 							name="contact"
 							control={control}
-							defaultValue=""
 							render={({ field, fieldState }) => (
 								<Input
 									{...field}
-									defaultValue={phoneEntryBox}
+									dialCode={"05"}
 									error={fieldState.error}
 									onClick={(e) => e.stopPropagation()}
+									value={field.value}
 								/>
 							)}
 						/>
@@ -112,14 +119,6 @@ const FormComponent = forwardRef(
 
 		return (
 			<>
-				<div
-					onClick={(e) => {
-						e.stopPropagation(); // Stops the click event from propagating to the toast
-					}}
-				>
-					<Toast ref={toast} />
-				</div>
-
 				<form onSubmit={mainHandleSubmit(onSubmit)} noValidate>
 					{renderFormContent(mainControl, mainErrors)}
 				</form>
