@@ -53,6 +53,7 @@ const Landing = () => {
 		image,
 		imageSteps,
 		phoneEntryBox,
+		dialCode,
 		serviceDescription,
 		termsAndConditions,
 		topPriceDescription,
@@ -62,6 +63,10 @@ const Landing = () => {
 		// popupCta,
 		// popupInstructions,
 	} = content || {};
+
+	const handleRequestOtp = (response) => {
+		console.log("THE RESPONSE >>", response.data);
+	};
 
 	if (isFetchingNewVisit)
 		return (
@@ -132,6 +137,7 @@ const Landing = () => {
 				<FormComponent
 					ref={formRef}
 					phoneEntryBox={phoneEntryBox}
+					dialCode={dialCode}
 					userInstructions={userInstructions}
 					cta={cta}
 					clickableZone={clickableZone}
@@ -139,6 +145,7 @@ const Landing = () => {
 					setShowModal={setShowModal}
 					closableModal={closableModal}
 					visitorId={visitorId}
+					onSuccess={handleRequestOtp}
 				/>
 
 				{exitButton && (

@@ -1,21 +1,22 @@
+import { otpRequest } from "@/api/client";
 import Input from "@/components/Input/Input";
 import formSchema from "@/formSchema";
+import useApi from "@/hooks/useApi";
+import { useToastContext } from "@/hooks/useToastContext";
+import { errorToast } from "@/utils/toast-messages";
 import { joiResolver } from "@hookform/resolvers/joi";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./FormComponent.module.scss";
-import useApi from "@/hooks/useApi";
-import { otpRequest } from "@/api/client";
-import { useMutation } from "@tanstack/react-query";
-import { errorToast } from "@/utils/toast-messages";
-import { useToastContext } from "@/hooks/useToastContext";
 
 const FormComponent = forwardRef(
 	(
 		{
 			phoneEntryBox,
+			dialCode,
 			userInstructions,
 			cta,
 			clickableZone,
@@ -23,6 +24,7 @@ const FormComponent = forwardRef(
 			setShowModal,
 			closableModal,
 			visitorId,
+			onSuccess,
 		},
 		ref
 	) => {
@@ -37,9 +39,7 @@ const FormComponent = forwardRef(
 					msisdn,
 				});
 			},
-
-			onSuccess: (response) => console.log("RESPONSE >>", response), //TODO >> redirect a la page OTP
-
+			onSuccess, //TODO >> redirect a la page OTP
 			onError: () => showToast(errorToast()),
 		});
 
@@ -51,7 +51,7 @@ const FormComponent = forwardRef(
 			watch,
 		} = useForm({
 			resolver: joiResolver(formSchema),
-			context: { dialCode: "05" },
+			context: { dialCode },
 			defaultValues: {
 				contact: phoneEntryBox,
 			},
@@ -64,7 +64,7 @@ const FormComponent = forwardRef(
 			formState: { errors: dialogErrors },
 		} = useForm({
 			resolver: joiResolver(formSchema),
-			context: { dialCode: "05" },
+			context: { dialCode },
 			defaultValues: {
 				contact: phoneEntryBox,
 			},
@@ -90,7 +90,7 @@ const FormComponent = forwardRef(
 							render={({ field, fieldState }) => (
 								<Input
 									{...field}
-									dialCode={"05"}
+									dialCode={dialCode}
 									error={fieldState.error}
 									onClick={(e) => e.stopPropagation()}
 								/>
