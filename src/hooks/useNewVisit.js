@@ -6,7 +6,7 @@ import useConnectionInfo from "./useConnectionInfo";
 import { useEffect } from "react";
 import useVisitorId from "./useVisitorId";
 
-const useNewVisit = (serviceName, enabled = true, testResponse) => {
+const useNewVisit = (serviceName, step, enabled = true, testResponse) => {
 	const { type, effectiveType } = useConnectionInfo();
 	const { visitorId: storedVisitorId, updateVisitorId } = useVisitorId();
 
@@ -15,6 +15,7 @@ const useNewVisit = (serviceName, enabled = true, testResponse) => {
 	const postNewVisit = async () => {
 		const response = await newVisitApi.request({
 			serviceName, //~ MANDATORY
+			step,
 			connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
 			// networkInformationEffectiveType: effectiveType, //TODO >> to add later with the rest of all the other optional parameters
 			...(storedVisitorId && { visitorId: storedVisitorId }),

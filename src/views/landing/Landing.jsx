@@ -2,13 +2,75 @@ import FormComponent from "@/components/FormComponent/FormComponent";
 import useNewVisit from "@/hooks/useNewVisit";
 import Layout from "@components/Layout/Layout";
 import { Button } from "primereact/button";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Landing.module.scss";
+import { useNavigate, useLocation } from "react-router-dom";
+import OtpRequest from "@/components/OtpRequest/OtpRequest";
 
 const serviceName = "Service_1";
 
 const Landing = () => {
 	const formRef = useRef(null);
+
+	// !============== OTP STEP ==============
+
+	const [currentStep, setCurrentStep] = useState("initial");
+	console.log("🚀 ~ currentStep >>", currentStep);
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	useEffect(() => {
+		const urlParams = new URLSearchParams(location.search);
+		const stepFromUrl = urlParams.get("step");
+		if (stepFromUrl && ["initial", "otp", "final"].includes(stepFromUrl)) {
+			setCurrentStep(stepFromUrl);
+		} else {
+			navigate("?step=initial", { replace: true });
+		}
+	}, [navigate, location]);
+
+	const goToNextStep = (nextStep) => {
+		setCurrentStep(nextStep);
+		navigate(`?step=${nextStep}`, { replace: true });
+	};
+
+	const renderStep = () => {
+		switch (currentStep) {
+			case "initial":
+				return (
+					<FormComponent
+						ref={formRef}
+						phoneEntryBox={phoneEntryBox}
+						dialCode={dialCode}
+						userInstructions={userInstructions}
+						cta={cta}
+						clickableZone={clickableZone}
+						showModal={showModal}
+						setShowModal={setShowModal}
+						closableModal={closableModal}
+						visitorId={visitorId}
+						onSuccess={handleRequestOtp}
+					/>
+				);
+			case "otp":
+				return (
+					<div>
+						<OtpRequest />
+					</div>
+				);
+			case "final":
+				return (
+					<div>
+						<h2>Final Step</h2>
+						<p>Flow completed!</p>
+					</div>
+				);
+			default:
+				return <div>Unknown step</div>;
+		}
+	};
+
+	// ! =====================================
 
 	const [showModal, setShowModal] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +99,12 @@ const Landing = () => {
 		storedVisitorId: visitorId,
 	} = useNewVisit(
 		serviceName,
-		true
+		currentStep === "initial"
+			? "New Visit"
+			: currentStep === "otp"
+			? "Otp Request"
+			: "Otp Confirm"
+
 		// 1 // testResponse
 	);
 
@@ -65,6 +132,8 @@ const Landing = () => {
 	} = content || {};
 
 	const handleRequestOtp = (response) => {
+		goToNextStep("otp");
+		//TODO >> need to reset the state with the new response
 		console.log("THE RESPONSE >>", response.data);
 	};
 
@@ -86,11 +155,13 @@ const Landing = () => {
 			termsVisibility={termsV}
 			lang={currentLanguage}
 			onRootClick={() => {
-				if (showModal) {
-					return;
-				} else {
-					setShowModal(true);
-					formRef.current.reset();
+				if (currentStep === "initial") {
+					if (showModal) {
+						return;
+					} else {
+						setShowModal(true);
+						formRef.current.reset();
+					}
 				}
 			}}
 		>
@@ -106,11 +177,13 @@ const Landing = () => {
 						unstyled
 						className={styles.image_button}
 						onClick={
-							playButton
-								? (e) => {
-										e.stopPropagation();
-										handleShowModal();
-								  }
+							currentStep === "initial"
+								? playButton
+									? (e) => {
+											e.stopPropagation();
+											handleShowModal();
+									  }
+									: undefined
 								: undefined
 						}
 					>
@@ -134,7 +207,7 @@ const Landing = () => {
 			)}
 
 			<div className={styles.main}>
-				<FormComponent
+				{/* <FormComponent
 					ref={formRef}
 					phoneEntryBox={phoneEntryBox}
 					dialCode={dialCode}
@@ -146,7 +219,9 @@ const Landing = () => {
 					closableModal={closableModal}
 					visitorId={visitorId}
 					onSuccess={handleRequestOtp}
-				/>
+				/> */}
+
+				{renderStep()}
 
 				{exitButton && (
 					<Button

@@ -33,13 +33,13 @@ const FormComponent = forwardRef(
 		const otpApi = useApi(otpRequest);
 
 		const { mutate: requestOtp, isPending } = useMutation({
-			mutationFn: (msisdn) => {
+			mutationFn: (msisdn = "") => {
 				return otpApi.request({
 					visitorId,
 					msisdn,
 				});
 			},
-			onSuccess, //TODO >> redirect a la page OTP
+			onSuccess,
 			onError: () => showToast(errorToast()),
 		});
 
@@ -48,12 +48,11 @@ const FormComponent = forwardRef(
 			control: mainControl,
 			handleSubmit: mainHandleSubmit,
 			formState: { errors: mainErrors },
-			watch,
 		} = useForm({
 			resolver: joiResolver(formSchema),
-			context: { dialCode },
+			context: { dialCode, phoneEntryBox },
 			defaultValues: {
-				contact: phoneEntryBox,
+				contact: phoneEntryBox ?? "",
 			},
 			mode: "onSubmit",
 		});
@@ -64,9 +63,9 @@ const FormComponent = forwardRef(
 			formState: { errors: dialogErrors },
 		} = useForm({
 			resolver: joiResolver(formSchema),
-			context: { dialCode },
+			context: { dialCode, phoneEntryBox },
 			defaultValues: {
-				contact: phoneEntryBox,
+				contact: phoneEntryBox ?? "",
 			},
 			mode: "onSubmit",
 		});
