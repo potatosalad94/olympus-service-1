@@ -15,7 +15,6 @@ const Landing = () => {
 	// !============== OTP STEP ==============
 
 	const [currentStep, setCurrentStep] = useState("initial");
-	console.log("🚀 ~ currentStep >>", currentStep);
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -50,6 +49,7 @@ const Landing = () => {
 						closableModal={closableModal}
 						visitorId={visitorId}
 						onSuccess={handleRequestOtp}
+						showInput={showInput}
 					/>
 				);
 			case "otp":
@@ -110,7 +110,8 @@ const Landing = () => {
 
 	const { css, content, heRequired, currentLanguage } = newVisitData || {};
 
-	const { clickableZone, termsV, playButton, closableModal } = css ?? {};
+	const { clickableZone, termsV, playButton, closableModal, showInput } =
+		css ?? {};
 
 	const {
 		acknowledgment,

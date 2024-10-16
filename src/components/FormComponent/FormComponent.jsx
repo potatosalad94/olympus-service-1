@@ -25,6 +25,7 @@ const FormComponent = forwardRef(
 			closableModal,
 			visitorId,
 			onSuccess,
+			showInput,
 		},
 		ref
 	) => {
@@ -80,7 +81,7 @@ const FormComponent = forwardRef(
 
 		const renderFormContent = (control, errors) => (
 			<div className={styles.form_container}>
-				{phoneEntryBox && (
+				{showInput && (
 					<>
 						{userInstructions && <p>{userInstructions}</p>}
 						<Controller
