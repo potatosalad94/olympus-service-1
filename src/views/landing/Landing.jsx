@@ -1,32 +1,24 @@
 import FormComponent from "@/components/FormComponent/FormComponent";
-import useNewVisit from "@/hooks/useNewVisit";
+import useDisplayData from "@/hooks/useDisplayData";
 import Layout from "@components/Layout/Layout";
 import { Button } from "primereact/button";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Landing.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import OtpRequest from "@/components/OtpRequest/OtpRequest";
+import useStepManagement from "@/hooks/useStepManagement";
 
 const serviceName = "Service_1";
 
+//TODO >> should now allow user to manually navigate to step "otp" or "final" when entering in the url manually.
+//TODO >> should perform a check (state or localStorage) to check that the previous step returned a 200 response
+//TODO >> check solution provided by GPT : https://claude.ai/chat/60bc452a-bdb9-497f-8039-5ab02605eab7
+
 const Landing = () => {
 	const formRef = useRef(null);
-
-	// !============== OTP STEP ==============
-
-	const [currentStep, setCurrentStep] = useState("initial");
 	const navigate = useNavigate();
-	const location = useLocation();
 
-	useEffect(() => {
-		const urlParams = new URLSearchParams(location.search);
-		const stepFromUrl = urlParams.get("step");
-		if (stepFromUrl && ["initial", "otp", "final"].includes(stepFromUrl)) {
-			setCurrentStep(stepFromUrl);
-		} else {
-			navigate("?step=initial", { replace: true });
-		}
-	}, [navigate, location]);
+	const [currentStep, setCurrentStep] = useStepManagement();
 
 	const goToNextStep = (nextStep) => {
 		setCurrentStep(nextStep);
@@ -95,9 +87,9 @@ const Landing = () => {
 	// * ====== NEW VIST CALL ======
 
 	const {
-		query: { data: newVisitData, isFetching: isFetchingNewVisit },
+		query: { data: displayData, isFetching: isFetchingNewVisit },
 		storedVisitorId: visitorId,
-	} = useNewVisit(
+	} = useDisplayData(
 		serviceName,
 		currentStep === "initial"
 			? "New Visit"
@@ -108,7 +100,7 @@ const Landing = () => {
 		// 1 // testResponse
 	);
 
-	const { css, content, heRequired, currentLanguage } = newVisitData || {};
+	const { css, content, heRequired, currentLanguage } = displayData || {};
 
 	const { clickableZone, termsV, playButton, closableModal, showInput } =
 		css ?? {};
@@ -132,10 +124,8 @@ const Landing = () => {
 		// popupInstructions,
 	} = content || {};
 
-	const handleRequestOtp = (response) => {
+	const handleRequestOtp = () => {
 		goToNextStep("otp");
-		//TODO >> need to reset the state with the new response
-		console.log("THE RESPONSE >>", response.data);
 	};
 
 	if (isFetchingNewVisit)

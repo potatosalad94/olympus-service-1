@@ -1,4 +1,4 @@
-import { newVisit } from "@api/client";
+import { displayData } from "@api/client";
 import useApi from "./useApi";
 import { queryKeys } from "@/app-keys-factory";
 import { useQuery } from "@tanstack/react-query";
@@ -6,14 +6,16 @@ import useConnectionInfo from "./useConnectionInfo";
 import { useEffect } from "react";
 import useVisitorId from "./useVisitorId";
 
-const useNewVisit = (serviceName, step, enabled = true, testResponse) => {
+const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 	const { type, effectiveType } = useConnectionInfo();
 	const { visitorId: storedVisitorId, updateVisitorId } = useVisitorId();
 
-	const newVisitApi = useApi(newVisit);
+	const displayDataApi = useApi(displayData);
 
-	const postNewVisit = async () => {
-		const response = await newVisitApi.request({
+	const getData = async ({ queryKey }) => {
+		const [_, step] = queryKey;
+		console.log("🚀 ~ step >>", step);
+		const response = await displayDataApi.request({
 			serviceName, //~ MANDATORY
 			step,
 			connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
@@ -32,8 +34,8 @@ const useNewVisit = (serviceName, step, enabled = true, testResponse) => {
 	};
 
 	const query = useQuery({
-		queryKey: queryKeys.newVisit,
-		queryFn: postNewVisit,
+		queryKey: queryKeys.displayData(step),
+		queryFn: getData,
 		enabled,
 	});
 
@@ -46,4 +48,4 @@ const useNewVisit = (serviceName, step, enabled = true, testResponse) => {
 	return { query, storedVisitorId };
 };
 
-export default useNewVisit;
+export default useDisplayData;

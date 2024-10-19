@@ -51,7 +51,11 @@ const FormComponent = forwardRef(
 			formState: { errors: mainErrors },
 		} = useForm({
 			resolver: joiResolver(formSchema),
-			context: { dialCode, phoneEntryBox },
+			context: {
+				dialCode,
+				showInput,
+				// phoneEntryBox
+			},
 			defaultValues: {
 				contact: phoneEntryBox ?? "",
 			},
@@ -64,7 +68,11 @@ const FormComponent = forwardRef(
 			formState: { errors: dialogErrors },
 		} = useForm({
 			resolver: joiResolver(formSchema),
-			context: { dialCode, phoneEntryBox },
+			context: {
+				dialCode,
+				showInput,
+				// phoneEntryBox
+			},
 			defaultValues: {
 				contact: phoneEntryBox ?? "",
 			},

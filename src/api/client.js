@@ -9,10 +9,10 @@ const apiClient = create({
 const serviceInfo = (serviceName) =>
 	apiClient.get(`/ServiceInfo?serviceName=${serviceName}`);
 
-const newVisit = (body) => apiClient.post(`/NewVisit`, body);
+const displayData = (body) => apiClient.post(`/DisplayData`, body);
 
 const changeLanguage = (body) => apiClient.post(`/LanguageChange`, body);
 
 const otpRequest = (body) => apiClient.post(`/OtpRequest`, body);
 
-export { serviceInfo, newVisit, changeLanguage, otpRequest };
+export { serviceInfo, displayData, changeLanguage, otpRequest };

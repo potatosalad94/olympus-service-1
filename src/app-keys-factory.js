@@ -1,6 +1,6 @@
 export const queryKeys = {
 	serviceInfo: (serviceName, lang) => ["ServiceInfo", serviceName, lang],
-	newVisit: ["NewVisit"],
+	displayData: (step) => ["displayData", step],
 
 	// landing: () => [...jobsKeys.all, "landing"],
 
