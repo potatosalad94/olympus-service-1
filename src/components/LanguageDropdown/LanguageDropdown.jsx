@@ -4,7 +4,7 @@ import useApi from "@/hooks/useApi";
 import useVisitorId from "@/hooks/useVisitorId";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dropdown } from "primereact/dropdown";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import styles from "./LanguageDropdown.module.scss";
 import { errorToast } from "@/utils/toast-messages";
 import { useToastContext } from "@/hooks/useToastContext";
@@ -14,12 +14,10 @@ const languages = [
 	{ name: "العربية", code: "Ar" },
 ];
 
-const LanguageDropdown = ({ lang }) => {
+const LanguageDropdown = ({ lang, step }) => {
 	const { showToast } = useToastContext();
 	const { visitorId } = useVisitorId();
 	const queryClient = useQueryClient();
-
-	const toast = useRef(null);
 
 	const [selectedLanguage, setSelectedLanguage] = useState(() =>
 		languages.find((item) => item.code === lang)
@@ -36,9 +34,13 @@ const LanguageDropdown = ({ lang }) => {
 		},
 
 		onSuccess: (response) =>
-			queryClient.setQueryData(queryKeys.newVisit, response.data),
+			queryClient.setQueryData(
+				queryKeys.displayData(step),
+				response.data
+			),
 
-		onError: () => showToast(errorToast()),
+		onError: ({ errorTitle, error }) =>
+			showToast(errorToast(errorTitle, error)),
 	});
 
 	return (

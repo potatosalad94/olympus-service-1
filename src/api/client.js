@@ -15,4 +15,15 @@ const changeLanguage = (body) => apiClient.post(`/LanguageChange`, body);
 
 const otpRequest = (body) => apiClient.post(`/OtpRequest`, body);
 
-export { serviceInfo, displayData, changeLanguage, otpRequest };
+const resendOtp = (body) => apiClient.post(`/ResendOtp`, body);
+
+const otpConfirm = (body) => apiClient.post(`/OtpConfirm`, body);
+
+export {
+	serviceInfo,
+	displayData,
+	changeLanguage,
+	otpRequest,
+	resendOtp,
+	otpConfirm,
+};

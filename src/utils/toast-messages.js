@@ -1,8 +1,8 @@
-export const errorToast = (text) => {
+export const errorToast = (summary, errorMessage) => {
 	return {
 		severity: "error",
-		summary: "Error",
-		detail: text || "Something wrong happened",
+		summary: summary || "Error",
+		detail: errorMessage || "Something wrong happened",
 		life: 3000,
 	};
 };

@@ -1,16 +1,16 @@
-import FormComponent from "@/components/FormComponent/FormComponent";
+import OtpRequest from "@/components/OtpRequest/OtpRequest";
 import useDisplayData from "@/hooks/useDisplayData";
 import Layout from "@components/Layout/Layout";
 import { Button } from "primereact/button";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Landing.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";
-import OtpRequest from "@/components/OtpRequest/OtpRequest";
+import OtpConfirm from "@/components/OtpConfirm/OtpConfirm";
 import useStepManagement from "@/hooks/useStepManagement";
 
 const serviceName = "Service_1";
 
-//TODO >> should now allow user to manually navigate to step "otp" or "final" when entering in the url manually.
+//TODO >> should not allow user to manually navigate to step "otp" or "final" when entering in the url manually.
 //TODO >> should perform a check (state or localStorage) to check that the previous step returned a 200 response
 //TODO >> check solution provided by GPT : https://claude.ai/chat/60bc452a-bdb9-497f-8039-5ab02605eab7
 
@@ -25,11 +25,23 @@ const Landing = () => {
 		navigate(`?step=${nextStep}`, { replace: true });
 	};
 
+	// const [usedPhone, setUsedPhone] = useState("");
+
+	const handleNextStep = (step, ...args) => {
+		const [_, msisdn] = args;
+
+		if (step === "otp") {
+			sessionStorage.setItem("msisdn", msisdn);
+		}
+
+		goToNextStep(step);
+	};
+
 	const renderStep = () => {
 		switch (currentStep) {
 			case "initial":
 				return (
-					<FormComponent
+					<OtpRequest
 						ref={formRef}
 						phoneEntryBox={phoneEntryBox}
 						dialCode={dialCode}
@@ -40,17 +52,25 @@ const Landing = () => {
 						setShowModal={setShowModal}
 						closableModal={closableModal}
 						visitorId={visitorId}
-						onSuccess={handleRequestOtp}
+						// onSuccess={() => goToNextStep("otp")}
+						onSuccess={(...args) => handleNextStep("otp", ...args)}
 						showInput={showInput}
 					/>
 				);
 			case "otp":
 				return (
 					<div>
-						<OtpRequest />
+						<OtpConfirm
+							// onSubmit={}
+							// onSuccess={() => goToNextStep("final")}
+
+							onSuccess={() => handleNextStep("final")}
+							visitorId={visitorId}
+						/>
 					</div>
 				);
 			case "final":
+				//TODO =============================== LAST STEP OF THE FORM ===============================
 				return (
 					<div>
 						<h2>Final Step</h2>
@@ -86,17 +106,19 @@ const Landing = () => {
 
 	// * ====== NEW VIST CALL ======
 
-	const {
-		query: { data: displayData, isFetching: isFetchingNewVisit },
-		storedVisitorId: visitorId,
-	} = useDisplayData(
-		serviceName,
+	const step =
 		currentStep === "initial"
 			? "New Visit"
 			: currentStep === "otp"
 			? "Otp Request"
-			: "Otp Confirm"
+			: "Otp Confirm";
 
+	const {
+		query: { data: displayData, isFetching },
+		storedVisitorId: visitorId,
+	} = useDisplayData(
+		serviceName,
+		step
 		// 1 // testResponse
 	);
 
@@ -124,11 +146,7 @@ const Landing = () => {
 		// popupInstructions,
 	} = content || {};
 
-	const handleRequestOtp = () => {
-		goToNextStep("otp");
-	};
-
-	if (isFetchingNewVisit)
+	if (isFetching)
 		return (
 			<div className={styles.loading_container}>
 				<i
@@ -145,6 +163,7 @@ const Landing = () => {
 			terms={termsAndConditions ?? ""}
 			termsVisibility={termsV}
 			lang={currentLanguage}
+			step={step}
 			onRootClick={() => {
 				if (currentStep === "initial") {
 					if (showModal) {
@@ -198,20 +217,6 @@ const Landing = () => {
 			)}
 
 			<div className={styles.main}>
-				{/* <FormComponent
-					ref={formRef}
-					phoneEntryBox={phoneEntryBox}
-					dialCode={dialCode}
-					userInstructions={userInstructions}
-					cta={cta}
-					clickableZone={clickableZone}
-					showModal={showModal}
-					setShowModal={setShowModal}
-					closableModal={closableModal}
-					visitorId={visitorId}
-					onSuccess={handleRequestOtp}
-				/> */}
-
 				{renderStep()}
 
 				{exitButton && (

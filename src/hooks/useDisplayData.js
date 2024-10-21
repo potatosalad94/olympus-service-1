@@ -14,7 +14,6 @@ const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 
 	const getData = async ({ queryKey }) => {
 		const [_, step] = queryKey;
-		console.log("🚀 ~ step >>", step);
 		const response = await displayDataApi.request({
 			serviceName, //~ MANDATORY
 			step,
@@ -22,7 +21,6 @@ const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 			// networkInformationEffectiveType: effectiveType, //TODO >> to add later with the rest of all the other optional parameters
 			...(storedVisitorId && { visitorId: storedVisitorId }),
 			...(testResponse && { testResponse: testResponse }), //! TEST PURPOSES
-
 			//TODO
 			// batteryLevel, //float (between 0.0 and 1.0)
 			// batteryCharging, //bool
@@ -37,6 +35,7 @@ const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 		queryKey: queryKeys.displayData(step),
 		queryFn: getData,
 		enabled,
+		retry: 2,
 	});
 
 	useEffect(() => {

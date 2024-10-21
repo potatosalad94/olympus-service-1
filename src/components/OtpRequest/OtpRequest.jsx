@@ -1,35 +1,148 @@
-import styles from "./OtpRequest.module.scss";
-import useOtpCountdown from "@/hooks/useOtpCountdown";
+import { otpRequest } from "@/api/client";
+import Input from "@/components/Input/Input";
+import otpRequestSchema from "@/components/OtpRequest/otpRequestSchema";
+import useApi from "@/hooks/useApi";
+import { useToastContext } from "@/hooks/useToastContext";
+import { errorToast } from "@/utils/toast-messages";
+import { joiResolver } from "@hookform/resolvers/joi";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
-import { InputOtp } from "primereact/inputotp";
-import { useState } from "react";
+import { Dialog } from "primereact/dialog";
+import { forwardRef, useImperativeHandle } from "react";
+import { Controller, useForm } from "react-hook-form";
+import styles from "./OtpRequest.module.scss";
 
-const OtpRequest = () => {
-	const [token, setTokens] = useState();
+const OtpRequest = forwardRef(
+	(
+		{
+			phoneEntryBox,
+			dialCode,
+			userInstructions,
+			cta,
+			clickableZone,
+			showModal,
+			setShowModal,
+			closableModal,
+			visitorId,
+			onSuccess,
+			showInput,
+		},
+		ref
+	) => {
+		const { showToast } = useToastContext();
 
-	const { countdown, startCountdown } = useOtpCountdown();
+		const otpRequestApi = useApi(otpRequest);
 
-	const handleOtpRequest = () => {
-		startCountdown();
-	};
+		const { mutate: requestOtp, isPending } = useMutation({
+			mutationFn: (msisdn = "") => {
+				return otpRequestApi.request({
+					visitorId,
+					msisdn,
+				});
+			},
+			onSuccess,
+			onError: ({ errorTitle, error }) =>
+				showToast(errorToast(errorTitle, error)),
+		});
 
-	return (
-		<div className={styles.container}>
-			<InputOtp
-				value={token}
-				onChange={(e) => setTokens(e.value)}
-				integerOnly
-			/>
-			<Button onClick={handleOtpRequest} disabled={countdown > 0} link>
-				Request OTP
-			</Button>
+		const {
+			reset,
+			control: mainControl,
+			handleSubmit: mainHandleSubmit,
+			formState: { errors: mainErrors },
+		} = useForm({
+			resolver: joiResolver(otpRequestSchema),
+			context: {
+				dialCode,
+				showInput,
+				// phoneEntryBox
+			},
+			defaultValues: {
+				contact: phoneEntryBox ?? "",
+			},
+			mode: "onSubmit",
+		});
 
-			<Button>Submit</Button>
-			{countdown > 0 && (
-				<p>You can request another OTP in {countdown} seconds</p>
-			)}
-		</div>
-	);
-};
+		const {
+			control: dialogControl,
+			handleSubmit: dialogHandleSubmit,
+			formState: { errors: dialogErrors },
+		} = useForm({
+			resolver: joiResolver(otpRequestSchema),
+			context: {
+				dialCode,
+				showInput,
+				// phoneEntryBox
+			},
+			defaultValues: {
+				contact: phoneEntryBox ?? "",
+			},
+			mode: "onSubmit",
+		});
+
+		const onSubmit = ({ contact }) => {
+			requestOtp(contact);
+		};
+
+		useImperativeHandle(ref, () => ({
+			reset,
+		}));
+
+		const renderFormContent = (control, errors) => (
+			<div className={styles.form_container}>
+				{showInput && (
+					<>
+						{userInstructions && <p>{userInstructions}</p>}
+						<Controller
+							name="contact"
+							control={control}
+							render={({ field, fieldState }) => (
+								<Input
+									{...field}
+									dialCode={dialCode}
+									error={fieldState.error}
+									onClick={(e) => e.stopPropagation()}
+								/>
+							)}
+						/>
+					</>
+				)}
+				<Button
+					type="submit"
+					label={cta}
+					size={clickableZone === "Large" ? "large" : undefined}
+					onClick={(e) => {
+						e.stopPropagation();
+					}}
+					loading={isPending}
+				/>
+			</div>
+		);
+
+		return (
+			<>
+				<form onSubmit={mainHandleSubmit(onSubmit)} noValidate>
+					{renderFormContent(mainControl, mainErrors)}
+				</form>
+
+				<Dialog
+					visible={showModal}
+					style={{ width: "70vw" }}
+					onHide={() => setShowModal(false)}
+					closable={closableModal}
+					draggable={false}
+					showHeader={closableModal}
+					contentClassName={
+						!closableModal ? styles.no_header : undefined
+					}
+				>
+					<form onSubmit={dialogHandleSubmit(onSubmit)} noValidate>
+						{renderFormContent(dialogControl, dialogErrors)}
+					</form>
+				</Dialog>
+			</>
+		);
+	}
+);
 
 export default OtpRequest;

@@ -9,11 +9,12 @@ const Layout = ({
 	termsVisibility,
 	lang,
 	onRootClick,
+	step,
 }) => {
 	return (
 		<div className={styles.container} onClick={onRootClick}>
 			<div style={{ height: termsVisibility ? "auto" : "100dvh" }}>
-				<Header text={headerPrice} lang={lang} />
+				<Header text={headerPrice} lang={lang} step={step} />
 				<div className={styles.children_wrapper}>{children}</div>
 			</div>
 
