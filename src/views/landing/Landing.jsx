@@ -1,18 +1,15 @@
+import ConfirmedSubscription from "@/components/ConfirmedSubscription/ConfirmedSubscription";
+import OtpConfirm from "@/components/OtpConfirm/OtpConfirm";
 import OtpRequest from "@/components/OtpRequest/OtpRequest";
 import useDisplayData from "@/hooks/useDisplayData";
+import useStepManagement from "@/hooks/useStepManagement";
 import Layout from "@components/Layout/Layout";
 import { Button } from "primereact/button";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Landing.module.scss";
-import { useNavigate, useLocation } from "react-router-dom";
-import OtpConfirm from "@/components/OtpConfirm/OtpConfirm";
-import useStepManagement from "@/hooks/useStepManagement";
 
 const serviceName = "Service_1";
-
-//TODO >> should not allow user to manually navigate to step "otp" or "final" when entering in the url manually.
-//TODO >> should perform a check (state or localStorage) to check that the previous step returned a 200 response
-//TODO >> check solution provided by GPT : https://claude.ai/chat/60bc452a-bdb9-497f-8039-5ab02605eab7
 
 const Landing = () => {
 	const formRef = useRef(null);
@@ -27,15 +24,15 @@ const Landing = () => {
 
 	// const [usedPhone, setUsedPhone] = useState("");
 
-	const handleNextStep = (step, ...args) => {
-		const [_, msisdn] = args;
+	// const handleNextStep = (step, ...args) => {
+	// 	const [_, msisdn] = args;
 
-		if (step === "otp") {
-			sessionStorage.setItem("msisdn", msisdn);
-		}
+	// 	if (step === "otp") {
+	// 		sessionStorage.setItem("msisdn", msisdn);
+	// 	}
 
-		goToNextStep(step);
-	};
+	// 	goToNextStep(step);
+	// };
 
 	const renderStep = () => {
 		switch (currentStep) {
@@ -43,7 +40,7 @@ const Landing = () => {
 				return (
 					<OtpRequest
 						ref={formRef}
-						phoneEntryBox={phoneEntryBox}
+						msisdn={msisdn}
 						dialCode={dialCode}
 						userInstructions={userInstructions}
 						cta={cta}
@@ -52,31 +49,24 @@ const Landing = () => {
 						setShowModal={setShowModal}
 						closableModal={closableModal}
 						visitorId={visitorId}
-						// onSuccess={() => goToNextStep("otp")}
-						onSuccess={(...args) => handleNextStep("otp", ...args)}
-						showInput={showInput}
+						onSuccess={() => goToNextStep("otp")}
+						// onSuccess={(...args) => handleNextStep("otp", ...args)}
+						showInput={showMsisdnInput}
+						msisdnPrefill={msisdnPrefill}
 					/>
 				);
 			case "otp":
 				return (
-					<div>
-						<OtpConfirm
-							// onSubmit={}
-							// onSuccess={() => goToNextStep("final")}
-
-							onSuccess={() => handleNextStep("final")}
-							visitorId={visitorId}
-						/>
-					</div>
+					<OtpConfirm
+						msisdn={msisdn}
+						onSuccess={() => goToNextStep("final")}
+						onBack={() => goToNextStep("initial")}
+						visitorId={visitorId}
+					/>
 				);
 			case "final":
 				//TODO =============================== LAST STEP OF THE FORM ===============================
-				return (
-					<div>
-						<h2>Final Step</h2>
-						<p>Flow completed!</p>
-					</div>
-				);
+				return <ConfirmedSubscription msisdn={msisdn} />;
 			default:
 				return <div>Unknown step</div>;
 		}
@@ -124,8 +114,14 @@ const Landing = () => {
 
 	const { css, content, heRequired, currentLanguage } = displayData || {};
 
-	const { clickableZone, termsV, playButton, closableModal, showInput } =
-		css ?? {};
+	const {
+		clickableZone,
+		termsV,
+		playButton,
+		closableModal,
+		showMsisdnInput,
+		msisdnPrefill,
+	} = css ?? {};
 
 	const {
 		acknowledgment,
@@ -134,7 +130,7 @@ const Landing = () => {
 		exitButton,
 		image,
 		imageSteps,
-		phoneEntryBox,
+		msisdn,
 		dialCode,
 		serviceDescription,
 		termsAndConditions,

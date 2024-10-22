@@ -15,7 +15,7 @@ import styles from "./OtpRequest.module.scss";
 const OtpRequest = forwardRef(
 	(
 		{
-			phoneEntryBox,
+			msisdn,
 			dialCode,
 			userInstructions,
 			cta,
@@ -26,6 +26,7 @@ const OtpRequest = forwardRef(
 			visitorId,
 			onSuccess,
 			showInput,
+			msisdnPrefill,
 		},
 		ref
 	) => {
@@ -58,7 +59,7 @@ const OtpRequest = forwardRef(
 				// phoneEntryBox
 			},
 			defaultValues: {
-				contact: phoneEntryBox ?? "",
+				contact: msisdnPrefill && msisdn ? msisdn : "",
 			},
 			mode: "onSubmit",
 		});
@@ -75,7 +76,7 @@ const OtpRequest = forwardRef(
 				// phoneEntryBox
 			},
 			defaultValues: {
-				contact: phoneEntryBox ?? "",
+				contact: msisdnPrefill && msisdn ? msisdn : "",
 			},
 			mode: "onSubmit",
 		});

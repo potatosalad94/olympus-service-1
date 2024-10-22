@@ -7,20 +7,17 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { InputOtp } from "primereact/inputotp";
-import { useState } from "react";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { redirect } from "react-router-dom";
 import styles from "./OtpConfirm.module.scss";
 import otpConfirmSchema from "./otpConfirmSchema";
 
-const OtpConfirm = ({ onSuccess, visitorId }) => {
-	const [savedPhone, _] = useState(() => sessionStorage.getItem("msisdn"));
-
+const OtpConfirm = ({ onSuccess, visitorId, onBack, msisdn }) => {
 	const { countdown, startCountdown } = useOtpCountdown();
 
 	const handleOtpRequest = () => {
 		startCountdown();
-		resendOtp(savedPhone);
+		resendOtp(msisdn);
 	};
 
 	const { showToast } = useToastContext();
@@ -77,7 +74,11 @@ const OtpConfirm = ({ onSuccess, visitorId }) => {
 		confirmOtp(otp);
 	};
 
-	if (!savedPhone) return redirect("/");
+	useEffect(() => {
+		if (!msisdn) {
+			onBack();
+		}
+	}, [msisdn]);
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className={styles.container}>
