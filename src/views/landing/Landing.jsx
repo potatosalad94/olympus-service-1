@@ -8,34 +8,10 @@ import { Button } from "primereact/button";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Landing.module.scss";
-import { useAppContext } from "@/hooks/useAppContext"; //TODO >> to delete ?
 
 const serviceName = "Service_1";
 
 const Landing = () => {
-	// const { setLandingData, setHandleContainerClick } = useAppContext();
-
-	// const handleClick = () => {
-	// 	if (currentStep === "initial") {
-	// 		if (showModal) {
-	// 			return;
-	// 		} else {
-	// 			setShowModal(true);
-	// 			formRef.current.reset();
-	// 		}
-	// 	}
-	// };
-
-	// useEffect(() => {
-	// 	// Set up the click handler
-	// 	setHandleContainerClick(() => handleClick);
-
-	// 	// Cleanup when component unmounts
-	// 	return () => setHandleContainerClick(null);
-	// }, [setHandleContainerClick]);
-
-	//!----------
-
 	const formRef = useRef(null);
 	const navigate = useNavigate();
 
@@ -45,18 +21,6 @@ const Landing = () => {
 		setCurrentStep(nextStep);
 		navigate(`?step=${nextStep}`, { replace: true });
 	};
-
-	// const [usedPhone, setUsedPhone] = useState("");
-
-	// const handleNextStep = (step, ...args) => {
-	// 	const [_, msisdn] = args;
-
-	// 	if (step === "otp") {
-	// 		sessionStorage.setItem("msisdn", msisdn);
-	// 	}
-
-	// 	goToNextStep(step);
-	// };
 
 	const renderStep = () => {
 		switch (currentStep) {
@@ -74,7 +38,6 @@ const Landing = () => {
 						closableModal={closableModal}
 						visitorId={visitorId}
 						onSuccess={() => goToNextStep("otp")}
-						// onSuccess={(...args) => handleNextStep("otp", ...args)}
 						showInput={showMsisdnInput}
 						msisdnPrefill={msisdnPrefill}
 					/>
@@ -137,10 +100,6 @@ const Landing = () => {
 		// 1 // testResponse
 	);
 
-	// useEffect(() => {
-	// 	if (displayData) setLandingData({ ...displayData, step: currentStep });
-	// }, [displayData, currentStep]);
-
 	const { css, content, heRequired, currentLanguage, alreadySubscribed } =
 		displayData || {};
 
@@ -184,77 +143,6 @@ const Landing = () => {
 	if (heRequired) return <div> Should do a HE redirect + call Post HE</div>;
 
 	return (
-		// <>
-		// 	{imageSteps && (
-		// 		<div className={styles.logo_container}>
-		// 			<img src={imageSteps} alt="steps" />
-		// 		</div>
-		// 	)}
-
-		// 	{image && (
-		// 		<div className={styles.logo_container}>
-		// 			<Button
-		// 				unstyled
-		// 				className={styles.image_button}
-		// 				onClick={
-		// 					currentStep === "initial"
-		// 						? playButton
-		// 							? (e) => {
-		// 									e.stopPropagation();
-		// 									handleShowModal();
-		// 							  }
-		// 							: undefined
-		// 						: undefined
-		// 				}
-		// 			>
-		// 				{playButton && !isLoading && (
-		// 					<i className="pi pi-play-circle"></i>
-		// 				)}
-		// 				{isLoading && (
-		// 					<i
-		// 						className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}
-		// 					></i>
-		// 				)}
-		// 				<img src={image} alt="" />
-		// 			</Button>
-		// 		</div>
-		// 	)}
-
-		// 	{serviceDescription && (
-		// 		<div className={styles.desc}>
-		// 			<p>{serviceDescription}</p>
-		// 		</div>
-		// 	)}
-
-		// 	<div className={styles.main}>
-		// 		{renderStep()}
-
-		// 		{exitButton && (
-		// 			<Button
-		// 				type={"button"}
-		// 				label={exitButton}
-		// 				className={styles.exitBtn}
-		// 				onClick={(e) => {
-		// 					e.stopPropagation();
-		// 					window.close();
-		// 				}}
-		// 				size="small"
-		// 			/>
-		// 		)}
-		// 	</div>
-
-		// 	{bottomPriceDescription && (
-		// 		<div className={styles.price_wrapper}>
-		// 			<p>{bottomPriceDescription}</p>
-		// 		</div>
-		// 	)}
-
-		// 	{acknowledgment && (
-		// 		<div className={styles.acknowledgment_container}>
-		// 			<i className={styles.acknowledgment}>{acknowledgment}</i>
-		// 		</div>
-		// 	)}
-		// </>
 		<Layout
 			headerPrice={topPriceDescription ?? ""}
 			terms={termsAndConditions ?? ""}

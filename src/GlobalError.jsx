@@ -17,10 +17,6 @@ const GlobalError = () => {
 						<i className="pi pi-exclamation-triangle" />
 					</div>
 
-					{/* <div className={styles.errorCode}>{code}</div>
-					<h2 className={styles.errorTitle}>{title}</h2>
-					<p className={styles.errorMessage}>{message}</p> */}
-
 					{isErrorInstance ? (
 						<>
 							<h1>Something went wrong!</h1>
@@ -34,6 +30,8 @@ const GlobalError = () => {
 							<div className={styles.errorCode}>
 								{error.errorCode}
 							</div>
+							{/* <h2 className={styles.errorTitle}>{title}</h2> */}
+
 							<p className={styles.errorMessage}>{error.error}</p>
 						</>
 					)}

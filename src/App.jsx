@@ -4,23 +4,11 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import GlobalError from "./GlobalError";
-import Confirmation from "./views/confirmation/Confirmation";
-import RootLayout from "./components/Layout/RootLayout";
+import NotFound from "./views/not-found/NotFound";
 
 const router = createBrowserRouter([
-	// {
-	// 	path: "/",
-	// 	element: <Landing />,
-	// 	errorElement: <GlobalError />,
-	// },
-	// {
-	// 	path: "/confirmation",
-	// 	element: <Confirmation />,
-	// 	errorElement: <GlobalError />,
-	// },
 	{
 		path: "/",
-		// element: <RootLayout />,
 		errorElement: <GlobalError />,
 		children: [
 			{
@@ -28,13 +16,9 @@ const router = createBrowserRouter([
 				element: <Landing />,
 			},
 			{
-				path: "confirmation",
-				element: <Confirmation />, //TODO >> ?
+				path: "*",
+				element: <NotFound />,
 			},
-			//   {
-			//     path: "*",
-			//     element: <NotFound />,
-			//   }
 		],
 	},
 ]);
