@@ -36,6 +36,7 @@ const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 		queryFn: getData,
 		enabled,
 		retry: 2,
+		throwOnError: true,
 	});
 
 	useEffect(() => {

@@ -42,8 +42,7 @@ const OtpRequest = forwardRef(
 				});
 			},
 			onSuccess,
-			onError: ({ errorTitle, error }) =>
-				showToast(errorToast(errorTitle, error)),
+			onError: (error) => showToast(errorToast(error)),
 		});
 
 		const {
@@ -126,21 +125,28 @@ const OtpRequest = forwardRef(
 					{renderFormContent(mainControl, mainErrors)}
 				</form>
 
-				<Dialog
-					visible={showModal}
-					style={{ width: "70vw" }}
-					onHide={() => setShowModal(false)}
-					closable={closableModal}
-					draggable={false}
-					showHeader={closableModal}
-					contentClassName={
-						!closableModal ? styles.no_header : undefined
-					}
-				>
-					<form onSubmit={dialogHandleSubmit(onSubmit)} noValidate>
-						{renderFormContent(dialogControl, dialogErrors)}
-					</form>
-				</Dialog>
+				<div onClick={(e) => e.stopPropagation()}>
+					<Dialog
+						visible={showModal}
+						style={{ width: "70vw" }}
+						onHide={() => {
+							setShowModal(false);
+						}}
+						closable={closableModal}
+						draggable={false}
+						showHeader={closableModal}
+						contentClassName={
+							!closableModal ? styles.no_header : undefined
+						}
+					>
+						<form
+							onSubmit={dialogHandleSubmit(onSubmit)}
+							noValidate
+						>
+							{renderFormContent(dialogControl, dialogErrors)}
+						</form>
+					</Dialog>
+				</div>
 			</>
 		);
 	}

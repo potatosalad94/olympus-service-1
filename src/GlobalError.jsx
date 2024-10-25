@@ -1,27 +1,72 @@
-import { isRouteErrorResponse, useRouteError } from "react-router-dom";
+import { Button } from "primereact/button";
+import { useNavigate, useRouteError } from "react-router-dom";
+import { Card } from "primereact/card";
+import styles from "./GlobalError.module.scss";
 
 const GlobalError = () => {
+	const navigate = useNavigate();
 	const error = useRouteError();
 
-	if (isRouteErrorResponse(error)) {
-		if (error.status === 404) {
-			return <div>This page doesn't exist!</div>;
-		}
+	const isErrorInstance = error instanceof Error;
 
-		if (error.status === 401) {
-			return <div>You aren't authorized to see this</div>;
-		}
+	return (
+		<div className={styles.errorContainer}>
+			<Card className={styles.errorCard}>
+				<div className={styles.cardContent}>
+					<div className={styles.iconWrapper}>
+						<i className="pi pi-exclamation-triangle" />
+					</div>
 
-		if (error.status === 503) {
-			return <div>Looks like our API is down</div>;
-		}
+					{/* <div className={styles.errorCode}>{code}</div>
+					<h2 className={styles.errorTitle}>{title}</h2>
+					<p className={styles.errorMessage}>{message}</p> */}
 
-		if (error.status === 418) {
-			return <div>🫖</div>;
-		}
-	}
+					{isErrorInstance ? (
+						<>
+							<h1>Something went wrong!</h1>
+							<p>
+								Oops! It seems we're experiencing technical
+								difficulties
+							</p>
+						</>
+					) : (
+						<>
+							<div className={styles.errorCode}>
+								{error.errorCode}
+							</div>
+							<p className={styles.errorMessage}>{error.error}</p>
+						</>
+					)}
 
-	return <div>Something went wrong</div>;
+					<Button
+						label="Home"
+						icon="pi pi-home"
+						outlined
+						onClick={() => navigate("/")}
+					/>
+
+					{/* <div className={styles.buttonContainer}>
+						{showHome && (
+							<Button
+								label="Home"
+								icon="pi pi-home"
+								outlined
+								onClick={handleHome}
+							/>
+						)}
+						{showRefresh && (
+							<Button
+								label="Try Again"
+								icon="pi pi-refresh"
+								severity="warning"
+								onClick={handleRefresh}
+							/>
+						)}
+					</div> */}
+				</div>
+			</Card>
+		</div>
+	);
 };
 
 export default GlobalError;

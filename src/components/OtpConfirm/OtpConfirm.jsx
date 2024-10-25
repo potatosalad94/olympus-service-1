@@ -12,7 +12,13 @@ import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpConfirm.module.scss";
 import otpConfirmSchema from "./otpConfirmSchema";
 
-const OtpConfirm = ({ onSuccess, visitorId, onBack, msisdn }) => {
+const OtpConfirm = ({
+	onSuccess,
+	visitorId,
+	onBack,
+	msisdn,
+	alreadySubscribed,
+}) => {
 	const { countdown, startCountdown } = useOtpCountdown();
 
 	const handleOtpRequest = () => {
@@ -33,8 +39,7 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, msisdn }) => {
 			});
 		},
 		onSuccess,
-		onError: ({ errorTitle, error }) =>
-			showToast(errorToast(errorTitle, error)),
+		onError: (error) => showToast(errorToast(error)),
 	});
 
 	// * ==== RESEND OTP =====
@@ -49,8 +54,7 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, msisdn }) => {
 			});
 		},
 		onSuccess,
-		onError: ({ errorTitle, error }) =>
-			showToast(errorToast(errorTitle, error)),
+		onError: (error) => showToast(errorToast(error)),
 	});
 
 	const {
@@ -75,10 +79,11 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, msisdn }) => {
 	};
 
 	useEffect(() => {
-		if (!msisdn) {
+		if (!!msisdn && alreadySubscribed) {
 			onBack();
+			showToast(errorToast({ error: { message: "Already subscribed" } }));
 		}
-	}, [msisdn]);
+	}, [msisdn, alreadySubscribed]);
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className={styles.container}>

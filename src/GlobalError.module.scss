@@ -1,0 +1,62 @@
+// ErrorPage.module.scss
+.errorContainer {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+	background-color: var(--surface-ground);
+}
+
+.errorCard {
+	max-width: 32rem;
+	width: 100%;
+	background: var(--surface-card);
+	border-radius: var(--border-radius);
+	box-shadow: var(--card-shadow);
+}
+
+.cardContent {
+	padding: 2rem;
+	text-align: center;
+}
+
+.iconWrapper {
+	margin-bottom: 1.5rem;
+
+	:global(.p-icon) {
+		width: 4rem;
+		height: 4rem;
+		color: var(--yellow-500);
+	}
+}
+
+.errorCode {
+	font-size: 4rem;
+	font-weight: 700;
+	color: var(--text-color);
+	margin-bottom: 1rem;
+	line-height: 1;
+}
+
+.errorTitle {
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: var(--text-color);
+	margin-bottom: 0.5rem;
+}
+
+.errorMessage {
+	color: var(--text-secondary-color);
+	margin-bottom: 2rem;
+}
+
+.buttonContainer {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+
+	:global(.p-button-icon) {
+		margin-right: 0.5rem;
+	}
+}
