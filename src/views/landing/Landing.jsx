@@ -1,11 +1,10 @@
-import ConfirmedSubscription from "@/components/ConfirmedSubscription/ConfirmedSubscription";
 import OtpConfirm from "@/components/OtpConfirm/OtpConfirm";
 import OtpRequest from "@/components/OtpRequest/OtpRequest";
 import useDisplayData from "@/hooks/useDisplayData";
 import useStepManagement from "@/hooks/useStepManagement";
 import Layout from "@components/Layout/Layout";
 import { Button } from "primereact/button";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Landing.module.scss";
 
@@ -28,33 +27,40 @@ const Landing = () => {
 				return (
 					<OtpRequest
 						ref={formRef}
+						//* CSS
+						showInput={showMsisdnInput}
+						clickableZone={clickableZone}
+						msisdnPrefill={msisdnPrefill}
+						closableModal={closableModal}
+						//* CONTENT
 						msisdn={msisdn}
 						dialCode={dialCode}
 						userInstructions={userInstructions}
 						cta={cta}
-						clickableZone={clickableZone}
+						// *
 						showModal={showModal}
 						setShowModal={setShowModal}
-						closableModal={closableModal}
 						visitorId={visitorId}
 						onSuccess={() => goToNextStep("otp")}
-						showInput={showMsisdnInput}
-						msisdnPrefill={msisdnPrefill}
 					/>
 				);
 			case "otp":
 				return (
 					<OtpConfirm
-						msisdn={msisdn}
-						onSuccess={() => goToNextStep("final")} //TODO >> maybe better to redirect to another route for 'confirmation' page
+						content={content}
+						onSuccess={() => {
+							if (redirection) {
+								window.location.replace(redirection);
+							} else {
+								navigate("/confirmation", { replace: true });
+							}
+						}}
 						onBack={() => goToNextStep("initial")}
 						visitorId={visitorId}
 						alreadySubscribed={alreadySubscribed}
 					/>
 				);
-			case "final":
-				//TODO =============================== LAST STEP OF THE FORM ===============================
-				return <ConfirmedSubscription msisdn={msisdn} />;
+
 			default:
 				return <div>Unknown step</div>;
 		}
@@ -84,12 +90,7 @@ const Landing = () => {
 
 	// * ====== NEW VIST CALL ======
 
-	const step =
-		currentStep === "initial"
-			? "New Visit"
-			: currentStep === "otp"
-			? "Otp Request"
-			: "Otp Confirm";
+	const step = currentStep === "initial" ? "New Visit" : "Otp Request";
 
 	const {
 		query: { data: displayData, isFetching },
@@ -100,8 +101,14 @@ const Landing = () => {
 		// 1 // testResponse
 	);
 
-	const { css, content, heRequired, currentLanguage, alreadySubscribed } =
-		displayData || {};
+	const {
+		css,
+		content,
+		heRequired,
+		currentLanguage,
+		alreadySubscribed,
+		redirection,
+	} = displayData || {};
 
 	const {
 		clickableZone,
@@ -110,7 +117,7 @@ const Landing = () => {
 		closableModal,
 		showMsisdnInput,
 		msisdnPrefill,
-	} = css ?? {};
+	} = css || {};
 
 	const {
 		acknowledgment,
@@ -125,10 +132,6 @@ const Landing = () => {
 		userInstructions,
 		termsAndConditions,
 		topPriceDescription,
-		// newOtpRequest,
-		// otpConfirmTimer,
-		// popupCta,
-		// popupInstructions,
 	} = content || {};
 
 	if (isFetching)

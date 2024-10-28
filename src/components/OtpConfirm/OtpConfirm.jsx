@@ -16,13 +16,14 @@ const OtpConfirm = ({
 	onSuccess,
 	visitorId,
 	onBack,
-	msisdn,
+	content,
 	alreadySubscribed,
 }) => {
+	const { msisdn, cta, newOtpRequest } = content || {};
+
 	const { countdown, startCountdown } = useOtpCountdown();
 
 	const handleOtpRequest = () => {
-		startCountdown();
 		resendOtp(msisdn);
 	};
 
@@ -53,7 +54,7 @@ const OtpConfirm = ({
 				msisdn,
 			});
 		},
-		onSuccess,
+		onSuccess: () => startCountdown(),
 		onError: (error) => showToast(errorToast(error)),
 	});
 
@@ -81,7 +82,7 @@ const OtpConfirm = ({
 	useEffect(() => {
 		if (!!msisdn && alreadySubscribed) {
 			onBack();
-			showToast(errorToast({ error: { message: "Already subscribed" } }));
+			showToast(errorToast({ message: "You are already subscribed" })); //TODO >> hardcoded only in english !
 		}
 	}, [msisdn, alreadySubscribed]);
 
@@ -100,17 +101,23 @@ const OtpConfirm = ({
 			/>
 
 			<Button
+				loading={isPending}
+				className={styles.cta_btn}
+				disabled={otpWatcher.length !== 4}
+			>
+				{cta}
+			</Button>
+
+			<Button
 				type={"button"}
+				className={styles.cta_btn}
 				onClick={handleOtpRequest}
 				disabled={countdown > 0}
 				link
 			>
-				Resend OTP
+				{newOtpRequest}
 			</Button>
 
-			<Button loading={isPending} disabled={otpWatcher.length !== 4}>
-				Submit
-			</Button>
 			{countdown > 0 && (
 				<p>You can request another OTP in {countdown} seconds</p>
 			)}

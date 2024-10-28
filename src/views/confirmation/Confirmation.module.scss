@@ -1,0 +1,55 @@
+// ThankYouPage.module.scss
+
+// Variables
+$primary-color: #2563eb;
+$primary-hover: #1d4ed8;
+$success-color: #22c55e;
+$background-gradient-start: #f8fafc;
+$background-gradient-end: #ffffff;
+$text-primary: #111827;
+$text-secondary: #4b5563;
+$border-color: #e5e7eb;
+
+.container {
+	min-height: 100vh;
+	background: linear-gradient(
+		$background-gradient-start,
+		$background-gradient-end
+	);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+}
+
+.card {
+	background: white;
+	border-radius: 0.5rem;
+	box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+	width: 100%;
+	max-width: 32rem;
+}
+
+.content {
+	padding: 1.5rem;
+	text-align: center;
+}
+
+.checkmark {
+	width: 3rem;
+	height: 3rem;
+	background: rgba($success-color, 0.1);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 1rem;
+	color: $success-color;
+}
+
+.title {
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: 0.75rem;
+}
