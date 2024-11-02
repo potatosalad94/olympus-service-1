@@ -17,7 +17,7 @@ const languages = [
 const LanguageDropdown = ({ lang, step }) => {
 	const { showToast } = useToastContext();
 	const { visitorId } = useVisitorId();
-	console.log("🚀 ~ visitorId >>", visitorId);
+
 	const queryClient = useQueryClient();
 
 	const [selectedLanguage, setSelectedLanguage] = useState({});
