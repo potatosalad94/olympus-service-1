@@ -3,7 +3,10 @@ import styles from "./Input.module.scss";
 import { forwardRef } from "react";
 
 const Input = forwardRef(
-	({ dialCode = "", onChange, onBlur, name, error, onClick, value }, ref) => {
+	(
+		{ dialCode = "", onChange, onBlur, name, error, onClick, value, type },
+		ref
+	) => {
 		return (
 			<div className={styles.container}>
 				<InputMask
@@ -16,6 +19,7 @@ const Input = forwardRef(
 					className={error ? "p-invalid" : ""}
 					onClick={onClick}
 					value={value}
+					type={type}
 				/>
 				{error && <small className="p-error">{error.message}</small>}
 			</div>

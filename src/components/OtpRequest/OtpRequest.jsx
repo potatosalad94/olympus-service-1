@@ -102,6 +102,7 @@ const OtpRequest = forwardRef(
 									dialCode={dialCode}
 									error={fieldState.error}
 									onClick={(e) => e.stopPropagation()}
+									type="tel"
 								/>
 							)}
 						/>
