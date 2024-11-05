@@ -29,8 +29,8 @@ const otpRequestSchema = Joi.object({
 					return numericValue; // Return original value without spaces
 				})
 				.messages({
-					"string.empty": "Phone number can't be empty",
-					"any.required": "Phone number is required",
+					"string.empty": "Enter your phone number",
+					"any.required": "Enter your phone number",
 					"number.base": "Phone number must contain only numbers",
 					"string.pattern.base": "Phone number format is invalid",
 				}),

@@ -27,6 +27,7 @@ const OtpRequest = forwardRef(
 			onSuccess,
 			showInput,
 			msisdnPrefill,
+			language,
 		},
 		ref
 	) => {
@@ -64,6 +65,7 @@ const OtpRequest = forwardRef(
 		});
 
 		const {
+			reset: resetDialog,
 			control: dialogControl,
 			handleSubmit: dialogHandleSubmit,
 			formState: { errors: dialogErrors },
@@ -132,6 +134,7 @@ const OtpRequest = forwardRef(
 						style={{ width: "70vw" }}
 						onHide={() => {
 							setShowModal(false);
+							resetDialog();
 						}}
 						closable={closableModal}
 						draggable={false}

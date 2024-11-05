@@ -37,6 +37,7 @@ const Landing = () => {
 						dialCode={dialCode}
 						userInstructions={userInstructions}
 						cta={cta}
+						language={currentLanguage}
 						// *
 						showModal={showModal}
 						setShowModal={setShowModal}
