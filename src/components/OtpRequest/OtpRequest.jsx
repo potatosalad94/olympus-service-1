@@ -11,6 +11,7 @@ import { Dialog } from "primereact/dialog";
 import { forwardRef, useImperativeHandle } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpRequest.module.scss";
+import errorMessages from "./errorMessages";
 
 const OtpRequest = forwardRef(
 	(
@@ -62,10 +63,13 @@ const OtpRequest = forwardRef(
 				contact: msisdnPrefill && msisdn ? msisdn : "",
 			},
 			mode: "onSubmit",
+			i18nConfig: {
+				messages:
+					errorMessages[language.toLowerCase()] || errorMessages.en,
+			},
 		});
 
 		const {
-			reset: resetDialog,
 			control: dialogControl,
 			handleSubmit: dialogHandleSubmit,
 			formState: { errors: dialogErrors },
@@ -80,6 +84,10 @@ const OtpRequest = forwardRef(
 				contact: msisdnPrefill && msisdn ? msisdn : "",
 			},
 			mode: "onSubmit",
+			i18nConfig: {
+				messages:
+					errorMessages[language.toLowerCase()] || errorMessages.en,
+			},
 		});
 
 		const onSubmit = ({ contact }) => {
@@ -134,7 +142,6 @@ const OtpRequest = forwardRef(
 						style={{ width: "70vw" }}
 						onHide={() => {
 							setShowModal(false);
-							resetDialog();
 						}}
 						closable={closableModal}
 						draggable={false}
