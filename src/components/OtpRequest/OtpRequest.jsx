@@ -8,10 +8,9 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpRequest.module.scss";
-import errorMessages from "./errorMessages";
 
 const OtpRequest = forwardRef(
 	(
@@ -52,43 +51,45 @@ const OtpRequest = forwardRef(
 			control: mainControl,
 			handleSubmit: mainHandleSubmit,
 			formState: { errors: mainErrors },
+			trigger: triggerMain,
 		} = useForm({
-			resolver: joiResolver(otpRequestSchema),
+			resolver: joiResolver(otpRequestSchema(language.toLowerCase())),
 			context: {
 				dialCode,
 				showInput,
-				// phoneEntryBox
 			},
 			defaultValues: {
 				contact: msisdnPrefill && msisdn ? msisdn : "",
 			},
 			mode: "onSubmit",
-			i18nConfig: {
-				messages:
-					errorMessages[language.toLowerCase()] || errorMessages.en,
-			},
 		});
 
 		const {
 			control: dialogControl,
 			handleSubmit: dialogHandleSubmit,
 			formState: { errors: dialogErrors },
+			trigger: triggerDialog,
 		} = useForm({
-			resolver: joiResolver(otpRequestSchema),
+			resolver: joiResolver(otpRequestSchema(language.toLowerCase())),
 			context: {
 				dialCode,
 				showInput,
-				// phoneEntryBox
 			},
 			defaultValues: {
 				contact: msisdnPrefill && msisdn ? msisdn : "",
 			},
 			mode: "onSubmit",
-			i18nConfig: {
-				messages:
-					errorMessages[language.toLowerCase()] || errorMessages.en,
-			},
 		});
+
+		const didMountRef = useRef(false);
+
+		useEffect(() => {
+			if (didMountRef.current) {
+				Object.keys(mainErrors).length > 0 && triggerMain();
+				Object.keys(dialogErrors).length > 0 && triggerDialog();
+			}
+			didMountRef.current = true;
+		}, [language]);
 
 		const onSubmit = ({ contact }) => {
 			requestOtp(contact);
