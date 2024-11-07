@@ -139,6 +139,7 @@ const OtpRequest = forwardRef(
 
 				<div onClick={(e) => e.stopPropagation()}>
 					<Dialog
+						focusOnShow={false}
 						visible={showModal}
 						style={{ width: "70vw" }}
 						onHide={() => {
