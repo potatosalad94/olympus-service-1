@@ -4,7 +4,7 @@ import useDisplayData from "@/hooks/useDisplayData";
 import useStepManagement from "@/hooks/useStepManagement";
 import Layout from "@components/Layout/Layout";
 import { Button } from "primereact/button";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Landing.module.scss";
 
@@ -16,10 +16,13 @@ const Landing = () => {
 
 	const [currentStep, setCurrentStep] = useStepManagement();
 
-	const goToNextStep = (nextStep) => {
-		setCurrentStep(nextStep);
-		navigate(`?step=${nextStep}`, { replace: true });
-	};
+	const goToNextStep = useCallback(
+		(nextStep) => {
+			setCurrentStep(nextStep);
+			navigate(`?step=${nextStep}`, { replace: true });
+		},
+		[navigate, setCurrentStep]
+	);
 
 	const renderStep = () => {
 		switch (currentStep) {
@@ -63,7 +66,7 @@ const Landing = () => {
 				);
 
 			default:
-				return <div>Unknown step</div>;
+				return <div>Unknown step</div>; //TODO ?? ===========
 		}
 	};
 
@@ -95,6 +98,7 @@ const Landing = () => {
 
 	const {
 		query: { data: displayData, isFetching },
+		isCollecting,
 		storedVisitorId: visitorId,
 	} = useDisplayData(
 		serviceName,
@@ -102,23 +106,17 @@ const Landing = () => {
 		// 1 // testResponse
 	);
 
-	const {
-		css,
-		content,
-		heRequired,
-		currentLanguage,
-		alreadySubscribed,
-		redirection,
-	} = displayData || {};
+	const { css, content, ctaMethod, heRequired, currentLanguage, alreadySubscribed, redirection } =
+		displayData || {};
 
-	const {
-		clickableZone,
-		termsV,
-		playButton,
-		closableModal,
-		showMsisdnInput,
-		msisdnPrefill,
-	} = css || {};
+	useEffect(() => {
+		if (ctaMethod === "OtpConfirm" && !alreadySubscribed) {
+			goToNextStep("otp");
+		}
+	}, [alreadySubscribed, ctaMethod, goToNextStep]);
+
+	const { clickableZone, termsV, playButton, closableModal, showMsisdnInput, msisdnPrefill } =
+		css || {};
 
 	const {
 		acknowledgment,
@@ -135,7 +133,7 @@ const Landing = () => {
 		topPriceDescription,
 	} = content || {};
 
-	if (isFetching)
+	if (isFetching || isCollecting)
 		return (
 			<div className={styles.loading_container}>
 				<i
@@ -144,7 +142,7 @@ const Landing = () => {
 			</div>
 		);
 
-	if (heRequired) return <div> Should do a HE redirect + call Post HE</div>;
+	if (heRequired) return <div> Should do a HE redirect + call Post HE</div>; //TODO LATER
 
 	return (
 		<Layout
@@ -186,9 +184,7 @@ const Landing = () => {
 								: undefined
 						}
 					>
-						{playButton && !isLoading && (
-							<i className="pi pi-play-circle"></i>
-						)}
+						{playButton && !isLoading && <i className="pi pi-play-circle"></i>}
 						{isLoading && (
 							<i
 								className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}

@@ -53,7 +53,7 @@ const OtpRequest = forwardRef(
 			formState: { errors: mainErrors },
 			trigger: triggerMain,
 		} = useForm({
-			resolver: joiResolver(otpRequestSchema(language.toLowerCase())),
+			resolver: joiResolver(otpRequestSchema(language?.toLowerCase())),
 			context: {
 				dialCode,
 				showInput,
@@ -70,7 +70,7 @@ const OtpRequest = forwardRef(
 			formState: { errors: dialogErrors },
 			trigger: triggerDialog,
 		} = useForm({
-			resolver: joiResolver(otpRequestSchema(language.toLowerCase())),
+			resolver: joiResolver(otpRequestSchema(language?.toLowerCase())),
 			context: {
 				dialCode,
 				showInput,
@@ -148,14 +148,9 @@ const OtpRequest = forwardRef(
 						closable={closableModal}
 						draggable={false}
 						showHeader={closableModal}
-						contentClassName={
-							!closableModal ? styles.no_header : undefined
-						}
+						contentClassName={!closableModal ? styles.no_header : undefined}
 					>
-						<form
-							onSubmit={dialogHandleSubmit(onSubmit)}
-							noValidate
-						>
+						<form onSubmit={dialogHandleSubmit(onSubmit)} noValidate>
 							{renderFormContent(dialogControl, dialogErrors)}
 						</form>
 					</Dialog>

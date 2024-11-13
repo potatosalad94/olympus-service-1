@@ -3,12 +3,20 @@ import useApi from "./useApi";
 import { queryKeys } from "@/app-keys-factory";
 import { useQuery } from "@tanstack/react-query";
 import useConnectionInfo from "./useConnectionInfo";
+import useDataCollection from "./useDataCollection";
 import { useEffect } from "react";
 import useVisitorId from "./useVisitorId";
 
 const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
-	const { type, effectiveType } = useConnectionInfo();
+	const isNewVisit = step === "New Visit";
+
 	const { visitorId: storedVisitorId, updateVisitorId } = useVisitorId();
+	const {
+		type,
+		// effectiveType
+	} = useConnectionInfo(); //TODO >> included in useDataCollection, so not needed once implemented
+	const { visitorInfo, isCollecting } = useDataCollection(isNewVisit);
+	console.log("🚀 ~ isCollecting >>", isCollecting);
 
 	const displayDataApi = useApi(displayData);
 
@@ -17,16 +25,11 @@ const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 		const response = await displayDataApi.request({
 			serviceName, //~ MANDATORY
 			step,
+			...(isNewVisit && !isCollecting && visitorInfo),
 			connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
 			// networkInformationEffectiveType: effectiveType, //TODO >> to add later with the rest of all the other optional parameters
 			...(storedVisitorId && { visitorId: storedVisitorId }),
 			...(testResponse && { testResponse: testResponse }), //! TEST PURPOSES
-			//TODO
-			// batteryLevel, //float (between 0.0 and 1.0)
-			// batteryCharging, //bool
-			// userTimezoneOffset //number
-			// networkInformationRtt //string
-			// networkInformationSaveData //bool
 		});
 		return response.data;
 	};
@@ -34,7 +37,7 @@ const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 	const query = useQuery({
 		queryKey: queryKeys.displayData(step),
 		queryFn: getData,
-		enabled,
+		enabled: isNewVisit ? enabled && !isCollecting : enabled,
 		retry: 2,
 		throwOnError: true,
 	});
@@ -45,7 +48,7 @@ const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 		}
 	}, [query?.data?.visitorId]);
 
-	return { query, storedVisitorId };
+	return { query, storedVisitorId, isCollecting };
 };
 
 export default useDisplayData;

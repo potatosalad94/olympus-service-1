@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+// TODO >> to be deleted ?
+
 const useConnectionInfo = () => {
 	const [connectionInfo, setConnectionInfo] = useState({
 		type: "unknown",
@@ -21,17 +23,10 @@ const useConnectionInfo = () => {
 		updateConnectionInfo(); // Initial check
 
 		if ("connection" in navigator && navigator.connection) {
-			navigator.connection.addEventListener(
-				"change",
-				updateConnectionInfo
-			);
+			navigator.connection.addEventListener("change", updateConnectionInfo);
 
 			// Cleanup
-			return () =>
-				navigator.connection.removeEventListener(
-					"change",
-					updateConnectionInfo
-				);
+			return () => navigator.connection.removeEventListener("change", updateConnectionInfo);
 		}
 	}, []);
 

@@ -20,28 +20,18 @@ const GlobalError = () => {
 					{isErrorInstance ? (
 						<>
 							<h1>Something went wrong!</h1>
-							<p>
-								Oops! It seems we're experiencing technical
-								difficulties
-							</p>
+							<p>Oops! It seems we're experiencing technical difficulties</p>
 						</>
 					) : (
 						<>
-							<div className={styles.errorCode}>
-								{error.errorCode}
-							</div>
+							<div className={styles.errorCode}>{error.code}</div>
 							{/* <h2 className={styles.errorTitle}>{title}</h2> */}
 
-							<p className={styles.errorMessage}>{error.error}</p>
+							<p className={styles.errorMessage}>{error.message}</p>
 						</>
 					)}
 
-					<Button
-						label="Home"
-						icon="pi pi-home"
-						outlined
-						onClick={() => navigate("/")}
-					/>
+					<Button label="Home" icon="pi pi-home" outlined onClick={() => navigate("/")} />
 
 					{/* <div className={styles.buttonContainer}>
 						{showHome && (
