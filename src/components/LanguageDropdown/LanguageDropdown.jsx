@@ -46,7 +46,11 @@ const LanguageDropdown = ({ lang, step }) => {
 		if (option) {
 			return (
 				<div className={styles.language_item}>
-					<img src={`/src/images/${option.code}-flag.png`} />
+					<img
+						src={new URL(`../../images/${option.code}-flag.png`, import.meta.url).href}
+						// src={new URL(`@images/${option.code}-flag.png`, import.meta.url).href}
+						// src={`/src/images/${option.code}-flag.png`}
+					/>
 					<div>{option.name}</div>
 				</div>
 			);
@@ -58,7 +62,11 @@ const LanguageDropdown = ({ lang, step }) => {
 	const countryOptionTemplate = (option) => {
 		return (
 			<div className={styles.language_item}>
-				<img src={`/src/images/${option.code}-flag.png`} />
+				<img
+					src={new URL(`../../images/${option.code}-flag.png`, import.meta.url).href}
+					// src={new URL(`@images/${option.code}-flag.png`, import.meta.url).href}
+					// src={`/src/images/${option.code}-flag.png`}
+				/>
 				<div>{option.name}</div>
 			</div>
 		);
