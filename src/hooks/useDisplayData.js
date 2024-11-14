@@ -11,25 +11,21 @@ const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 	const isNewVisit = step === "New Visit";
 
 	const { visitorId: storedVisitorId, updateVisitorId } = useVisitorId();
-	const {
-		type,
-		// effectiveType
-	} = useConnectionInfo(); //TODO >> included in useDataCollection, so not needed once implemented
+	const { type } = useConnectionInfo();
+
 	const { visitorInfo, isCollecting } = useDataCollection(isNewVisit);
-	console.log("🚀 ~ isCollecting >>", isCollecting);
 
 	const displayDataApi = useApi(displayData);
 
 	const getData = async ({ queryKey }) => {
 		const [_, step] = queryKey;
 		const response = await displayDataApi.request({
-			serviceName, //~ MANDATORY
+			serviceName,
 			step,
-			...(isNewVisit && !isCollecting && visitorInfo),
 			connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
-			// networkInformationEffectiveType: effectiveType, //TODO >> to add later with the rest of all the other optional parameters
+			...(isNewVisit && !isCollecting && visitorInfo),
 			...(storedVisitorId && { visitorId: storedVisitorId }),
-			...(testResponse && { testResponse: testResponse }), //! TEST PURPOSES
+			...(testResponse && { testResponse: testResponse }), //* FOR TEST PURPOSES ONLY
 		});
 		return response.data;
 	};

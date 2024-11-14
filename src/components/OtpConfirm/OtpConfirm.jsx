@@ -12,13 +12,7 @@ import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpConfirm.module.scss";
 import otpConfirmSchema from "./otpConfirmSchema";
 
-const OtpConfirm = ({
-	onSuccess,
-	visitorId,
-	onBack,
-	content,
-	alreadySubscribed,
-}) => {
+const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed }) => {
 	const { msisdn, cta, newOtpRequest } = content || {};
 
 	const { countdown, startCountdown } = useOtpCountdown();
@@ -40,7 +34,10 @@ const OtpConfirm = ({
 			});
 		},
 		onSuccess,
-		onError: (error) => showToast(errorToast(error)),
+		onError: (error) => {
+			showToast(errorToast(error));
+			reset();
+		},
 	});
 
 	// * ==== RESEND OTP =====
@@ -61,6 +58,7 @@ const OtpConfirm = ({
 	const {
 		control,
 		handleSubmit,
+		reset,
 		// formState: { errors },
 		watch,
 	} = useForm({
@@ -92,11 +90,7 @@ const OtpConfirm = ({
 				name="otp"
 				control={control}
 				render={({ field: { onChange, ...field } }) => (
-					<InputOtp
-						{...field}
-						onChange={(e) => onChange(e.value)}
-						integerOnly
-					/>
+					<InputOtp {...field} onChange={(e) => onChange(e.value)} integerOnly />
 				)}
 			/>
 
@@ -118,9 +112,7 @@ const OtpConfirm = ({
 				{newOtpRequest}
 			</Button>
 
-			{countdown > 0 && (
-				<p>You can request another OTP in {countdown} seconds</p>
-			)}
+			{countdown > 0 && <p>You can request another OTP in {countdown} seconds</p>}
 		</form>
 	);
 };

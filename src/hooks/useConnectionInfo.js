@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 
-// TODO >> to be deleted ?
-
 const useConnectionInfo = () => {
 	const [connectionInfo, setConnectionInfo] = useState({
 		type: "unknown",
@@ -12,6 +10,8 @@ const useConnectionInfo = () => {
 		const updateConnectionInfo = () => {
 			if ("connection" in navigator && navigator.connection) {
 				const { type, effectiveType } = navigator.connection;
+				console.log("🚀 ~ type >>", type);
+				console.log("🚀 ~ effectiveType >>", effectiveType);
 
 				setConnectionInfo({
 					type: type || "unknown",
