@@ -127,6 +127,7 @@ const OtpRequest = forwardRef(
 						e.stopPropagation();
 					}}
 					loading={isPending}
+					className={styles.submit_btn}
 				/>
 			</div>
 		);
@@ -141,16 +142,24 @@ const OtpRequest = forwardRef(
 					<Dialog
 						focusOnShow={false}
 						visible={showModal}
-						style={{ width: "70vw" }}
+						// style={{ width: "70vw" }}
+						maskStyle={{ padding: "20px" }}
+						blockScroll={true}
+						className={styles.dialog_container}
 						onHide={() => {
 							setShowModal(false);
 						}}
 						closable={closableModal}
 						draggable={false}
 						showHeader={closableModal}
-						contentClassName={!closableModal ? styles.no_header : undefined}
+						contentClassName={
+							!closableModal ? styles.no_header : undefined
+						}
 					>
-						<form onSubmit={dialogHandleSubmit(onSubmit)} noValidate>
+						<form
+							onSubmit={dialogHandleSubmit(onSubmit)}
+							noValidate
+						>
 							{renderFormContent(dialogControl, dialogErrors)}
 						</form>
 					</Dialog>

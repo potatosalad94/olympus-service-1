@@ -1,6 +1,7 @@
 import { InputMask } from "primereact/inputmask";
 import styles from "./Input.module.scss";
 import { forwardRef } from "react";
+import { classNames } from "primereact/utils";
 
 const Input = forwardRef(
 	(
@@ -16,7 +17,9 @@ const Input = forwardRef(
 					onBlur={onBlur}
 					mask={`${dialCode}9 999 9999`}
 					placeholder="05x xxx xxxx"
-					className={error ? "p-invalid" : ""}
+					className={classNames(styles.input, {
+						"p-invalid": error,
+					})}
 					onClick={onClick}
 					value={value}
 					type={type}

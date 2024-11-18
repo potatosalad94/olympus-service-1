@@ -7,6 +7,7 @@ import { Button } from "primereact/button";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Landing.module.scss";
+import CircularProgress from "@/components/CircularProgress/CircularProgress";
 
 const serviceName = "Service_1";
 
@@ -106,8 +107,15 @@ const Landing = () => {
 		// 1 // testResponse
 	);
 
-	const { css, content, ctaMethod, heRequired, currentLanguage, alreadySubscribed, redirection } =
-		displayData || {};
+	const {
+		css,
+		content,
+		ctaMethod,
+		heRequired,
+		currentLanguage,
+		alreadySubscribed,
+		redirection,
+	} = displayData || {};
 
 	useEffect(() => {
 		if (ctaMethod === "OtpConfirm" && !alreadySubscribed) {
@@ -115,8 +123,14 @@ const Landing = () => {
 		}
 	}, [alreadySubscribed, ctaMethod, goToNextStep]);
 
-	const { clickableZone, termsV, playButton, closableModal, showMsisdnInput, msisdnPrefill } =
-		css || {};
+	const {
+		clickableZone,
+		termsV,
+		playButton,
+		closableModal,
+		showMsisdnInput,
+		msisdnPrefill,
+	} = css || {};
 
 	const {
 		acknowledgment,
@@ -168,6 +182,8 @@ const Landing = () => {
 				</div>
 			)}
 
+			{/* // *  to be shown conditionally when no img in the response: <CircularProgress /> */}
+
 			{image && (
 				<div className={styles.logo_container}>
 					<Button
@@ -184,7 +200,9 @@ const Landing = () => {
 								: undefined
 						}
 					>
-						{playButton && !isLoading && <i className="pi pi-play-circle"></i>}
+						{playButton && !isLoading && (
+							<i className="pi pi-play-circle"></i>
+						)}
 						{isLoading && (
 							<i
 								className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}

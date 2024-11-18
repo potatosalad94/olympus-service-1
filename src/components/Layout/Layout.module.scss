@@ -5,26 +5,12 @@
 	box-sizing: border-box;
 
 	.children_wrapper {
+		width: 400px;
+		margin: auto;
 		padding: 1rem;
 
-		//desktop
-		@media (min-width: 1200px) {
-			padding: 5rem;
-		}
-
-		//laptop
-		@media (min-width: 992px) {
-			padding: 4rem;
-		}
-
-		//tablet
-		@media (min-width: 768px) {
-			padding: 3rem;
-		}
-
-		//mobile
-		@media (min-width: 576px) {
-			padding: 2rem;
+		@media screen and (max-width: 400px) {
+			width: 100%;
 		}
 	}
 }

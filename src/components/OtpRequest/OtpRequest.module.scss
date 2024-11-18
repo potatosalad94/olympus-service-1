@@ -3,6 +3,10 @@
 	border-radius: 6px;
 }
 
+.dialog_container {
+	width: 400px;
+}
+
 .form_container {
 	display: flex;
 	flex-direction: column;
@@ -16,5 +20,9 @@
 
 	input {
 		width: 200px;
+	}
+
+	.submit_btn {
+		width: 100%;
 	}
 }
