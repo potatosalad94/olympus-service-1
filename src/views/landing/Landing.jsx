@@ -8,6 +8,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Landing.module.scss";
 import CircularProgress from "@/components/CircularProgress/CircularProgress";
+import { Stepper } from "primereact/stepper";
+import { StepperPanel } from "primereact/stepperpanel";
 
 const serviceName = "Service_1";
 
@@ -107,30 +109,18 @@ const Landing = () => {
 		// 1 // testResponse
 	);
 
-	const {
-		css,
-		content,
-		ctaMethod,
-		heRequired,
-		currentLanguage,
-		alreadySubscribed,
-		redirection,
-	} = displayData || {};
+	const { css, content, ctaMethod, heRequired, currentLanguage, alreadySubscribed, redirection } =
+		displayData || {};
 
+	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
 	useEffect(() => {
 		if (ctaMethod === "OtpConfirm" && !alreadySubscribed) {
 			goToNextStep("otp");
 		}
 	}, [alreadySubscribed, ctaMethod, goToNextStep]);
 
-	const {
-		clickableZone,
-		termsV,
-		playButton,
-		closableModal,
-		showMsisdnInput,
-		msisdnPrefill,
-	} = css || {};
+	const { clickableZone, termsV, playButton, closableModal, showMsisdnInput, msisdnPrefill } =
+		css || {};
 
 	const {
 		acknowledgment,
@@ -138,7 +128,7 @@ const Landing = () => {
 		cta,
 		exitButton,
 		image,
-		imageSteps,
+		// imageSteps,
 		msisdn,
 		dialCode,
 		serviceDescription,
@@ -176,16 +166,29 @@ const Landing = () => {
 				}
 			}}
 		>
-			{imageSteps && (
+			{/* {imageSteps && (
 				<div className={styles.logo_container}>
 					<img src={imageSteps} alt="steps" />
 				</div>
-			)}
+			)} */}
 
-			{/* // *  to be shown conditionally when no img in the response: <CircularProgress /> */}
+			<Stepper
+				linear={true}
+				activeStep={currentStep === "otp" ? 1 : 0}
+				pt={{
+					panelContainer: {
+						style: {
+							display: "none",
+						},
+					},
+				}}
+			>
+				<StepperPanel header="Step 1"></StepperPanel>
+				<StepperPanel header="Step 2"></StepperPanel>
+			</Stepper>
 
-			{image && (
-				<div className={styles.logo_container}>
+			<div className={styles.logo_container}>
+				{image ? (
 					<Button
 						unstyled
 						className={styles.image_button}
@@ -200,9 +203,7 @@ const Landing = () => {
 								: undefined
 						}
 					>
-						{playButton && !isLoading && (
-							<i className="pi pi-play-circle"></i>
-						)}
+						{playButton && !isLoading && <i className="pi pi-play-circle"></i>}
 						{isLoading && (
 							<i
 								className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}
@@ -210,8 +211,10 @@ const Landing = () => {
 						)}
 						<img src={image} alt="" />
 					</Button>
-				</div>
-			)}
+				) : (
+					<CircularProgress />
+				)}
+			</div>
 
 			{serviceDescription && (
 				<div className={styles.desc}>

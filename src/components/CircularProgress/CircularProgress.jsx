@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-const CircularProgress = () => {
+const CircularProgress = ({ color = "#06b6d4" }) => {
 	const [progress, setProgress] = useState(0);
 	const [showArrow, setShowArrow] = useState(false);
 	const [arrowOffset, setArrowOffset] = useState(0);
 
-	const size = 200;
-	const strokeWidth = 8;
+	const size = 150;
+	const strokeWidth = 10;
 	const center = size / 2;
 	const radius = center - strokeWidth;
 	const circumference = 2 * Math.PI * radius;
@@ -17,7 +17,7 @@ const CircularProgress = () => {
 		if (progress < 100) {
 			const timer = setTimeout(() => {
 				setProgress((prev) => Math.min(prev + 1, 100));
-			}, 30); // Approximately 3 seconds total
+			}, 10); // Approximately 3 seconds total
 			return () => clearTimeout(timer);
 		} else if (progress === 100 && !showArrow) {
 			setTimeout(() => setShowArrow(true), 500);
@@ -79,7 +79,7 @@ const CircularProgress = () => {
 					cy={center}
 					r={radius}
 					fill="none"
-					stroke="#4caf50"
+					stroke={color}
 					strokeWidth={strokeWidth}
 					style={progressStyle}
 					transform={`rotate(-90 ${center} ${center})`}
@@ -101,8 +101,12 @@ const CircularProgress = () => {
 					>
 						<path
 							d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
-							fill="#4caf50"
-							transform="rotate(90 12 12)" // Changed from -90 to 90 to point downward
+							fill={color}
+							transform="rotate(90 12 12)"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth="2"
+							stroke={color}
 						/>
 					</svg>
 				)}

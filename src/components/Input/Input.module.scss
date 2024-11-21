@@ -7,9 +7,28 @@
 	small {
 		margin-top: 5px;
 		text-align: center;
+		animation: moveLeftRight 0.5s;
 	}
 
+	.input_wrapper,
 	.input {
 		width: 100%;
+	}
+
+	.animated_error {
+		@keyframes moveLeftRight {
+			0% {
+				transform: translateX(0px);
+			}
+			33% {
+				transform: translateX(-20px);
+			}
+			66% {
+				transform: translateX(20px);
+			}
+			100% {
+				transform: translateX(0px);
+			}
+		}
 	}
 }
