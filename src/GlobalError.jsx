@@ -1,58 +1,46 @@
 import { Button } from "primereact/button";
 import { useNavigate, useRouteError } from "react-router-dom";
-import { Card } from "primereact/card";
 import styles from "./GlobalError.module.scss";
 
 const GlobalError = () => {
 	const navigate = useNavigate();
 	const error = useRouteError();
-
 	const isErrorInstance = error instanceof Error;
 
 	return (
-		<div className={styles.errorContainer}>
-			<Card className={styles.errorCard}>
-				<div className={styles.cardContent}>
-					<div className={styles.iconWrapper}>
-						<i className="pi pi-exclamation-triangle" />
-					</div>
+		<div className={styles.container}>
+			<div className={styles.content}>
+				{isErrorInstance ? (
+					<>
+						<h1 className={styles.message}>
+							Something went wrong!
+						</h1>
+						<p className={styles.description}>
+							Oops! It seems we're experiencing technical
+							difficulties
+						</p>
+					</>
+				) : (
+					<>
+						<h1 className={styles.title}>
+							{error.status || error.code}
+						</h1>
+						{/* <p className={styles.message}>Page not found</p> */}
+						<p className={styles.description}>
+							{error.message || error.statusText}
+						</p>
+					</>
+				)}
 
-					{isErrorInstance ? (
-						<>
-							<h1>Something went wrong!</h1>
-							<p>Oops! It seems we're experiencing technical difficulties</p>
-						</>
-					) : (
-						<>
-							<div className={styles.errorCode}>{error.code}</div>
-							{/* <h2 className={styles.errorTitle}>{title}</h2> */}
-
-							<p className={styles.errorMessage}>{error.message}</p>
-						</>
-					)}
-
-					<Button label="Home" icon="pi pi-home" outlined onClick={() => navigate("/")} />
-
-					{/* <div className={styles.buttonContainer}>
-						{showHome && (
-							<Button
-								label="Home"
-								icon="pi pi-home"
-								outlined
-								onClick={handleHome}
-							/>
-						)}
-						{showRefresh && (
-							<Button
-								label="Try Again"
-								icon="pi pi-refresh"
-								severity="warning"
-								onClick={handleRefresh}
-							/>
-						)}
-					</div> */}
-				</div>
-			</Card>
+				<Button
+					type="submit"
+					label={"Go back home"}
+					size={"large"}
+					onClick={() => {
+						navigate("/");
+					}}
+				/>
+			</div>
 		</div>
 	);
 };

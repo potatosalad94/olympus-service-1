@@ -67,11 +67,12 @@ const Landing = () => {
 						onBack={() => goToNextStep("initial")}
 						visitorId={visitorId}
 						alreadySubscribed={alreadySubscribed}
+						language={currentLanguage}
 					/>
 				);
 
 			default:
-				return <div>Unknown step</div>; //TODO ?? ===========
+				break;
 		}
 	};
 
@@ -111,8 +112,15 @@ const Landing = () => {
 		// 1 // testResponse
 	);
 
-	const { css, content, ctaMethod, heRequired, currentLanguage, alreadySubscribed, redirection } =
-		displayData || {};
+	const {
+		css,
+		content,
+		ctaMethod,
+		heRequired,
+		currentLanguage,
+		alreadySubscribed,
+		redirection,
+	} = displayData || {};
 
 	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
 	useEffect(() => {
@@ -121,8 +129,14 @@ const Landing = () => {
 		}
 	}, [alreadySubscribed, ctaMethod, goToNextStep]);
 
-	const { clickableZone, termsV, playButton, closableModal, showMsisdnInput, msisdnPrefill } =
-		css || {};
+	const {
+		clickableZone,
+		termsV,
+		playButton,
+		closableModal,
+		showMsisdnInput,
+		msisdnPrefill,
+	} = css || {};
 
 	const {
 		acknowledgment,
@@ -169,12 +183,6 @@ const Landing = () => {
 				}
 			}}
 		>
-			{/* {imageSteps && (
-				<div className={styles.logo_container}>
-					<img src={imageSteps} alt="steps" />
-				</div>
-			)} */}
-
 			<Stepper
 				linear={true}
 				activeStep={currentStep === "otp" ? 1 : 0}
@@ -206,7 +214,9 @@ const Landing = () => {
 								: undefined
 						}
 					>
-						{playButton && !isLoading && <i className="pi pi-play-circle"></i>}
+						{playButton && !isLoading && (
+							<i className="pi pi-play-circle"></i>
+						)}
 						{isLoading && (
 							<i
 								className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}

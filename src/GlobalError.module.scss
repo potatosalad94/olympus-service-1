@@ -1,62 +1,42 @@
-// ErrorPage.module.scss
-.errorContainer {
-	min-height: 100vh;
+.container {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 1rem;
-	background-color: var(--surface-ground);
+	min-height: 100vh;
+	padding: 20px;
+	background-color: #f8f9fa;
 }
 
-.errorCard {
-	max-width: 32rem;
-	width: 100%;
-	background: var(--surface-card);
-	border-radius: var(--border-radius);
-	box-shadow: var(--card-shadow);
-}
-
-.cardContent {
-	padding: 2rem;
+.content {
 	text-align: center;
+	max-width: 500px;
 }
 
-.iconWrapper {
-	margin-bottom: 1.5rem;
-
-	:global(.p-icon) {
-		width: 4rem;
-		height: 4rem;
-		color: var(--yellow-500);
-	}
-}
-
-.errorCode {
-	font-size: 4rem;
-	font-weight: 700;
-	color: var(--text-color);
-	margin-bottom: 1rem;
+.title {
+	font-size: 120px;
+	margin: 0;
+	color: #343a40;
 	line-height: 1;
-}
+	font-weight: bold;
 
-.errorTitle {
-	font-size: 1.5rem;
-	font-weight: 600;
-	color: var(--text-color);
-	margin-bottom: 0.5rem;
-}
-
-.errorMessage {
-	color: var(--text-secondary-color);
-	margin-bottom: 2rem;
-}
-
-.buttonContainer {
-	display: flex;
-	gap: 1rem;
-	justify-content: center;
-
-	:global(.p-button-icon) {
-		margin-right: 0.5rem;
+	&:after {
+		content: "";
+		display: block;
+		width: 100px;
+		height: 4px;
+		background-color: #6c757d;
+		margin: 20px auto;
 	}
+}
+
+.message {
+	font-size: 32px;
+	color: #495057;
+	margin: 0 0 20px;
+}
+
+.description {
+	color: #6c757d;
+	margin: 0 0 30px;
+	line-height: 1.6;
 }

@@ -12,7 +12,14 @@ import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpConfirm.module.scss";
 import otpConfirmSchema from "./otpConfirmSchema";
 
-const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed }) => {
+const OtpConfirm = ({
+	onSuccess,
+	visitorId,
+	onBack,
+	content,
+	alreadySubscribed,
+	language,
+}) => {
 	const { msisdn, cta, newOtpRequest } = content || {};
 
 	const { countdown, startCountdown } = useOtpCountdown();
@@ -71,8 +78,6 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed }
 
 	const otpWatcher = watch("otp");
 
-	// console.log("🚀 ~ errors in otp confirm >>", errors);
-
 	const onSubmit = ({ otp }) => {
 		confirmOtp(otp);
 	};
@@ -80,7 +85,14 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed }
 	useEffect(() => {
 		if (!!msisdn && alreadySubscribed) {
 			onBack();
-			showToast(errorToast({ message: "You are already subscribed" })); //TODO >> hardcoded only in english !
+			showToast(
+				errorToast({
+					message:
+						language === "En"
+							? "You are already subscribed"
+							: "أنت مشترك بالفعل",
+				})
+			);
 		}
 	}, [msisdn, alreadySubscribed]);
 
@@ -90,7 +102,11 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed }
 				name="otp"
 				control={control}
 				render={({ field: { onChange, ...field } }) => (
-					<InputOtp {...field} onChange={(e) => onChange(e.value)} integerOnly />
+					<InputOtp
+						{...field}
+						onChange={(e) => onChange(e.value)}
+						integerOnly
+					/>
 				)}
 			/>
 
@@ -112,7 +128,13 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed }
 				{newOtpRequest}
 			</Button>
 
-			{countdown > 0 && <p>You can request another OTP in {countdown} seconds</p>}
+			{countdown > 0 && (
+				<p>
+					{language === "En"
+						? `You can request another OTP in ${countdown} seconds`
+						: `يمكنك طلب رمز التحقق مرة أخرى بعد ${countdown} ثانية`}
+				</p>
+			)}
 		</form>
 	);
 };
