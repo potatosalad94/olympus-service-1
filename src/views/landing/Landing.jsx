@@ -43,6 +43,8 @@ const Landing = () => {
 						dialCode={dialCode}
 						userInstructions={userInstructions}
 						cta={cta}
+						modalUserInstructions={modalUserInstructions}
+						modalCta={modalCta}
 						language={currentLanguage}
 						// *
 						showModal={showModal}
@@ -126,13 +128,14 @@ const Landing = () => {
 		acknowledgment,
 		bottomPriceDescription,
 		cta,
+		userInstructions,
+		modalCta,
+		modalUserInstructions,
 		exitButton,
 		image,
-		// imageSteps,
 		msisdn,
 		dialCode,
 		serviceDescription,
-		userInstructions,
 		termsAndConditions,
 		topPriceDescription,
 	} = content || {};

@@ -19,6 +19,8 @@ const OtpRequest = forwardRef(
 			dialCode,
 			userInstructions,
 			cta,
+			modalUserInstructions,
+			modalCta,
 			clickableZone,
 			showModal,
 			setShowModal,
@@ -99,11 +101,13 @@ const OtpRequest = forwardRef(
 			reset,
 		}));
 
-		const renderFormContent = (control, errors) => (
+		const renderFormContent = (control, errors, isModal = false) => (
 			<div className={styles.form_container}>
 				{showInput && (
 					<>
-						{userInstructions && <p>{userInstructions}</p>}
+						{userInstructions && !isModal && <p>{userInstructions}</p>}
+						{modalUserInstructions && isModal && <p>{modalUserInstructions}</p>}
+
 						<Controller
 							name="contact"
 							control={control}
@@ -121,7 +125,7 @@ const OtpRequest = forwardRef(
 				)}
 				<Button
 					type="submit"
-					label={cta}
+					label={isModal ? modalCta : cta}
 					size={clickableZone === "Large" ? "large" : undefined}
 					onClick={(e) => {
 						e.stopPropagation();
@@ -152,15 +156,10 @@ const OtpRequest = forwardRef(
 						closable={closableModal}
 						draggable={false}
 						showHeader={closableModal}
-						contentClassName={
-							!closableModal ? styles.no_header : undefined
-						}
+						contentClassName={!closableModal ? styles.no_header : undefined}
 					>
-						<form
-							onSubmit={dialogHandleSubmit(onSubmit)}
-							noValidate
-						>
-							{renderFormContent(dialogControl, dialogErrors)}
+						<form onSubmit={dialogHandleSubmit(onSubmit)} noValidate>
+							{renderFormContent(dialogControl, dialogErrors, true)}
 						</form>
 					</Dialog>
 				</div>
