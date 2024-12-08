@@ -192,8 +192,32 @@ const Landing = () => {
 							display: "none",
 						},
 					},
+					nav: {
+						style: {
+							flexDirection: "row-reverse",
+						},
+					},
+					stepperpanel: {
+						style: {
+							flexDirection: "row-reverse",
+						},
+						//TODO >> ne fonctionne pas
+						// action: {
+						// 	style: {
+						// 		display: "flex",
+						// 		flexDirection: "row-reverse",
+						// 	},
+						// },
+						separator: {
+							style: {
+								marginInlineStart: 0,
+								marginInlineEnd: "1rem",
+							},
+						},
+					},
 				}}
 			>
+				{/* الخطوة  */}
 				<StepperPanel header="Step 1"></StepperPanel>
 				<StepperPanel header="Step 2"></StepperPanel>
 			</Stepper>

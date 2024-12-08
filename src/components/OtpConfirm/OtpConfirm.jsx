@@ -41,10 +41,7 @@ const OtpConfirm = ({
 			});
 		},
 		onSuccess,
-		onError: (error) => {
-			showToast(errorToast(error));
-			reset();
-		},
+		onError: () => reset(),
 	});
 
 	// * ==== RESEND OTP =====
@@ -59,7 +56,7 @@ const OtpConfirm = ({
 			});
 		},
 		onSuccess: () => startCountdown(),
-		onError: (error) => showToast(errorToast(error)),
+		// onError: (error) => showToast(errorToast(error)),
 	});
 
 	const {
@@ -82,19 +79,19 @@ const OtpConfirm = ({
 		confirmOtp(otp);
 	};
 
-	useEffect(() => {
-		if (!!msisdn && alreadySubscribed) {
-			onBack();
-			showToast(
-				errorToast({
-					message:
-						language === "En"
-							? "You are already subscribed"
-							: "أنت مشترك بالفعل",
-				})
-			);
-		}
-	}, [msisdn, alreadySubscribed]);
+	// useEffect(() => {
+	// 	if (!!msisdn && alreadySubscribed) {
+	// 		onBack();
+	// 		showToast(
+	// 			errorToast({
+	// 				message:
+	// 					language === "En"
+	// 						? "You are already subscribed"
+	// 						: "أنت مشترك بالفعل",
+	// 			})
+	// 		);
+	// 	}
+	// }, [msisdn, alreadySubscribed]);
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className={styles.container}>

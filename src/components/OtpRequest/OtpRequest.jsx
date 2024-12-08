@@ -3,7 +3,6 @@ import Input from "@/components/Input/Input";
 import otpRequestSchema from "@/components/OtpRequest/otpRequestSchema";
 import useApi from "@/hooks/useApi";
 import { useToastContext } from "@/hooks/useToastContext";
-import { errorToast } from "@/utils/toast-messages";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
@@ -45,7 +44,7 @@ const OtpRequest = forwardRef(
 				});
 			},
 			onSuccess,
-			onError: (error) => showToast(errorToast(error)),
+			// onError: (error) => showToast(errorToast(error)),
 		});
 
 		const {
@@ -105,8 +104,12 @@ const OtpRequest = forwardRef(
 			<div className={styles.form_container}>
 				{showInput && (
 					<>
-						{userInstructions && !isModal && <p>{userInstructions}</p>}
-						{modalUserInstructions && isModal && <p>{modalUserInstructions}</p>}
+						{userInstructions && !isModal && (
+							<p>{userInstructions}</p>
+						)}
+						{modalUserInstructions && isModal && (
+							<p>{modalUserInstructions}</p>
+						)}
 
 						<Controller
 							name="contact"
@@ -156,10 +159,19 @@ const OtpRequest = forwardRef(
 						closable={closableModal}
 						draggable={false}
 						showHeader={closableModal}
-						contentClassName={!closableModal ? styles.no_header : undefined}
+						contentClassName={
+							!closableModal ? styles.no_header : undefined
+						}
 					>
-						<form onSubmit={dialogHandleSubmit(onSubmit)} noValidate>
-							{renderFormContent(dialogControl, dialogErrors, true)}
+						<form
+							onSubmit={dialogHandleSubmit(onSubmit)}
+							noValidate
+						>
+							{renderFormContent(
+								dialogControl,
+								dialogErrors,
+								true
+							)}
 						</form>
 					</Dialog>
 				</div>

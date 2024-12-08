@@ -36,6 +36,9 @@ const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 		enabled: isNewVisit ? enabled && !isCollecting : enabled,
 		retry: 2,
 		throwOnError: true,
+		meta: {
+			enableError: false, //! for notification
+		},
 	});
 
 	useEffect(() => {

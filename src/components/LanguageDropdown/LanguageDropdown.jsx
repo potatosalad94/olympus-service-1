@@ -23,7 +23,8 @@ const LanguageDropdown = ({ lang, step }) => {
 	const [selectedLanguage, setSelectedLanguage] = useState({});
 
 	useEffect(() => {
-		if (lang) setSelectedLanguage(languages.find((item) => item.code === lang));
+		if (lang)
+			setSelectedLanguage(languages.find((item) => item.code === lang));
 	}, [lang]);
 
 	const changeLanguageApi = useApi(changeLanguage);
@@ -37,9 +38,12 @@ const LanguageDropdown = ({ lang, step }) => {
 		},
 
 		onSuccess: (response) =>
-			queryClient.setQueryData(queryKeys.displayData(step), response.data),
+			queryClient.setQueryData(
+				queryKeys.displayData(step),
+				response.data
+			),
 
-		onError: (error) => showToast(errorToast(error)),
+		// onError: (error) => showToast(errorToast(error)),
 	});
 
 	const selectedCountryTemplate = (option, props) => {
@@ -47,7 +51,12 @@ const LanguageDropdown = ({ lang, step }) => {
 			return (
 				<div className={styles.language_item}>
 					<img
-						src={new URL(`../../images/${option.code}-flag.png`, import.meta.url).href}
+						src={
+							new URL(
+								`../../images/${option.code}-flag.png`,
+								import.meta.url
+							).href
+						}
 						// src={new URL(`@images/${option.code}-flag.png`, import.meta.url).href}
 						// src={`/src/images/${option.code}-flag.png`}
 					/>
@@ -63,7 +72,12 @@ const LanguageDropdown = ({ lang, step }) => {
 		return (
 			<div className={styles.language_item}>
 				<img
-					src={new URL(`../../images/${option.code}-flag.png`, import.meta.url).href}
+					src={
+						new URL(
+							`../../images/${option.code}-flag.png`,
+							import.meta.url
+						).href
+					}
 					// src={new URL(`@images/${option.code}-flag.png`, import.meta.url).href}
 					// src={`/src/images/${option.code}-flag.png`}
 				/>
