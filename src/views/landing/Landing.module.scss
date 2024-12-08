@@ -8,9 +8,15 @@
 	}
 }
 
-.header {
-	display: flex;
-	flex-direction: row-reverse;
+.stepper_panel {
+	& > button {
+		flex-direction: row-reverse;
+
+		& > span:last-child {
+			margin-left: 0;
+			margin-right: 0.5rem;
+		}
+	}
 }
 
 .logo_container {

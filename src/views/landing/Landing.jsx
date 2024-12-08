@@ -192,34 +192,36 @@ const Landing = () => {
 							display: "none",
 						},
 					},
-					nav: {
-						style: {
-							flexDirection: "row-reverse",
-						},
-					},
-					stepperpanel: {
-						style: {
-							flexDirection: "row-reverse",
-						},
-						//TODO >> ne fonctionne pas
-						// action: {
-						// 	style: {
-						// 		display: "flex",
-						// 		flexDirection: "row-reverse",
-						// 	},
-						// },
-						separator: {
+					...(currentLanguage === "Ar" && {
+						nav: {
 							style: {
-								marginInlineStart: 0,
-								marginInlineEnd: "1rem",
+								flexDirection: "row-reverse",
 							},
 						},
-					},
+
+						stepperpanel: {
+							style: {
+								flexDirection: "row-reverse",
+							},
+							className: styles.stepper_panel,
+
+							separator: {
+								style: {
+									marginInlineStart: 0,
+									marginInlineEnd: "1rem",
+								},
+							},
+						},
+					}),
 				}}
 			>
 				{/* الخطوة  */}
-				<StepperPanel header="Step 1"></StepperPanel>
-				<StepperPanel header="Step 2"></StepperPanel>
+				<StepperPanel
+					header={currentLanguage === "Ar" ? "الخطوة 1" : "Step 1"}
+				></StepperPanel>
+				<StepperPanel
+					header={currentLanguage === "Ar" ? "الخطوة 2" : "Step 2"}
+				></StepperPanel>
 			</Stepper>
 
 			<div className={styles.logo_container}>
