@@ -53,3 +53,25 @@ $border-color: #e5e7eb;
 	color: $text-primary;
 	margin-bottom: 0.75rem;
 }
+
+.redirectTimer {
+	padding: 1rem;
+	background-color: #e6f2ff;
+	border-radius: 0.5rem;
+}
+
+.message {
+	font-size: 1.125rem;
+	margin-bottom: 1rem;
+	color: #333;
+}
+
+.fallbackLink {
+	color: #2563eb;
+	text-decoration: underline;
+
+	&:hover {
+		color: #1e40af;
+		text-decoration: none;
+	}
+}

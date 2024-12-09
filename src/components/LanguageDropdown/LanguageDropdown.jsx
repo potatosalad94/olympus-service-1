@@ -15,7 +15,7 @@ const languages = [
 ];
 
 const LanguageDropdown = ({ lang, step }) => {
-	const { showToast } = useToastContext();
+	// const { showToast } = useToastContext();
 	const { visitorId } = useVisitorId();
 
 	const queryClient = useQueryClient();

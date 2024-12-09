@@ -10,6 +10,7 @@ import styles from "./Landing.module.scss";
 import CircularProgress from "@/components/CircularProgress/CircularProgress";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
+import Confirmation from "../confirmation/Confirmation";
 
 const serviceName = "Service_1";
 
@@ -58,11 +59,12 @@ const Landing = () => {
 					<OtpConfirm
 						content={content}
 						onSuccess={() => {
-							if (redirection) {
-								window.location.replace(redirection);
-							} else {
-								navigate("/confirmation", { replace: true });
-							}
+							goToNextStep("final");
+							// if (redirection) {
+							// 	window.location.replace(redirection);
+							// } else {
+							// 	navigate("/confirmation", { replace: true });
+							// }
 						}}
 						onBack={() => goToNextStep("initial")}
 						visitorId={visitorId}
@@ -100,7 +102,12 @@ const Landing = () => {
 
 	// * ====== NEW VIST CALL ======
 
-	const step = currentStep === "initial" ? "New Visit" : "Otp Request";
+	const step =
+		currentStep === "initial"
+			? "New Visit"
+			: currentStep === "otp"
+			? "Otp Request"
+			: "Otp Confirm";
 
 	const {
 		query: { data: displayData, isFetching },
@@ -166,130 +173,142 @@ const Landing = () => {
 	if (heRequired) return <div> Should do a HE redirect + call Post HE</div>; //TODO LATER
 
 	return (
-		<Layout
-			headerPrice={topPriceDescription ?? ""}
-			terms={termsAndConditions ?? ""}
-			termsVisibility={termsV}
-			lang={currentLanguage}
-			step={step}
-			onRootClick={() => {
-				if (currentStep === "initial") {
-					if (showModal) {
-						return;
-					} else {
-						setShowModal(true);
-						formRef.current.reset();
-					}
-				}
-			}}
-		>
-			<Stepper
-				linear={true}
-				activeStep={currentStep === "otp" ? 1 : 0}
-				pt={{
-					panelContainer: {
-						style: {
-							display: "none",
-						},
-					},
-					...(currentLanguage === "Ar" && {
-						nav: {
-							style: {
-								flexDirection: "row-reverse",
-							},
-						},
-
-						stepperpanel: {
-							style: {
-								flexDirection: "row-reverse",
-							},
-							className: styles.stepper_panel,
-
-							separator: {
+		<>
+			{currentStep === "final" ? (
+				<Confirmation data={displayData} />
+			) : (
+				<Layout
+					headerPrice={topPriceDescription ?? ""}
+					terms={termsAndConditions ?? ""}
+					termsVisibility={termsV}
+					lang={currentLanguage}
+					step={step}
+					onRootClick={() => {
+						if (currentStep === "initial") {
+							if (showModal) {
+								return;
+							} else {
+								setShowModal(true);
+								formRef.current.reset();
+							}
+						}
+					}}
+				>
+					<Stepper
+						linear={true}
+						activeStep={currentStep === "otp" ? 1 : 0}
+						pt={{
+							panelContainer: {
 								style: {
-									marginInlineStart: 0,
-									marginInlineEnd: "1rem",
+									display: "none",
 								},
 							},
-						},
-					}),
-				}}
-			>
-				{/* الخطوة  */}
-				<StepperPanel
-					header={currentLanguage === "Ar" ? "الخطوة 1" : "Step 1"}
-				></StepperPanel>
-				<StepperPanel
-					header={currentLanguage === "Ar" ? "الخطوة 2" : "Step 2"}
-				></StepperPanel>
-			</Stepper>
+							...(currentLanguage === "Ar" && {
+								nav: {
+									style: {
+										flexDirection: "row-reverse",
+									},
+								},
 
-			<div className={styles.logo_container}>
-				{image ? (
-					<Button
-						unstyled
-						className={styles.image_button}
-						onClick={
-							currentStep === "initial"
-								? playButton
-									? (e) => {
-											e.stopPropagation();
-											handleShowModal();
-									  }
-									: undefined
-								: undefined
-						}
-					>
-						{playButton && !isLoading && (
-							<i className="pi pi-play-circle"></i>
-						)}
-						{isLoading && (
-							<i
-								className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}
-							></i>
-						)}
-						<img src={image} alt="" />
-					</Button>
-				) : (
-					<CircularProgress />
-				)}
-			</div>
+								stepperpanel: {
+									style: {
+										flexDirection: "row-reverse",
+									},
+									className: styles.stepper_panel,
 
-			{serviceDescription && (
-				<div className={styles.desc}>
-					<p>{serviceDescription}</p>
-				</div>
-			)}
-
-			<div className={styles.main}>
-				{renderStep()}
-
-				{exitButton && (
-					<Button
-						type={"button"}
-						label={exitButton}
-						className={styles.exitBtn}
-						onClick={(e) => {
-							e.stopPropagation();
-							window.close();
+									separator: {
+										style: {
+											marginInlineStart: 0,
+											marginInlineEnd: "1rem",
+										},
+									},
+								},
+							}),
 						}}
-						size="small"
-					/>
-				)}
-			</div>
+					>
+						{/* الخطوة  */}
+						<StepperPanel
+							header={
+								currentLanguage === "Ar" ? "الخطوة 1" : "Step 1"
+							}
+						></StepperPanel>
+						<StepperPanel
+							header={
+								currentLanguage === "Ar" ? "الخطوة 2" : "Step 2"
+							}
+						></StepperPanel>
+					</Stepper>
 
-			{bottomPriceDescription && (
-				<div className={styles.price_wrapper}>
-					<p>{bottomPriceDescription}</p>
-				</div>
-			)}
+					<div className={styles.logo_container}>
+						{image ? (
+							<Button
+								unstyled
+								className={styles.image_button}
+								onClick={
+									currentStep === "initial"
+										? playButton
+											? (e) => {
+													e.stopPropagation();
+													handleShowModal();
+											  }
+											: undefined
+										: undefined
+								}
+							>
+								{playButton && !isLoading && (
+									<i className="pi pi-play-circle"></i>
+								)}
+								{isLoading && (
+									<i
+										className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}
+									></i>
+								)}
+								<img src={image} alt="" />
+							</Button>
+						) : (
+							<CircularProgress />
+						)}
+					</div>
 
-			{acknowledgment && (
-				<div className={styles.acknowledgment_container}>
-					<i className={styles.acknowledgment}>{acknowledgment}</i>
-				</div>
+					{serviceDescription && (
+						<div className={styles.desc}>
+							<p>{serviceDescription}</p>
+						</div>
+					)}
+
+					<div className={styles.main}>
+						{renderStep()}
+
+						{exitButton && (
+							<Button
+								type={"button"}
+								label={exitButton}
+								className={styles.exitBtn}
+								onClick={(e) => {
+									e.stopPropagation();
+									window.close();
+								}}
+								size="small"
+							/>
+						)}
+					</div>
+
+					{bottomPriceDescription && (
+						<div className={styles.price_wrapper}>
+							<p>{bottomPriceDescription}</p>
+						</div>
+					)}
+
+					{acknowledgment && (
+						<div className={styles.acknowledgment_container}>
+							<i className={styles.acknowledgment}>
+								{acknowledgment}
+							</i>
+						</div>
+					)}
+				</Layout>
 			)}
-		</Layout>
+		</>
 	);
 };
 
