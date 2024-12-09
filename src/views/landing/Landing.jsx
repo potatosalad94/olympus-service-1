@@ -20,7 +20,7 @@ const Landing = () => {
 
 	const [currentStep, setCurrentStep] = useStepManagement();
 
-	const goToNextStep = useCallback(
+	const goToStep = useCallback(
 		(nextStep) => {
 			setCurrentStep(nextStep);
 			navigate(`?step=${nextStep}`, { replace: true });
@@ -51,7 +51,7 @@ const Landing = () => {
 						showModal={showModal}
 						setShowModal={setShowModal}
 						visitorId={visitorId}
-						onSuccess={() => goToNextStep("otp")}
+						onSuccess={() => goToStep("otp")}
 					/>
 				);
 			case "otp":
@@ -59,14 +59,13 @@ const Landing = () => {
 					<OtpConfirm
 						content={content}
 						onSuccess={() => {
-							goToNextStep("final");
-							// if (redirection) {
-							// 	window.location.replace(redirection);
-							// } else {
-							// 	navigate("/confirmation", { replace: true });
-							// }
+							if (redirection && subscriptionConfirmationPage) {
+								window.location.replace(redirection);
+							} else {
+								goToStep("final");
+							}
 						}}
-						onBack={() => goToNextStep("initial")}
+						onBack={() => goToStep("initial")}
 						visitorId={visitorId}
 						alreadySubscribed={alreadySubscribed}
 						language={currentLanguage}
@@ -127,14 +126,15 @@ const Landing = () => {
 		currentLanguage,
 		alreadySubscribed,
 		redirection,
+		subscriptionConfirmationPage,
 	} = displayData || {};
 
 	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
 	useEffect(() => {
 		if (ctaMethod === "OtpConfirm" && !alreadySubscribed) {
-			goToNextStep("otp");
+			goToStep("otp");
 		}
-	}, [alreadySubscribed, ctaMethod, goToNextStep]);
+	}, [alreadySubscribed, ctaMethod, goToStep]);
 
 	const {
 		clickableZone,
