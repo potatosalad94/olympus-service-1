@@ -128,9 +128,6 @@ const Landing = () => {
 		redirection,
 		subscriptionConfirmationPage,
 	} = displayData || {};
-	console.log("🚀 ~ redirection >>", redirection);
-	console.log("🚀 ~ subscriptionConfirmationPage >>", subscriptionConfirmationPage);
-	console.log("------");
 
 	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
 	useEffect(() => {
