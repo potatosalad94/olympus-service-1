@@ -59,7 +59,7 @@ const Landing = () => {
 					<OtpConfirm
 						content={content}
 						onSuccess={() => {
-							if (redirection && subscriptionConfirmationPage) {
+							if (redirection && !subscriptionConfirmationPage) {
 								window.location.replace(redirection);
 							} else {
 								goToStep("final");
@@ -128,6 +128,9 @@ const Landing = () => {
 		redirection,
 		subscriptionConfirmationPage,
 	} = displayData || {};
+	console.log("🚀 ~ redirection >>", redirection);
+	console.log("🚀 ~ subscriptionConfirmationPage >>", subscriptionConfirmationPage);
+	console.log("------");
 
 	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
 	useEffect(() => {
@@ -136,14 +139,8 @@ const Landing = () => {
 		}
 	}, [alreadySubscribed, ctaMethod, goToStep]);
 
-	const {
-		clickableZone,
-		termsV,
-		playButton,
-		closableModal,
-		showMsisdnInput,
-		msisdnPrefill,
-	} = css || {};
+	const { clickableZone, termsV, playButton, closableModal, showMsisdnInput, msisdnPrefill } =
+		css || {};
 
 	const {
 		acknowledgment,
@@ -228,14 +225,10 @@ const Landing = () => {
 					>
 						{/* الخطوة  */}
 						<StepperPanel
-							header={
-								currentLanguage === "Ar" ? "الخطوة 1" : "Step 1"
-							}
+							header={currentLanguage === "Ar" ? "الخطوة 1" : "Step 1"}
 						></StepperPanel>
 						<StepperPanel
-							header={
-								currentLanguage === "Ar" ? "الخطوة 2" : "Step 2"
-							}
+							header={currentLanguage === "Ar" ? "الخطوة 2" : "Step 2"}
 						></StepperPanel>
 					</Stepper>
 
@@ -255,9 +248,7 @@ const Landing = () => {
 										: undefined
 								}
 							>
-								{playButton && !isLoading && (
-									<i className="pi pi-play-circle"></i>
-								)}
+								{playButton && !isLoading && <i className="pi pi-play-circle"></i>}
 								{isLoading && (
 									<i
 										className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}
@@ -301,9 +292,7 @@ const Landing = () => {
 
 					{acknowledgment && (
 						<div className={styles.acknowledgment_container}>
-							<i className={styles.acknowledgment}>
-								{acknowledgment}
-							</i>
+							<i className={styles.acknowledgment}>{acknowledgment}</i>
 						</div>
 					)}
 				</Layout>

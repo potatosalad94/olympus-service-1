@@ -4,13 +4,14 @@ import styles from "./Confirmation.module.scss";
 const SECONDS = 10;
 
 const Confirmation = ({ data }) => {
-	const { subscriptionConfirmationPageText, redirection } = data;
+	const { subscriptionConfirmationPageText, subscriptionConfirmationPageTitle, redirection } =
+		data;
 
 	const [countdown, setCountdown] = useState(SECONDS);
 
 	useEffect(() => {
 		if (countdown === 0) {
-			window.location.href = redirection;
+			window.location.replace(redirection);
 			return;
 		}
 
@@ -38,19 +39,14 @@ const Confirmation = ({ data }) => {
 						</svg>
 					</div>
 
-					<h1 className={styles.title}>
-						{subscriptionConfirmationPageText}
-					</h1>
+					<h1 className={styles.title}>{subscriptionConfirmationPageTitle}</h1>
+					<p>{subscriptionConfirmationPageText}</p>
 
 					<div className={styles.redirectTimer}>
 						<p className={styles.message}>
 							{`You will be redirected in ${countdown} seconds`}
 						</p>
-						<a
-							href={redirection}
-							target={"_self"}
-							className={styles.fallbackLink}
-						>
+						<a href={redirection} target={"_self"} className={styles.fallbackLink}>
 							Click here if you are not redirected automatically
 						</a>
 					</div>
