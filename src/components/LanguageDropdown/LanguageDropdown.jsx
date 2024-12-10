@@ -6,8 +6,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dropdown } from "primereact/dropdown";
 import { useEffect, useState } from "react";
 import styles from "./LanguageDropdown.module.scss";
-import { errorToast } from "@/utils/toast-messages";
-import { useToastContext } from "@/hooks/useToastContext";
 
 const languages = [
 	{ name: "English", code: "En" },
@@ -15,7 +13,6 @@ const languages = [
 ];
 
 const LanguageDropdown = ({ lang, step }) => {
-	// const { showToast } = useToastContext();
 	const { visitorId } = useVisitorId();
 
 	const queryClient = useQueryClient();
@@ -23,8 +20,7 @@ const LanguageDropdown = ({ lang, step }) => {
 	const [selectedLanguage, setSelectedLanguage] = useState({});
 
 	useEffect(() => {
-		if (lang)
-			setSelectedLanguage(languages.find((item) => item.code === lang));
+		if (lang) setSelectedLanguage(languages.find((item) => item.code === lang));
 	}, [lang]);
 
 	const changeLanguageApi = useApi(changeLanguage);
@@ -37,13 +33,9 @@ const LanguageDropdown = ({ lang, step }) => {
 			});
 		},
 
-		onSuccess: (response) =>
-			queryClient.setQueryData(
-				queryKeys.displayData(step),
-				response.data
-			),
-
-		// onError: (error) => showToast(errorToast(error)),
+		onSuccess: (response, lang) => {
+			queryClient.invalidateQueries(queryKeys.displayData(step, lang));
+		},
 	});
 
 	const selectedCountryTemplate = (option, props) => {
@@ -51,14 +43,7 @@ const LanguageDropdown = ({ lang, step }) => {
 			return (
 				<div className={styles.language_item}>
 					<img
-						src={
-							new URL(
-								`../../images/${option.code}-flag.png`,
-								import.meta.url
-							).href
-						}
-						// src={new URL(`@images/${option.code}-flag.png`, import.meta.url).href}
-						// src={`/src/images/${option.code}-flag.png`}
+						src={new URL(`../../images/${option.code}-flag.png`, import.meta.url).href}
 					/>
 					<div>{option.name}</div>
 				</div>
@@ -71,16 +56,7 @@ const LanguageDropdown = ({ lang, step }) => {
 	const countryOptionTemplate = (option) => {
 		return (
 			<div className={styles.language_item}>
-				<img
-					src={
-						new URL(
-							`../../images/${option.code}-flag.png`,
-							import.meta.url
-						).href
-					}
-					// src={new URL(`@images/${option.code}-flag.png`, import.meta.url).href}
-					// src={`/src/images/${option.code}-flag.png`}
-				/>
+				<img src={new URL(`../../images/${option.code}-flag.png`, import.meta.url).href} />
 				<div>{option.name}</div>
 			</div>
 		);
