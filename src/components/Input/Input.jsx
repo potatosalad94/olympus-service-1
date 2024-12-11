@@ -24,6 +24,8 @@ const Input = forwardRef(
 						onClick={onClick}
 						value={value}
 						type={type}
+						autoComplete={"tel"}
+						inputMode={"tel"}
 					/>
 				</IconField>
 
