@@ -1,7 +1,6 @@
 import OtpConfirm from "@/components/OtpConfirm/OtpConfirm";
 import OtpRequest from "@/components/OtpRequest/OtpRequest";
 import useDisplayData from "@/hooks/useDisplayData";
-import useStepManagement from "@/hooks/useStepManagement";
 import Layout from "@components/Layout/Layout";
 import { Button } from "primereact/button";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -126,7 +125,8 @@ const Landing = () => {
 		storedVisitorId: visitorId,
 	} = useDisplayData(
 		serviceName,
-		formattedStep
+		formattedStep,
+		params
 		// 1 // testResponse
 	);
 

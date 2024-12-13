@@ -7,8 +7,11 @@ import useDataCollection from "./useDataCollection";
 import { useEffect } from "react";
 import useVisitorId from "./useVisitorId";
 
-const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
+const enabled = true;
+
+const useDisplayData = (serviceName, step, params) => {
 	const isNewVisit = step === "New Visit";
+	const { step: stepParams, ...restParams } = params || {};
 
 	const { visitorId: storedVisitorId, updateVisitorId } = useVisitorId();
 	const { type } = useConnectionInfo();
@@ -19,14 +22,17 @@ const useDisplayData = (serviceName, step, enabled = true, testResponse) => {
 
 	const getData = async ({ queryKey }) => {
 		const [_, step] = queryKey;
-		const response = await displayDataApi.request({
-			serviceName,
-			step,
-			connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
-			...(isNewVisit && !isCollecting && visitorInfo),
-			...(storedVisitorId && { visitorId: storedVisitorId }),
-			...(testResponse && { testResponse: testResponse }), //* FOR TEST PURPOSES ONLY
-		});
+		const response = await displayDataApi.request(
+			{
+				serviceName,
+				step,
+				connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
+				...(isNewVisit && !isCollecting && visitorInfo),
+				...(storedVisitorId && { visitorId: storedVisitorId }),
+				// TODO >> pass the params
+			},
+			step === "New Visit" && restParams
+		);
 		return response.data;
 	};
 
