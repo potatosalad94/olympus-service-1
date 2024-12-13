@@ -1,26 +1,28 @@
 import { otpConfirm, resendOtp as resendOtpEndpoint } from "@/api/client";
 import useApi from "@/hooks/useApi";
 import useOtpCountdown from "@/hooks/useOtpCountdown";
+import { languages } from "@/utils/languages-dictionnary";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
 import { InputOtp } from "primereact/inputotp";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpConfirm.module.scss";
 import otpConfirmSchema from "./otpConfirmSchema";
-import { languages } from "@/utils/languages-dictionnary";
-import { Dialog } from "primereact/dialog";
 
 const OtpConfirm = ({
 	onSuccess,
 	visitorId,
 	content,
 	language,
-	showModal, //TODO
-	setShowModal, //TODO
+	showModal,
+	setShowModal,
 	closableModal,
 }) => {
-	console.log("🚀 ~ showModal >>", showModal);
+	const [otpValue, setOtpValue] = useState("");
+
 	const { msisdn, userInstructions, cta, modalCta, modalUserInstructions, newOtpRequest } =
 		content || {};
 
@@ -62,13 +64,14 @@ const OtpConfirm = ({
 		control,
 		handleSubmit,
 		reset,
+		setValue,
 		// formState: { errors },
 		watch,
 	} = useForm({
 		resolver: joiResolver(otpConfirmSchema),
 		mode: "onSubmit",
 		defaultValues: {
-			otp: "",
+			otp: otpValue,
 		},
 	});
 
@@ -86,8 +89,16 @@ const OtpConfirm = ({
 			<Controller
 				name="otp"
 				control={control}
-				render={({ field: { onChange, ...field } }) => (
-					<InputOtp {...field} onChange={(e) => onChange(e.value)} integerOnly />
+				render={({ field: { ...field } }) => (
+					<InputOtp
+						{...field}
+						onChange={(e) => {
+							const newValue = e.value;
+							setOtpValue(newValue);
+							setValue("otp", newValue);
+						}}
+						integerOnly
+					/>
 				)}
 			/>
 
@@ -140,7 +151,7 @@ const OtpConfirm = ({
 					contentClassName={!closableModal ? styles.no_header : undefined}
 				>
 					<form onSubmit={handleSubmit(onSubmit)} noValidate>
-						{renderFormContent(true)}
+						{renderFormContent(showModal)}
 					</form>
 				</Dialog>
 			</div>

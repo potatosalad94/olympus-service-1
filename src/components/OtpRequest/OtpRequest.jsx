@@ -172,145 +172,134 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpRequest.module.scss";
 
-const OtpRequest = forwardRef(
-	(
-		{
-			msisdn,
-			dialCode,
-			userInstructions,
-			cta,
-			modalUserInstructions,
-			modalCta,
-			clickableZone,
-			showModal,
-			setShowModal,
-			closableModal,
-			visitorId,
-			onSuccess,
-			showInput,
-			msisdnPrefill,
-			language,
+const OtpRequest = ({
+	msisdn,
+	dialCode,
+	userInstructions,
+	cta,
+	modalUserInstructions,
+	modalCta,
+	clickableZone,
+	showModal,
+	setShowModal,
+	closableModal,
+	visitorId,
+	onSuccess,
+	showInput,
+	msisdnPrefill,
+	language,
+}) => {
+	const otpRequestApi = useApi(otpRequest);
+
+	// Add a state to manage the contact value separately
+	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
+
+	const { mutate: requestOtp, isPending } = useMutation({
+		mutationFn: (msisdn = "") => {
+			return otpRequestApi.request({
+				visitorId,
+				msisdn,
+			});
 		},
-		ref
-	) => {
-		const otpRequestApi = useApi(otpRequest);
+		onSuccess,
+	});
 
-		// Add a state to manage the contact value separately
-		const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
+	const { control, handleSubmit, setValue } = useForm({
+		resolver: joiResolver(otpRequestSchema(language?.toLowerCase())),
+		context: {
+			dialCode,
+			showInput,
+		},
+		defaultValues: {
+			contact: contactValue,
+		},
+		mode: "onSubmit",
+	});
 
-		const { mutate: requestOtp, isPending } = useMutation({
-			mutationFn: (msisdn = "") => {
-				return otpRequestApi.request({
-					visitorId,
-					msisdn,
-				});
-			},
-			onSuccess,
-		});
+	const onSubmit = ({ contact }) => {
+		requestOtp(contact);
+	};
 
-		const { reset, control, handleSubmit, setValue } = useForm({
-			resolver: joiResolver(otpRequestSchema(language?.toLowerCase())),
-			context: {
-				dialCode,
-				showInput,
-			},
-			defaultValues: {
-				contact: contactValue,
-			},
-			mode: "onSubmit",
-		});
+	// useImperativeHandle(ref, () => ({
+	// 	reset: () => {
+	// 		reset();
+	// 		setContactValue("");
+	// 	},
+	// }));
 
-		const onSubmit = ({ contact }) => {
-			requestOtp(contact);
-		};
+	const renderFormContent = (isModal = false) => (
+		<div className={styles.form_container}>
+			{showInput && (
+				<>
+					{!isModal && userInstructions && <p>{userInstructions}</p>}
+					{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-		// useImperativeHandle(ref, () => ({
-		// 	reset: () => {
-		// 		reset();
-		// 		setContactValue("");
-		// 	},
-		// }));
+					<Controller
+						name="contact"
+						control={control}
+						render={({ field, fieldState }) => (
+							<Input
+								{...field}
+								value={contactValue}
+								onChange={(e) => {
+									const newValue = e.target.value;
+									setContactValue(newValue);
+									setValue("contact", newValue);
+								}}
+								dialCode={dialCode}
+								error={fieldState.error}
+								onClick={(e) => e.stopPropagation()}
+								type="tel"
+							/>
+						)}
+					/>
+				</>
+			)}
+			<Button
+				type="submit"
+				label={isModal ? modalCta : cta}
+				size={clickableZone === "Large" ? "large" : undefined}
+				onClick={(e) => {
+					e.stopPropagation();
+				}}
+				loading={isPending}
+				className={styles.submit_btn}
+			/>
+		</div>
+	);
 
-		const renderFormContent = (isModal = false) => (
-			<div className={styles.form_container}>
-				{showInput && (
-					<>
-						{!isModal && userInstructions && <p>{userInstructions}</p>}
-						{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
+	return (
+		<>
+			<form onSubmit={handleSubmit(onSubmit)} noValidate>
+				{renderFormContent()}
+			</form>
 
-						<Controller
-							name="contact"
-							control={control}
-							render={({ field, fieldState }) => (
-								<Input
-									{...field}
-									value={contactValue}
-									onChange={(e) => {
-										const newValue = e.target.value;
-										setContactValue(newValue);
-										setValue(
-											"contact",
-											newValue
-											//     {
-											// 	shouldValidate: true,
-											// }
-										);
-									}}
-									dialCode={dialCode}
-									error={fieldState.error}
-									onClick={(e) => e.stopPropagation()}
-									type="tel"
-								/>
-							)}
-						/>
-					</>
-				)}
-				<Button
-					type="submit"
-					label={isModal ? modalCta : cta}
-					size={clickableZone === "Large" ? "large" : undefined}
-					onClick={(e) => {
-						e.stopPropagation();
+			<div onClick={(e) => e.stopPropagation()}>
+				<Dialog
+					focusOnShow={false}
+					visible={showModal}
+					maskStyle={{ padding: "20px" }}
+					blockScroll={true}
+					className={styles.dialog_container}
+					onHide={() => {
+						setShowModal(false);
 					}}
-					loading={isPending}
-					className={styles.submit_btn}
-				/>
+					closable={closableModal}
+					draggable={false}
+					showHeader={closableModal}
+					contentClassName={!closableModal ? styles.no_header : undefined}
+				>
+					<form onSubmit={handleSubmit(onSubmit)} noValidate>
+						{renderFormContent(showModal)}
+					</form>
+				</Dialog>
 			</div>
-		);
-
-		return (
-			<>
-				<form onSubmit={handleSubmit(onSubmit)} noValidate>
-					{renderFormContent()}
-				</form>
-
-				<div onClick={(e) => e.stopPropagation()}>
-					<Dialog
-						focusOnShow={false}
-						visible={showModal}
-						maskStyle={{ padding: "20px" }}
-						blockScroll={true}
-						className={styles.dialog_container}
-						onHide={() => {
-							setShowModal(false);
-						}}
-						closable={closableModal}
-						draggable={false}
-						showHeader={closableModal}
-						contentClassName={!closableModal ? styles.no_header : undefined}
-					>
-						<form onSubmit={handleSubmit(onSubmit)} noValidate>
-							{renderFormContent(true)}
-						</form>
-					</Dialog>
-				</div>
-			</>
-		);
-	}
-);
+		</>
+	);
+};
 
 export default OtpRequest;
