@@ -17,23 +17,11 @@ import { paramConfigs } from "@/utils/param-configs";
 const serviceName = "Service_1";
 
 const Landing = () => {
-	const formRef = useRef(null);
+	// const formRef = useRef(null);
 	const navigate = useNavigate();
 
 	const { params, setParams } = useUrlParams(paramConfigs);
-	const {
-		step,
-		page_type,
-		utm_campaign,
-		lang,
-		gclid,
-		utm_medium,
-		utm_term,
-		utm_content,
-		utm_source,
-		token,
-		rsb,
-	} = params;
+	const { step } = params;
 
 	const goToStep = useCallback(
 		(nextStep) => {
@@ -48,7 +36,7 @@ const Landing = () => {
 			case "initial":
 				return (
 					<OtpRequest
-						ref={formRef}
+						// ref={formRef}
 						//* CSS
 						showInput={showMsisdnInput}
 						clickableZone={clickableZone}
@@ -72,6 +60,8 @@ const Landing = () => {
 			case "otp":
 				return (
 					<OtpConfirm
+						showModal={showModal}
+						setShowModal={setShowModal}
 						content={content}
 						onSuccess={() => {
 							if (redirection && !subscriptionConfirmationPage) {
@@ -80,9 +70,8 @@ const Landing = () => {
 								goToStep("final");
 							}
 						}}
-						onBack={() => goToStep("initial")}
+						closableModal={closableModal}
 						visitorId={visitorId}
-						alreadySubscribed={alreadySubscribed}
 						language={currentLanguage}
 					/>
 				);
@@ -108,7 +97,7 @@ const Landing = () => {
 		const newTimeoutId = setTimeout(() => {
 			setIsLoading(false);
 			setShowModal(true);
-			formRef.current.reset();
+			// formRef.current.reset();
 		}, 1000);
 
 		setTimeoutId(newTimeoutId);
@@ -190,12 +179,12 @@ const Landing = () => {
 					lang={currentLanguage}
 					step={formattedStep}
 					onRootClick={() => {
-						if (step === "initial") {
+						if (step === "initial" || step === "otp") {
 							if (showModal) {
 								return;
 							} else {
 								setShowModal(true);
-								formRef.current.reset();
+								// formRef.current.reset();
 							}
 						}
 					}}

@@ -1,28 +1,34 @@
 import { otpConfirm, resendOtp as resendOtpEndpoint } from "@/api/client";
 import useApi from "@/hooks/useApi";
 import useOtpCountdown from "@/hooks/useOtpCountdown";
-import { useToastContext } from "@/hooks/useToastContext";
-import { errorToast } from "@/utils/toast-messages";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { InputOtp } from "primereact/inputotp";
-import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpConfirm.module.scss";
 import otpConfirmSchema from "./otpConfirmSchema";
 import { languages } from "@/utils/languages-dictionnary";
+import { Dialog } from "primereact/dialog";
 
-const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed, language }) => {
-	const { msisdn, cta, newOtpRequest } = content || {};
+const OtpConfirm = ({
+	onSuccess,
+	visitorId,
+	content,
+	language,
+	showModal, //TODO
+	setShowModal, //TODO
+	closableModal,
+}) => {
+	console.log("🚀 ~ showModal >>", showModal);
+	const { msisdn, userInstructions, cta, modalCta, modalUserInstructions, newOtpRequest } =
+		content || {};
 
 	const { countdown, startCountdown } = useOtpCountdown();
 
 	const handleOtpRequest = () => {
 		resendOtp(msisdn);
 	};
-
-	const { showToast } = useToastContext();
 
 	// * ==== OTP CONFIRM =====
 	const otpConfirmApi = useApi(otpConfirm);
@@ -50,7 +56,6 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed, 
 			});
 		},
 		onSuccess: () => startCountdown(),
-		// onError: (error) => showToast(errorToast(error)),
 	});
 
 	const {
@@ -73,22 +78,11 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed, 
 		confirmOtp(otp);
 	};
 
-	// useEffect(() => {
-	// 	if (!!msisdn && alreadySubscribed) {
-	// 		onBack();
-	// 		showToast(
-	// 			errorToast({
-	// 				message:
-	// 					language === "En"
-	// 						? "You are already subscribed"
-	// 						: "أنت مشترك بالفعل",
-	// 			})
-	// 		);
-	// 	}
-	// }, [msisdn, alreadySubscribed]);
+	const renderFormContent = (isModal = false) => (
+		<div className={styles.container}>
+			{!isModal && userInstructions && <p>{userInstructions}</p>}
+			{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-	return (
-		<form onSubmit={handleSubmit(onSubmit)} className={styles.container}>
 			<Controller
 				name="otp"
 				control={control}
@@ -101,9 +95,8 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed, 
 				loading={isPending}
 				className={styles.cta_btn}
 				disabled={otpWatcher.length !== 4}
-			>
-				{cta}
-			</Button>
+				label={isModal ? modalCta : cta}
+			></Button>
 
 			<Button
 				type={"button"}
@@ -122,7 +115,36 @@ const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed, 
 						: `You can request another OTP in ${countdown} seconds`}
 				</p>
 			)}
-		</form>
+		</div>
+	);
+
+	return (
+		<>
+			<form onSubmit={handleSubmit(onSubmit)} onClick={(e) => e.stopPropagation()}>
+				{renderFormContent()}
+			</form>
+
+			<div onClick={(e) => e.stopPropagation()}>
+				<Dialog
+					focusOnShow={false}
+					visible={showModal}
+					maskStyle={{ padding: "20px" }}
+					blockScroll={true}
+					className={styles.dialog_container}
+					onHide={() => {
+						setShowModal(false);
+					}}
+					closable={closableModal}
+					draggable={false}
+					showHeader={closableModal}
+					contentClassName={!closableModal ? styles.no_header : undefined}
+				>
+					<form onSubmit={handleSubmit(onSubmit)} noValidate>
+						{renderFormContent(true)}
+					</form>
+				</Dialog>
+			</div>
+		</>
 	);
 };
 

@@ -2,8 +2,30 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+
+	gap: 10px;
+
+	p {
+		margin: 0 0 10px;
+		text-align: center;
+	}
+
+	.cta_btn {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+	}
 }
 
-.cta_btn {
-	margin-top: 20px;
+// .cta_btn {
+// 	margin-top: 20px;
+// }
+
+.no_header {
+	padding: 2rem 1.5rem;
+	border-radius: 6px;
+}
+
+.dialog_container {
+	width: 400px;
 }

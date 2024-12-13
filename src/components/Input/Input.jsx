@@ -12,6 +12,7 @@ const Input = forwardRef(
 				<IconField iconPosition="left" className={styles.input_wrapper}>
 					<InputIcon className="pi pi-mobile"></InputIcon>
 					<InputMask
+						autoClear={false}
 						ref={ref}
 						name={name}
 						onChange={onChange}
@@ -24,8 +25,8 @@ const Input = forwardRef(
 						onClick={onClick}
 						value={value}
 						type={type}
-						autoComplete={"tel"}
-						inputMode={"tel"}
+						autoComplete={"tel"} // TODO > not needed for OTP input ?
+						inputMode={"tel"} // TODO > not needed for OTP input ?
 					/>
 				</IconField>
 
