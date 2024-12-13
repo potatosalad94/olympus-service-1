@@ -11,6 +11,9 @@ import CircularProgress from "@/components/CircularProgress/CircularProgress";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import Confirmation from "../confirmation/Confirmation";
+import { languages } from "@/utils/languages-dictionnary";
+import useUrlParams from "@/hooks/useUrlParams";
+import { paramConfigs } from "@/utils/param-configs";
 
 const serviceName = "Service_1";
 
@@ -18,18 +21,31 @@ const Landing = () => {
 	const formRef = useRef(null);
 	const navigate = useNavigate();
 
-	const [currentStep, setCurrentStep] = useStepManagement();
+	const { params, setParams } = useUrlParams(paramConfigs);
+	const {
+		step,
+		page_type,
+		utm_campaign,
+		lang,
+		gclid,
+		utm_medium,
+		utm_term,
+		utm_content,
+		utm_source,
+		token,
+		rsb,
+	} = params;
 
 	const goToStep = useCallback(
 		(nextStep) => {
-			setCurrentStep(nextStep);
+			setParams({ step: nextStep });
 			navigate(`?step=${nextStep}`, { replace: true });
 		},
-		[navigate, setCurrentStep]
+		[navigate]
 	);
 
 	const renderStep = () => {
-		switch (currentStep) {
+		switch (step) {
 			case "initial":
 				return (
 					<OtpRequest
@@ -101,12 +117,8 @@ const Landing = () => {
 
 	// * ====== NEW VIST CALL ======
 
-	const step =
-		currentStep === "initial"
-			? "New Visit"
-			: currentStep === "otp"
-			? "Otp Request"
-			: "Otp Confirm";
+	const formattedStep =
+		step === "initial" ? "New Visit" : step === "otp" ? "Otp Request" : "Otp Confirm";
 
 	const {
 		query: { data: displayData, isFetching },
@@ -114,7 +126,7 @@ const Landing = () => {
 		storedVisitorId: visitorId,
 	} = useDisplayData(
 		serviceName,
-		step
+		formattedStep
 		// 1 // testResponse
 	);
 
@@ -168,7 +180,7 @@ const Landing = () => {
 
 	return (
 		<>
-			{currentStep === "final" ? (
+			{step === "final" ? (
 				<Confirmation data={displayData} />
 			) : (
 				<Layout
@@ -176,9 +188,9 @@ const Landing = () => {
 					terms={termsAndConditions ?? ""}
 					termsVisibility={termsV}
 					lang={currentLanguage}
-					step={step}
+					step={formattedStep}
 					onRootClick={() => {
-						if (currentStep === "initial") {
+						if (step === "initial") {
 							if (showModal) {
 								return;
 							} else {
@@ -190,14 +202,14 @@ const Landing = () => {
 				>
 					<Stepper
 						linear={true}
-						activeStep={currentStep === "otp" ? 1 : 0}
+						activeStep={step === "otp" ? 1 : 0}
 						pt={{
 							panelContainer: {
 								style: {
 									display: "none",
 								},
 							},
-							...(currentLanguage === "Ar" && {
+							...(currentLanguage === languages.arabic && {
 								nav: {
 									style: {
 										flexDirection: "row-reverse",
@@ -222,10 +234,10 @@ const Landing = () => {
 					>
 						{/* الخطوة  */}
 						<StepperPanel
-							header={currentLanguage === "Ar" ? "الخطوة 1" : "Step 1"}
+							header={currentLanguage === languages.arabic ? "الخطوة 1" : "Step 1"}
 						></StepperPanel>
 						<StepperPanel
-							header={currentLanguage === "Ar" ? "الخطوة 2" : "Step 2"}
+							header={currentLanguage === languages.arabic ? "الخطوة 2" : "Step 2"}
 						></StepperPanel>
 					</Stepper>
 
@@ -235,7 +247,7 @@ const Landing = () => {
 								unstyled
 								className={styles.image_button}
 								onClick={
-									currentStep === "initial"
+									step === "initial"
 										? playButton
 											? (e) => {
 													e.stopPropagation();

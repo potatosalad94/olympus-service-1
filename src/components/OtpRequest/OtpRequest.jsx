@@ -104,12 +104,8 @@ const OtpRequest = forwardRef(
 			<div className={styles.form_container}>
 				{showInput && (
 					<>
-						{userInstructions && !isModal && (
-							<p>{userInstructions}</p>
-						)}
-						{modalUserInstructions && isModal && (
-							<p>{modalUserInstructions}</p>
-						)}
+						{userInstructions && !isModal && <p>{userInstructions}</p>}
+						{modalUserInstructions && isModal && <p>{modalUserInstructions}</p>}
 
 						<Controller
 							name="contact"
@@ -159,19 +155,10 @@ const OtpRequest = forwardRef(
 						closable={closableModal}
 						draggable={false}
 						showHeader={closableModal}
-						contentClassName={
-							!closableModal ? styles.no_header : undefined
-						}
+						contentClassName={!closableModal ? styles.no_header : undefined}
 					>
-						<form
-							onSubmit={dialogHandleSubmit(onSubmit)}
-							noValidate
-						>
-							{renderFormContent(
-								dialogControl,
-								dialogErrors,
-								true
-							)}
+						<form onSubmit={dialogHandleSubmit(onSubmit)} noValidate>
+							{renderFormContent(dialogControl, dialogErrors, true)}
 						</form>
 					</Dialog>
 				</div>

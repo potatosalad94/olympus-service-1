@@ -11,15 +11,9 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpConfirm.module.scss";
 import otpConfirmSchema from "./otpConfirmSchema";
+import { languages } from "@/utils/languages-dictionnary";
 
-const OtpConfirm = ({
-	onSuccess,
-	visitorId,
-	onBack,
-	content,
-	alreadySubscribed,
-	language,
-}) => {
+const OtpConfirm = ({ onSuccess, visitorId, onBack, content, alreadySubscribed, language }) => {
 	const { msisdn, cta, newOtpRequest } = content || {};
 
 	const { countdown, startCountdown } = useOtpCountdown();
@@ -99,11 +93,7 @@ const OtpConfirm = ({
 				name="otp"
 				control={control}
 				render={({ field: { onChange, ...field } }) => (
-					<InputOtp
-						{...field}
-						onChange={(e) => onChange(e.value)}
-						integerOnly
-					/>
+					<InputOtp {...field} onChange={(e) => onChange(e.value)} integerOnly />
 				)}
 			/>
 
@@ -127,9 +117,9 @@ const OtpConfirm = ({
 
 			{countdown > 0 && (
 				<p>
-					{language === "En"
-						? `You can request another OTP in ${countdown} seconds`
-						: `يمكنك طلب رمز التحقق مرة أخرى بعد ${countdown} ثانية`}
+					{language === languages.arabic
+						? `يمكنك طلب رمز التحقق مرة أخرى بعد ${countdown} ثانية`
+						: `You can request another OTP in ${countdown} seconds`}
 				</p>
 			)}
 		</form>
