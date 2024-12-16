@@ -1,3 +1,4 @@
+import { classNames } from "primereact/utils";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import styles from "./Layout.module.scss";
@@ -11,12 +12,19 @@ const Layout = ({
 	onRootClick,
 	step,
 	logo,
+	fullscreenPlayer,
 }) => {
 	return (
 		<div className={styles.container} onClick={onRootClick}>
 			<div style={{ height: termsVisibility ? "auto" : "100dvh" }}>
 				<Header text={headerPrice} lang={lang} step={step} logo={logo} />
-				<div className={styles.children_wrapper}>{children}</div>
+				<div
+					className={classNames(styles.children_wrapper, {
+						[styles.isFullscreen]: fullscreenPlayer,
+					})}
+				>
+					{children}
+				</div>
 			</div>
 
 			<Footer content={terms} />

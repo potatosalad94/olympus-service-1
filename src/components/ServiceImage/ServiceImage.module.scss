@@ -1,0 +1,41 @@
+.service_img_container {
+	display: flex;
+	justify-content: center;
+
+	.image_button {
+		position: relative;
+		border: none;
+		background: none;
+	}
+
+	i {
+		color: white;
+		font-size: 5rem;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.rotating_icon {
+		transform: translate(-50%, -50%) rotate(0deg);
+		animation: rotate 2s linear infinite;
+	}
+
+	@keyframes rotate {
+		from {
+			transform: translate(-50%, -50%) rotate(0deg);
+		}
+		to {
+			transform: translate(-50%, -50%) rotate(360deg);
+		}
+	}
+
+	img:not(.isFullscreen) {
+		width: 100%;
+		max-width: 300px;
+	}
+	img.isFullscreen {
+		width: 100%;
+	}
+}

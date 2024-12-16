@@ -192,6 +192,7 @@ const OtpRequest = ({
 	showInput,
 	msisdnPrefill,
 	language,
+	blurPx,
 }) => {
 	const otpRequestApi = useApi(otpRequest);
 
@@ -283,7 +284,7 @@ const OtpRequest = ({
 					pt={{
 						mask: {
 							style: {
-								backdropFilter: `blur(15px)`, //TODO >> value will be dynamic from backend `blurPx`
+								backdropFilter: `blur(${blurPx}px)`,
 							},
 						},
 					}}

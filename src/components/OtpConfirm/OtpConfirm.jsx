@@ -20,6 +20,7 @@ const OtpConfirm = ({
 	showModal,
 	setShowModal,
 	closableModal,
+	blurPx,
 }) => {
 	const [otpValue, setOtpValue] = useState("");
 
@@ -140,7 +141,7 @@ const OtpConfirm = ({
 					pt={{
 						mask: {
 							style: {
-								backdropFilter: `blur(5px)`, //TODO >> value will be dynamic from backend `blurPx`
+								backdropFilter: `blur(${blurPx}px)`,
 							},
 						},
 					}}

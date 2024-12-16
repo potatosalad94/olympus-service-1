@@ -3,21 +3,20 @@ import OtpRequest from "@/components/OtpRequest/OtpRequest";
 import useDisplayData from "@/hooks/useDisplayData";
 import Layout from "@components/Layout/Layout";
 import { Button } from "primereact/button";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Landing.module.scss";
-import CircularProgress from "@/components/CircularProgress/CircularProgress";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import Confirmation from "../confirmation/Confirmation";
 import { languages } from "@/utils/languages-dictionnary";
 import useUrlParams from "@/hooks/useUrlParams";
 import { paramConfigs } from "@/utils/param-configs";
+import ServiceImage from "@/components/ServiceImage/ServiceImage";
 
 const serviceName = "Service_1";
 
 const Landing = () => {
-	// const formRef = useRef(null);
 	const navigate = useNavigate();
 
 	const { params, setParams } = useUrlParams(paramConfigs);
@@ -31,18 +30,39 @@ const Landing = () => {
 		[navigate]
 	);
 
+	// ! ============== MODAL COMPONENT =======================
+
+	const [showModal, setShowModal] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [timeoutId, setTimeoutId] = useState(null);
+
+	const handleShowModal = useCallback(() => {
+		setIsLoading(true);
+
+		if (timeoutId) {
+			clearTimeout(timeoutId);
+		}
+
+		const newTimeoutId = setTimeout(() => {
+			setIsLoading(false);
+			setShowModal(true);
+		}, 1000);
+
+		setTimeoutId(newTimeoutId);
+	}, [timeoutId]);
+
+	// ! ======================================================
+
 	const renderStep = () => {
 		switch (step) {
 			case "initial":
 				return (
 					<OtpRequest
-						// ref={formRef}
-						//* CSS
 						showInput={showMsisdnInput}
 						clickableZone={clickableZone}
 						msisdnPrefill={msisdnPrefill}
 						closableModal={closableModal}
-						//* CONTENT
+						blurPx={blurPx}
 						msisdn={msisdn}
 						dialCode={dialCode}
 						userInstructions={userInstructions}
@@ -50,7 +70,6 @@ const Landing = () => {
 						modalUserInstructions={modalUserInstructions}
 						modalCta={modalCta}
 						language={currentLanguage}
-						// *
 						showModal={showModal}
 						setShowModal={setShowModal}
 						visitorId={visitorId}
@@ -71,6 +90,7 @@ const Landing = () => {
 							}
 						}}
 						closableModal={closableModal}
+						blurPx={blurPx}
 						visitorId={visitorId}
 						language={currentLanguage}
 					/>
@@ -81,43 +101,16 @@ const Landing = () => {
 		}
 	};
 
-	// ! =====================================
-
-	const [showModal, setShowModal] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
-	const [timeoutId, setTimeoutId] = useState(null);
-
-	const handleShowModal = useCallback(() => {
-		setIsLoading(true);
-
-		if (timeoutId) {
-			clearTimeout(timeoutId);
-		}
-
-		const newTimeoutId = setTimeout(() => {
-			setIsLoading(false);
-			setShowModal(true);
-			// formRef.current.reset();
-		}, 1000);
-
-		setTimeoutId(newTimeoutId);
-	}, [timeoutId]);
-
 	// * ====== NEW VIST CALL ======
 
 	const formattedStep =
 		step === "initial" ? "New Visit" : step === "otp" ? "Otp Request" : "Otp Confirm";
 
 	const {
-		query: { data: displayData, isFetching },
+		query: { data: displayData, isFetching, isSuccess },
 		isCollecting,
 		storedVisitorId: visitorId,
-	} = useDisplayData(
-		serviceName,
-		formattedStep,
-		params
-		// 1 // testResponse
-	);
+	} = useDisplayData(serviceName, formattedStep, params);
 
 	const {
 		css,
@@ -128,6 +121,7 @@ const Landing = () => {
 		alreadySubscribed,
 		redirection,
 		subscriptionConfirmationPage,
+		userFlow,
 	} = displayData || {};
 
 	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
@@ -137,8 +131,18 @@ const Landing = () => {
 		}
 	}, [alreadySubscribed, ctaMethod, goToStep]);
 
-	const { clickableZone, termsV, playButton, closableModal, showMsisdnInput, msisdnPrefill } =
-		css || {};
+	const {
+		clickableZone,
+		termsV,
+		playButton,
+		closableModal,
+		showMsisdnInput,
+		msisdnPrefill,
+		blurPx,
+		skipTopPriceDesc, //TODO
+		showStepper, // TODO
+		fullscreenPlayer,
+	} = css || {};
 
 	const {
 		acknowledgment,
@@ -157,6 +161,39 @@ const Landing = () => {
 		topPriceDescription,
 	} = content || {};
 
+	const handleRootClick = () => {
+		if (userFlow === "full") {
+			setShowModal(true);
+		} else if (step === "initial" || step === "otp") {
+			if (showModal) {
+				return;
+			} else {
+				setShowModal(true);
+			}
+		}
+	};
+
+	useEffect(() => {
+		if (userFlow === "full" && step === "otp") {
+			setShowModal(true);
+		}
+	}, [userFlow, step]);
+
+	// const scrollPosition = 50;
+
+	// useEffect(() => {
+	// 	// Immediately set the scroll position without animation
+
+	// 	if (isSuccess && !isLoading)
+	// 		window.scrollTo({
+	// 			top: scrollPosition,
+	// 			left: 0,
+	// 			behavior: "instant", // This prevents smooth scrolling
+	// 		});
+	// }, [scrollPosition, isSuccess, isLoading]);
+
+	//TODO >> aussi ajouter que userFlow !== "full" dans la condition
+	//TODO >> pour éviter de render la loading page dans le cas d'un flow full modale
 	if (isFetching || isCollecting)
 		return (
 			<div className={styles.loading_container}>
@@ -180,86 +217,63 @@ const Landing = () => {
 					lang={currentLanguage}
 					step={formattedStep}
 					logo={logo}
-					onRootClick={() => {
-						if (step === "initial" || step === "otp") {
-							if (showModal) {
-								return;
-							} else {
-								setShowModal(true);
-								// formRef.current.reset();
-							}
-						}
-					}}
+					onRootClick={handleRootClick}
+					fullscreenPlayer={fullscreenPlayer}
 				>
-					<Stepper
-						linear={true}
-						activeStep={step === "otp" ? 1 : 0}
-						pt={{
-							panelContainer: {
-								style: {
-									display: "none",
-								},
-							},
-							...(currentLanguage === languages.arabic && {
-								nav: {
+					{showStepper && (
+						<Stepper
+							linear={true}
+							activeStep={step === "otp" ? 1 : 0}
+							pt={{
+								panelContainer: {
 									style: {
-										flexDirection: "row-reverse",
+										display: "none",
 									},
 								},
-
-								stepperpanel: {
-									style: {
-										flexDirection: "row-reverse",
-									},
-									className: styles.stepper_panel,
-
-									separator: {
+								...(currentLanguage === languages.arabic && {
+									nav: {
 										style: {
-											marginInlineStart: 0,
-											marginInlineEnd: "1rem",
+											flexDirection: "row-reverse",
 										},
 									},
-								},
-							}),
-						}}
-					>
-						{/* الخطوة  */}
-						<StepperPanel
-							header={currentLanguage === languages.arabic ? "الخطوة 1" : "Step 1"}
-						></StepperPanel>
-						<StepperPanel
-							header={currentLanguage === languages.arabic ? "الخطوة 2" : "Step 2"}
-						></StepperPanel>
-					</Stepper>
 
-					<div className={styles.logo_container}>
-						{image ? (
-							<Button
-								unstyled
-								className={styles.image_button}
-								onClick={
-									step === "initial"
-										? playButton
-											? (e) => {
-													e.stopPropagation();
-													handleShowModal();
-											  }
-											: undefined
-										: undefined
+									stepperpanel: {
+										style: {
+											flexDirection: "row-reverse",
+										},
+										className: styles.stepper_panel,
+
+										separator: {
+											style: {
+												marginInlineStart: 0,
+												marginInlineEnd: "1rem",
+											},
+										},
+									},
+								}),
+							}}
+						>
+							<StepperPanel
+								header={
+									currentLanguage === languages.arabic ? "الخطوة 1" : "Step 1"
 								}
-							>
-								{playButton && !isLoading && <i className="pi pi-play-circle"></i>}
-								{isLoading && (
-									<i
-										className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}
-									></i>
-								)}
-								<img src={image} alt="" />
-							</Button>
-						) : (
-							<CircularProgress />
-						)}
-					</div>
+							></StepperPanel>
+							<StepperPanel
+								header={
+									currentLanguage === languages.arabic ? "الخطوة 2" : "Step 2"
+								}
+							></StepperPanel>
+						</Stepper>
+					)}
+
+					<ServiceImage
+						playButton={playButton}
+						isLoading={isLoading}
+						image={image}
+						onShowModal={handleShowModal}
+						step={step}
+						fullscreenPlayer={fullscreenPlayer}
+					/>
 
 					{serviceDescription && (
 						<div className={styles.desc}>

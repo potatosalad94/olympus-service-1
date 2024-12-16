@@ -9,6 +9,10 @@
 		margin: auto;
 		padding: 1rem;
 
+		&.isFullscreen {
+			width: 100%;
+		}
+
 		@media screen and (max-width: 400px) {
 			width: 100%;
 		}
