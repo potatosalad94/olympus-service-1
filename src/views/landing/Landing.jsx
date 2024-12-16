@@ -148,6 +148,7 @@ const Landing = () => {
 		modalCta,
 		modalUserInstructions,
 		exitButton,
+		logo,
 		image,
 		msisdn,
 		dialCode,
@@ -178,6 +179,7 @@ const Landing = () => {
 					termsVisibility={termsV}
 					lang={currentLanguage}
 					step={formattedStep}
+					logo={logo}
 					onRootClick={() => {
 						if (step === "initial" || step === "otp") {
 							if (showModal) {

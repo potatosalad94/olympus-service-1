@@ -280,6 +280,13 @@ const OtpRequest = ({
 
 			<div onClick={(e) => e.stopPropagation()}>
 				<Dialog
+					pt={{
+						mask: {
+							style: {
+								backdropFilter: `blur(15px)`, //TODO >> value will be dynamic from backend `blurPx`
+							},
+						},
+					}}
 					focusOnShow={false}
 					visible={showModal}
 					maskStyle={{ padding: "20px" }}

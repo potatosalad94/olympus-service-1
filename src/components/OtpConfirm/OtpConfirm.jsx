@@ -137,6 +137,13 @@ const OtpConfirm = ({
 
 			<div onClick={(e) => e.stopPropagation()}>
 				<Dialog
+					pt={{
+						mask: {
+							style: {
+								backdropFilter: `blur(5px)`, //TODO >> value will be dynamic from backend `blurPx`
+							},
+						},
+					}}
 					focusOnShow={false}
 					visible={showModal}
 					maskStyle={{ padding: "20px" }}

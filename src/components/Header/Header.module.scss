@@ -1,11 +1,26 @@
+.price_wrapper {
+	display: flex;
+	justify-content: center;
+	background-color: var(--primary-color);
+	color: var(--primary-color-text);
+}
+
 .container {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-end;
 	padding: 1rem;
 	gap: 20px;
 
+	&.hasLogo {
+		justify-content: space-between;
+	}
+
 	&.reverse {
 		flex-direction: row-reverse;
+	}
+
+	.logo {
+		width: 100px;
 	}
 }
