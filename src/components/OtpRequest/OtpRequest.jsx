@@ -197,7 +197,9 @@ const OtpRequest = ({
 	const otpRequestApi = useApi(otpRequest);
 
 	// Add a state to manage the contact value separately
-	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
+	const [contactValue, setContactValue] = useState(
+		msisdnPrefill && msisdn ? msisdn : ""
+	);
 
 	const { mutate: requestOtp, isPending } = useMutation({
 		mutationFn: (msisdn = "") => {
@@ -234,42 +236,44 @@ const OtpRequest = ({
 
 	const renderFormContent = (isModal = false) => (
 		<div className={styles.form_container}>
-			{showInput && (
-				<>
-					{!isModal && userInstructions && <p>{userInstructions}</p>}
-					{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
+			{!isModal && userInstructions && <p>{userInstructions}</p>}
+			{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-					<Controller
-						name="contact"
-						control={control}
-						render={({ field, fieldState }) => (
-							<Input
-								{...field}
-								value={contactValue}
-								onChange={(e) => {
-									const newValue = e.target.value;
-									setContactValue(newValue);
-									setValue("contact", newValue);
-								}}
-								dialCode={dialCode}
-								error={fieldState.error}
-								onClick={(e) => e.stopPropagation()}
-								type="tel"
-							/>
-						)}
-					/>
-				</>
+			{/* //TODO >> add:  || showInputModal */}
+			{showInput && (
+				<Controller
+					name="contact"
+					control={control}
+					render={({ field, fieldState }) => (
+						<Input
+							{...field}
+							value={contactValue}
+							onChange={(e) => {
+								const newValue = e.target.value;
+								setContactValue(newValue);
+								setValue("contact", newValue);
+							}}
+							dialCode={dialCode}
+							error={fieldState.error}
+							onClick={(e) => e.stopPropagation()}
+							type="tel"
+						/>
+					)}
+				/>
 			)}
-			<Button
-				type="submit"
-				label={isModal ? modalCta : cta}
-				size={clickableZone === "Large" ? "large" : undefined}
-				onClick={(e) => {
-					e.stopPropagation();
-				}}
-				loading={isPending}
-				className={styles.submit_btn}
-			/>
+
+			{((isModal && modalCta) || (cta && !modalCta)) && (
+				<Button
+					type="submit"
+					label={isModal ? modalCta : cta}
+					size={clickableZone === "Large" ? "large" : undefined}
+					onClick={(e) => {
+						e.stopPropagation();
+					}}
+					loading={isPending}
+					className={styles.submit_btn}
+				/>
+			)}
 		</div>
 	);
 
@@ -299,7 +303,9 @@ const OtpRequest = ({
 					closable={closableModal}
 					draggable={false}
 					showHeader={closableModal}
-					contentClassName={!closableModal ? styles.no_header : undefined}
+					contentClassName={
+						!closableModal ? styles.no_header : undefined
+					}
 				>
 					<form onSubmit={handleSubmit(onSubmit)} noValidate>
 						{renderFormContent(showModal)}

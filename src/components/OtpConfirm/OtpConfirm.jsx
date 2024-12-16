@@ -21,11 +21,18 @@ const OtpConfirm = ({
 	setShowModal,
 	closableModal,
 	blurPx,
+	showInput,
 }) => {
 	const [otpValue, setOtpValue] = useState("");
 
-	const { msisdn, userInstructions, cta, modalCta, modalUserInstructions, newOtpRequest } =
-		content || {};
+	const {
+		msisdn,
+		userInstructions,
+		cta,
+		modalCta,
+		modalUserInstructions,
+		newOtpRequest,
+	} = content || {};
 
 	const { countdown, startCountdown } = useOtpCountdown();
 
@@ -87,38 +94,45 @@ const OtpConfirm = ({
 			{!isModal && userInstructions && <p>{userInstructions}</p>}
 			{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-			<Controller
-				name="otp"
-				control={control}
-				render={({ field: { ...field } }) => (
-					<InputOtp
-						{...field}
-						onChange={(e) => {
-							const newValue = e.value;
-							setOtpValue(newValue);
-							setValue("otp", newValue);
-						}}
-						integerOnly
-					/>
-				)}
-			/>
+			{showInput && (
+				<Controller
+					name="otp"
+					control={control}
+					render={({ field }) => (
+						<InputOtp
+							{...field}
+							onChange={(e) => {
+								const newValue = e.value;
+								setOtpValue(newValue);
+								setValue("otp", newValue);
+							}}
+							integerOnly
+							// error={fieldState.error} //TODO >> ajouter ?
+						/>
+					)}
+				/>
+			)}
 
-			<Button
-				loading={isPending}
-				className={styles.cta_btn}
-				disabled={otpWatcher.length !== 4}
-				label={isModal ? modalCta : cta}
-			></Button>
+			{((isModal && modalCta) || (cta && !modalCta)) && (
+				<>
+					<Button
+						loading={isPending}
+						className={styles.cta_btn}
+						disabled={otpWatcher.length !== 4}
+						label={isModal ? modalCta : cta}
+					></Button>
 
-			<Button
-				type={"button"}
-				className={styles.cta_btn}
-				onClick={handleOtpRequest}
-				disabled={countdown > 0}
-				link
-			>
-				{newOtpRequest}
-			</Button>
+					<Button
+						type={"button"}
+						className={styles.cta_btn}
+						onClick={handleOtpRequest}
+						disabled={countdown > 0}
+						link
+					>
+						{newOtpRequest}
+					</Button>
+				</>
+			)}
 
 			{countdown > 0 && (
 				<p>
@@ -132,7 +146,10 @@ const OtpConfirm = ({
 
 	return (
 		<>
-			<form onSubmit={handleSubmit(onSubmit)} onClick={(e) => e.stopPropagation()}>
+			<form
+				onSubmit={handleSubmit(onSubmit)}
+				onClick={(e) => e.stopPropagation()}
+			>
 				{renderFormContent()}
 			</form>
 
@@ -156,7 +173,9 @@ const OtpConfirm = ({
 					closable={closableModal}
 					draggable={false}
 					showHeader={closableModal}
-					contentClassName={!closableModal ? styles.no_header : undefined}
+					contentClassName={
+						!closableModal ? styles.no_header : undefined
+					}
 				>
 					<form onSubmit={handleSubmit(onSubmit)} noValidate>
 						{renderFormContent(showModal)}

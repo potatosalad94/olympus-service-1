@@ -79,6 +79,7 @@ const Landing = () => {
 			case "otp":
 				return (
 					<OtpConfirm
+						showInput={showMsisdnInput}
 						showModal={showModal}
 						setShowModal={setShowModal}
 						content={content}
@@ -104,7 +105,11 @@ const Landing = () => {
 	// * ====== NEW VIST CALL ======
 
 	const formattedStep =
-		step === "initial" ? "New Visit" : step === "otp" ? "Otp Request" : "Otp Confirm";
+		step === "initial"
+			? "New Visit"
+			: step === "otp"
+			? "Otp Request"
+			: "Otp Confirm";
 
 	const {
 		query: { data: displayData, isFetching, isSuccess },
@@ -121,7 +126,7 @@ const Landing = () => {
 		alreadySubscribed,
 		redirection,
 		subscriptionConfirmationPage,
-		userFlow,
+		modalFlow,
 	} = displayData || {};
 
 	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
@@ -140,7 +145,7 @@ const Landing = () => {
 		msisdnPrefill,
 		blurPx,
 		skipTopPriceDesc, //TODO
-		showStepper, // TODO
+		showStepper,
 		fullscreenPlayer,
 	} = css || {};
 
@@ -162,22 +167,24 @@ const Landing = () => {
 	} = content || {};
 
 	const handleRootClick = () => {
-		if (userFlow === "full") {
-			setShowModal(true);
-		} else if (step === "initial" || step === "otp") {
-			if (showModal) {
-				return;
-			} else {
+		if (step === "initial" || step === "otp") {
+			if (modalFlow === "full") {
 				setShowModal(true);
+			} else {
+				if (showModal || !modalFlow) {
+					return;
+				} else {
+					setShowModal(true);
+				}
 			}
 		}
 	};
 
 	useEffect(() => {
-		if (userFlow === "full" && step === "otp") {
+		if (modalFlow === "full" && step === "otp") {
 			setShowModal(true);
 		}
-	}, [userFlow, step]);
+	}, [modalFlow, step]);
 
 	// const scrollPosition = 50;
 
@@ -255,12 +262,16 @@ const Landing = () => {
 						>
 							<StepperPanel
 								header={
-									currentLanguage === languages.arabic ? "الخطوة 1" : "Step 1"
+									currentLanguage === languages.arabic
+										? "الخطوة 1"
+										: "Step 1"
 								}
 							></StepperPanel>
 							<StepperPanel
 								header={
-									currentLanguage === languages.arabic ? "الخطوة 2" : "Step 2"
+									currentLanguage === languages.arabic
+										? "الخطوة 2"
+										: "Step 2"
 								}
 							></StepperPanel>
 						</Stepper>
@@ -306,7 +317,9 @@ const Landing = () => {
 
 					{acknowledgment && (
 						<div className={styles.acknowledgment_container}>
-							<i className={styles.acknowledgment}>{acknowledgment}</i>
+							<i className={styles.acknowledgment}>
+								{acknowledgment}
+							</i>
 						</div>
 					)}
 				</Layout>
