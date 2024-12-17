@@ -13,6 +13,7 @@ import { languages } from "@/utils/languages-dictionnary";
 import useUrlParams from "@/hooks/useUrlParams";
 import { paramConfigs } from "@/utils/param-configs";
 import ServiceImage from "@/components/ServiceImage/ServiceImage";
+import FullFlow from "@/components/FullFlow";
 
 const serviceName = "Service_1";
 
@@ -59,6 +60,7 @@ const Landing = () => {
 				return (
 					<OtpRequest
 						showInput={showMsisdnInput}
+						showModalInput={showModalMsisdnInput}
 						clickableZone={clickableZone}
 						msisdnPrefill={msisdnPrefill}
 						closableModal={closableModal}
@@ -70,7 +72,7 @@ const Landing = () => {
 						modalUserInstructions={modalUserInstructions}
 						modalCta={modalCta}
 						language={currentLanguage}
-						showModal={showModal}
+						showModal={showModal && modalFlow !== "full"}
 						setShowModal={setShowModal}
 						visitorId={visitorId}
 						onSuccess={() => goToStep("otp")}
@@ -80,7 +82,8 @@ const Landing = () => {
 				return (
 					<OtpConfirm
 						showInput={showMsisdnInput}
-						showModal={showModal}
+						showModalInput={showModalMsisdnInput}
+						showModal={showModal && modalFlow !== "full"}
 						setShowModal={setShowModal}
 						content={content}
 						onSuccess={() => {
@@ -105,14 +108,10 @@ const Landing = () => {
 	// * ====== NEW VIST CALL ======
 
 	const formattedStep =
-		step === "initial"
-			? "New Visit"
-			: step === "otp"
-			? "Otp Request"
-			: "Otp Confirm";
+		step === "initial" ? "New Visit" : step === "otp" ? "Otp Request" : "Otp Confirm";
 
 	const {
-		query: { data: displayData, isFetching, isSuccess },
+		query: { data: displayData, isFetching },
 		isCollecting,
 		storedVisitorId: visitorId,
 	} = useDisplayData(serviceName, formattedStep, params);
@@ -129,19 +128,13 @@ const Landing = () => {
 		modalFlow,
 	} = displayData || {};
 
-	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
-	useEffect(() => {
-		if (ctaMethod === "OtpConfirm" && !alreadySubscribed) {
-			goToStep("otp");
-		}
-	}, [alreadySubscribed, ctaMethod, goToStep]);
-
 	const {
 		clickableZone,
 		termsV,
 		playButton,
 		closableModal,
 		showMsisdnInput,
+		showModalMsisdnInput,
 		msisdnPrefill,
 		blurPx,
 		skipTopPriceDesc, //TODO
@@ -164,27 +157,37 @@ const Landing = () => {
 		serviceDescription,
 		termsAndConditions,
 		topPriceDescription,
+		newOtpRequest,
+		otpConfirmTimer,
 	} = content || {};
 
 	const handleRootClick = () => {
 		if (step === "initial" || step === "otp") {
-			if (modalFlow === "full") {
+			if (modalFlow === "full" || modalFlow === "hybrid") {
 				setShowModal(true);
 			} else {
-				if (showModal || !modalFlow) {
-					return;
-				} else {
-					setShowModal(true);
-				}
+				return;
 			}
 		}
 	};
 
+	// !==== USE EFFECTS =====
+	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
 	useEffect(() => {
-		if (modalFlow === "full" && step === "otp") {
+		if (modalFlow !== "full" && ctaMethod === "OtpConfirm" && !alreadySubscribed) {
+			goToStep("otp");
+		}
+	}, [modalFlow, alreadySubscribed, ctaMethod, goToStep]);
+
+	useEffect(() => {
+		if (
+			modalFlow === "full" &&
+			!alreadySubscribed &&
+			(step === "otp" || ctaMethod === "OtpConfirm")
+		) {
 			setShowModal(true);
 		}
-	}, [modalFlow, step]);
+	}, [modalFlow, alreadySubscribed, ctaMethod, step]);
 
 	// const scrollPosition = 50;
 
@@ -199,14 +202,10 @@ const Landing = () => {
 	// 		});
 	// }, [scrollPosition, isSuccess, isLoading]);
 
-	//TODO >> aussi ajouter que userFlow !== "full" dans la condition
-	//TODO >> pour éviter de render la loading page dans le cas d'un flow full modale
 	if (isFetching || isCollecting)
 		return (
 			<div className={styles.loading_container}>
-				<i
-					className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon} ${styles.page_spinner}`}
-				></i>
+				<i className={`pi pi-spin pi-spinner-dotted ${styles.page_spinner}`}></i>
 			</div>
 		);
 
@@ -226,6 +225,7 @@ const Landing = () => {
 					logo={logo}
 					onRootClick={handleRootClick}
 					fullscreenPlayer={fullscreenPlayer}
+					skipTopPriceDesc={skipTopPriceDesc}
 				>
 					{showStepper && (
 						<Stepper
@@ -262,16 +262,12 @@ const Landing = () => {
 						>
 							<StepperPanel
 								header={
-									currentLanguage === languages.arabic
-										? "الخطوة 1"
-										: "Step 1"
+									currentLanguage === languages.arabic ? "الخطوة 1" : "Step 1"
 								}
 							></StepperPanel>
 							<StepperPanel
 								header={
-									currentLanguage === languages.arabic
-										? "الخطوة 2"
-										: "Step 2"
+									currentLanguage === languages.arabic ? "الخطوة 2" : "Step 2"
 								}
 							></StepperPanel>
 						</Stepper>
@@ -293,6 +289,35 @@ const Landing = () => {
 					)}
 
 					<div className={styles.main}>
+						{modalFlow === "full" && (
+							<FullFlow
+								showModal={showModal}
+								setShowModal={setShowModal}
+								showModalInput={showModalMsisdnInput}
+								clickableZone={clickableZone}
+								msisdnPrefill={msisdnPrefill}
+								closableModal={closableModal}
+								blurPx={blurPx}
+								msisdn={msisdn}
+								dialCode={dialCode}
+								modalUserInstructions={modalUserInstructions}
+								modalCta={modalCta}
+								language={currentLanguage}
+								ctaMethod={ctaMethod}
+								visitorId={visitorId}
+								onSuccess={() => {
+									if (redirection && !subscriptionConfirmationPage) {
+										window.location.replace(redirection);
+									} else {
+										goToStep("final");
+									}
+								}}
+								isLoadingDataDisplay={isFetching}
+								newOtpRequest={newOtpRequest}
+								otpConfirmTimer={otpConfirmTimer}
+							/>
+						)}
+
 						{renderStep()}
 
 						{exitButton && (
@@ -317,9 +342,7 @@ const Landing = () => {
 
 					{acknowledgment && (
 						<div className={styles.acknowledgment_container}>
-							<i className={styles.acknowledgment}>
-								{acknowledgment}
-							</i>
+							<i className={styles.acknowledgment}>{acknowledgment}</i>
 						</div>
 					)}
 				</Layout>

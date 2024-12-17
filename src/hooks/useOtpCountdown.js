@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const OTP_TIME_STAMP = "otpRequestTimestamp";
 
@@ -8,9 +8,7 @@ const useOtpCountdown = (countdownTime = 60) => {
 	useEffect(() => {
 		const storedTimestamp = localStorage.getItem(OTP_TIME_STAMP);
 		if (storedTimestamp) {
-			const elapsedTime = Math.floor(
-				(Date.now() - parseInt(storedTimestamp)) / 1000
-			);
+			const elapsedTime = Math.floor((Date.now() - parseInt(storedTimestamp)) / 1000);
 			if (elapsedTime < countdownTime) {
 				setCountdown(countdownTime - elapsedTime);
 			}

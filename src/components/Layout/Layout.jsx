@@ -2,6 +2,7 @@ import { classNames } from "primereact/utils";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import styles from "./Layout.module.scss";
+import { useEffect, useRef } from "react";
 
 const Layout = ({
 	children,
@@ -13,9 +14,23 @@ const Layout = ({
 	step,
 	logo,
 	fullscreenPlayer,
+	skipTopPriceDesc,
 }) => {
+	const divRef = useRef();
+
+	const scrollToElement = () => {
+		const { current } = divRef;
+		if (current !== null) {
+			current.scrollIntoView({ behavior: "instant" });
+		}
+	};
+
+	useEffect(() => {
+		if (skipTopPriceDesc) scrollToElement();
+	}, [skipTopPriceDesc]);
+
 	return (
-		<div className={styles.container} onClick={onRootClick}>
+		<div ref={divRef} className={styles.container} onClick={onRootClick}>
 			<div style={{ height: termsVisibility ? "auto" : "100dvh" }}>
 				<Header text={headerPrice} lang={lang} step={step} logo={logo} />
 				<div

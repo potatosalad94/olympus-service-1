@@ -22,8 +22,9 @@ const OtpConfirm = ({
 	closableModal,
 	blurPx,
 	showInput,
+	showModalInput,
 }) => {
-	const [otpValue, setOtpValue] = useState("");
+	const [otpState, setOtpState] = useState("");
 
 	const {
 		msisdn,
@@ -32,9 +33,10 @@ const OtpConfirm = ({
 		modalCta,
 		modalUserInstructions,
 		newOtpRequest,
+		otpConfirmTimer,
 	} = content || {};
 
-	const { countdown, startCountdown } = useOtpCountdown();
+	const { countdown, startCountdown } = useOtpCountdown(otpConfirmTimer);
 
 	const handleOtpRequest = () => {
 		resendOtp(msisdn);
@@ -68,6 +70,8 @@ const OtpConfirm = ({
 		onSuccess: () => startCountdown(),
 	});
 
+	// * =================
+
 	const {
 		control,
 		handleSubmit,
@@ -79,7 +83,7 @@ const OtpConfirm = ({
 		resolver: joiResolver(otpConfirmSchema),
 		mode: "onSubmit",
 		defaultValues: {
-			otp: otpValue,
+			otp: otpState,
 		},
 	});
 
@@ -94,7 +98,7 @@ const OtpConfirm = ({
 			{!isModal && userInstructions && <p>{userInstructions}</p>}
 			{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-			{showInput && (
+			{(showInput || showModalInput) && (
 				<Controller
 					name="otp"
 					control={control}
@@ -103,7 +107,7 @@ const OtpConfirm = ({
 							{...field}
 							onChange={(e) => {
 								const newValue = e.value;
-								setOtpValue(newValue);
+								setOtpState(newValue);
 								setValue("otp", newValue);
 							}}
 							integerOnly
@@ -146,12 +150,11 @@ const OtpConfirm = ({
 
 	return (
 		<>
-			<form
-				onSubmit={handleSubmit(onSubmit)}
-				onClick={(e) => e.stopPropagation()}
-			>
-				{renderFormContent()}
-			</form>
+			{(showInput || cta) && (
+				<form onSubmit={handleSubmit(onSubmit)} onClick={(e) => e.stopPropagation()}>
+					{renderFormContent()}
+				</form>
+			)}
 
 			<div onClick={(e) => e.stopPropagation()}>
 				<Dialog
@@ -163,7 +166,7 @@ const OtpConfirm = ({
 						},
 					}}
 					focusOnShow={false}
-					visible={showModal}
+					visible={showModal} //TODO >> ajouter aussi modalFlow !== "full" ?
 					maskStyle={{ padding: "20px" }}
 					blockScroll={true}
 					className={styles.dialog_container}
@@ -173,9 +176,7 @@ const OtpConfirm = ({
 					closable={closableModal}
 					draggable={false}
 					showHeader={closableModal}
-					contentClassName={
-						!closableModal ? styles.no_header : undefined
-					}
+					contentClassName={!closableModal ? styles.no_header : undefined}
 				>
 					<form onSubmit={handleSubmit(onSubmit)} noValidate>
 						{renderFormContent(showModal)}
