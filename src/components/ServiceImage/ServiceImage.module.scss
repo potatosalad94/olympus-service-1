@@ -33,9 +33,11 @@
 
 	img:not(.isFullscreen) {
 		width: 100%;
-		max-width: 300px;
+		height: unset;
 	}
+
 	img.isFullscreen {
 		width: 100%;
+		// min-height: 500px;
 	}
 }
