@@ -13,7 +13,9 @@ const ServiceImage = ({ playButton, isLoading, image, onShowModal, step, fullscr
 			{image ? (
 				<Button
 					unstyled
-					className={styles.image_button}
+					className={classNames(styles.image_button, {
+						[styles.isFullscreen]: fullscreenPlayer,
+					})}
 					onClick={
 						step === "initial"
 							? playButton

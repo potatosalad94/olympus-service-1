@@ -2,6 +2,7 @@ import { classNames } from "primereact/utils";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import styles from "./Layout.module.scss";
+import { useScrollToElement } from "@/hooks/useScrollToElement";
 
 const Layout = ({
 	children,
@@ -15,6 +16,8 @@ const Layout = ({
 	fullscreenPlayer,
 	skipTopPriceDesc,
 }) => {
+	const divRef = useScrollToElement(fullscreenPlayer);
+
 	return (
 		<div className={styles.container} onClick={onRootClick}>
 			<div style={{ height: termsVisibility ? "auto" : "100dvh" }}>
@@ -26,6 +29,7 @@ const Layout = ({
 					logo={logo}
 				/>
 				<div
+					ref={divRef}
 					className={classNames(styles.children_wrapper, {
 						[styles.isFullscreen]: fullscreenPlayer,
 					})}

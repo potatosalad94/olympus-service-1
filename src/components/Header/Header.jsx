@@ -2,24 +2,27 @@ import { classNames } from "primereact/utils";
 import LanguageDropdown from "../LanguageDropdown/LanguageDropdown";
 import styles from "./Header.module.scss";
 import { languages } from "@/utils/languages-dictionnary";
-import { useLayoutEffect, useRef } from "react";
+// import { useLayoutEffect, useRef } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useScrollToElement } from "@/hooks/useScrollToElement";
 
 const Header = ({ text, lang, step, logo, skipTopPriceDesc }) => {
-	const divRef = useRef();
+	// const divRef = useRef();
 
-	const scrollToElement = () => {
-		const { current } = divRef;
-		if (current !== null) {
-			current.scrollIntoView({ behavior: "instant", block: "start" });
-		}
-	};
+	// const scrollToElement = () => {
+	// 	const { current } = divRef;
+	// 	if (current !== null) {
+	// 		current.scrollIntoView({ behavior: "instant", block: "start" });
+	// 	}
+	// };
 
-	useLayoutEffect(() => {
-		if (skipTopPriceDesc) {
-			scrollToElement();
-		}
-	}, [skipTopPriceDesc]);
+	// useLayoutEffect(() => {
+	// 	if (skipTopPriceDesc) {
+	// 		scrollToElement();
+	// 	}
+	// }, [skipTopPriceDesc]);
+
+	const divRef = useScrollToElement(skipTopPriceDesc);
 
 	return (
 		<>
