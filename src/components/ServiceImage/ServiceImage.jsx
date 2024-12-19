@@ -32,7 +32,7 @@ const ServiceImage = ({ playButton, isLoading, image, onShowModal, step, fullscr
 						<i className={`pi pi-spin pi-spinner-dotted ${styles.rotating_icon}`}></i>
 					)}
 
-					{showPlaceholder && <div style={{ height: "500px" }}></div>}
+					{showPlaceholder && <div style={{ height: "100vh" }}></div>}
 
 					<LazyLoadImage
 						alt={"service"}

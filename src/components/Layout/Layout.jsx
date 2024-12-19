@@ -24,6 +24,7 @@ const Layout = ({
 				className={classNames({
 					[styles.main_wrapper]: !termsVisibility,
 					[styles.skipPriceHeader]: skipTopPriceDesc,
+					[styles.fullscreenPlayer]: fullscreenPlayer,
 				})}
 			>
 				<Header
