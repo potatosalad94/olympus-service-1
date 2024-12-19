@@ -16,7 +16,7 @@ export const useScrollToElement = (shouldScroll = true) => {
 
 			setTimeout(() => {
 				scrollToElement();
-			}, 10);
+			}, 300);
 		}
 	}, [shouldScroll]);
 
