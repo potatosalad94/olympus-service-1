@@ -1,3 +1,4 @@
+import { useScrollToElement } from "@/hooks/useScrollToElement";
 import styles from "./ServiceImage.module.scss";
 import CircularProgress from "@/components/CircularProgress/CircularProgress";
 import { Button } from "primereact/button";
@@ -7,6 +8,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const ServiceImage = ({ playButton, isLoading, image, onShowModal, step, fullscreenPlayer }) => {
 	const [showPlaceholder, setShowPlaceholder] = useState(true);
+	const divRef = useScrollToElement(fullscreenPlayer && !showPlaceholder);
 
 	return (
 		<div className={styles.service_img_container}>
@@ -34,18 +36,22 @@ const ServiceImage = ({ playButton, isLoading, image, onShowModal, step, fullscr
 
 					{showPlaceholder && <div style={{ height: "100vh" }}></div>}
 
-					<LazyLoadImage
-						alt={"service"}
-						className={classNames({
-							[styles.isFullscreen]: fullscreenPlayer,
-						})}
-						effect="blur"
-						wrapperProps={{
-							style: { transitionDelay: "1s" },
-						}}
-						src={image}
-						onLoad={() => setShowPlaceholder(false)}
-					/>
+					<div ref={divRef}>
+						<LazyLoadImage
+							itemRef={divRef}
+							alt={"service"}
+							className={classNames({
+								[styles.isFullscreen]: fullscreenPlayer,
+							})}
+							effect="blur"
+							// wrapperProps={{
+							// 	style: { transitionDelay: "1s" },
+							// }}
+							src={image}
+							visibleByDefault={true}
+							onLoad={() => setShowPlaceholder(false)}
+						/>
+					</div>
 				</Button>
 			) : (
 				<CircularProgress />

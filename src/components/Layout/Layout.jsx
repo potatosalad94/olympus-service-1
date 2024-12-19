@@ -16,7 +16,7 @@ const Layout = ({
 	fullscreenPlayer,
 	skipTopPriceDesc,
 }) => {
-	const divRef = useScrollToElement(fullscreenPlayer);
+	// const divRef = useScrollToElement(fullscreenPlayer);
 
 	return (
 		<div className={styles.container} onClick={onRootClick}>
@@ -35,7 +35,7 @@ const Layout = ({
 					logo={logo}
 				/>
 				<div
-					ref={divRef}
+					// ref={divRef}
 					className={classNames(styles.children_wrapper, {
 						[styles.isFullscreen]: fullscreenPlayer,
 					})}
