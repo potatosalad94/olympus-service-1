@@ -6,13 +6,17 @@ export const useScrollToElement = (shouldScroll = true) => {
 	const scrollToElement = () => {
 		const { current } = elementRef;
 		if (current !== null) {
-			current.scrollIntoView({ behavior: "instant", block: "start" });
+			current.scrollIntoView({ behavior: "instant", block: "start", inline: "nearest" });
 		}
 	};
 
 	useLayoutEffect(() => {
 		if (shouldScroll) {
-			scrollToElement();
+			// scrollToElement();
+
+			setTimeout(() => {
+				scrollToElement();
+			}, 10);
 		}
 	}, [shouldScroll]);
 
