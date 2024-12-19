@@ -20,7 +20,12 @@ const Layout = ({
 
 	return (
 		<div className={styles.container} onClick={onRootClick}>
-			<div style={{ height: termsVisibility ? "auto" : "100dvh" }}>
+			<div
+				className={classNames({
+					[styles.main_wrapper]: !termsVisibility,
+					[styles.skipPriceHeader]: skipTopPriceDesc,
+				})}
+			>
 				<Header
 					skipTopPriceDesc={skipTopPriceDesc}
 					text={headerPrice}

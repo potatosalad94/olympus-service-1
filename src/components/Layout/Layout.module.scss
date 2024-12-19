@@ -4,6 +4,14 @@
 	min-height: 100dvh;
 	box-sizing: border-box;
 
+	.main_wrapper {
+		flex-basis: 100vh;
+
+		&.skipPriceHeader {
+			flex-basis: calc(100vh + 40px); //* 40px is the price top description
+		}
+	}
+
 	.children_wrapper {
 		width: 400px;
 		margin: auto;
