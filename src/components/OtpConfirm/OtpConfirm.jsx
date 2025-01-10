@@ -98,24 +98,22 @@ const OtpConfirm = ({
 			{!isModal && userInstructions && <p>{userInstructions}</p>}
 			{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-			{(showInput || showModalInput) && (
-				<Controller
-					name="otp"
-					control={control}
-					render={({ field }) => (
-						<InputOtp
-							{...field}
-							onChange={(e) => {
-								const newValue = e.value;
-								setOtpState(newValue);
-								setValue("otp", newValue);
-							}}
-							integerOnly
-							// error={fieldState.error} //TODO >> ajouter ?
-						/>
-					)}
-				/>
-			)}
+			<Controller
+				name="otp"
+				control={control}
+				render={({ field }) => (
+					<InputOtp
+						{...field}
+						onChange={(e) => {
+							const newValue = e.value;
+							setOtpState(newValue);
+							setValue("otp", newValue);
+						}}
+						integerOnly
+						// error={fieldState.error} //TODO >> ajouter ?
+					/>
+				)}
+			/>
 
 			{((isModal && modalCta) || (!isModal && cta)) && (
 				<>
