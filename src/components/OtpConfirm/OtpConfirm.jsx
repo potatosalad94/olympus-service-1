@@ -117,7 +117,7 @@ const OtpConfirm = ({
 				/>
 			)}
 
-			{((isModal && modalCta) || (cta && !modalCta)) && (
+			{((isModal && modalCta) || (!isModal && cta)) && (
 				<>
 					<Button
 						loading={isPending}

@@ -94,7 +94,7 @@ const OtpRequest = ({
 				/>
 			)}
 
-			{((isModal && modalCta) || (cta && !modalCta)) && (
+			{((isModal && modalCta) || (!isModal && cta)) && (
 				<Button
 					type="submit"
 					label={isModal ? modalCta : cta}

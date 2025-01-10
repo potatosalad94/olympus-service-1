@@ -137,7 +137,7 @@ const Landing = () => {
 		showModalMsisdnInput,
 		msisdnPrefill,
 		blurPx,
-		skipTopPriceDesc, //TODO
+		skipTopPriceDesc,
 		showStepper,
 		fullscreenPlayer,
 	} = css || {};
