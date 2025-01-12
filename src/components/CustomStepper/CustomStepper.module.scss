@@ -1,0 +1,84 @@
+/* AnimatedStepper.module.scss */
+$primary-color: var(--primary-color);
+$inactive-color: #e0e0e0;
+$text-color: #757575;
+$transition-timing: 0.3s ease;
+$progress-timing: 0.5s ease-in-out;
+
+.stepperContainer {
+	padding: 20px;
+	width: 100%;
+	max-width: 600px;
+	margin: 0 auto;
+
+	&.rtl {
+		direction: rtl;
+
+		.progressLine {
+			transform-origin: right;
+		}
+	}
+}
+
+.stepper {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: relative;
+}
+
+.step {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	z-index: 2;
+
+	.stepCircle {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background-color: $inactive-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: bold;
+		color: $text-color;
+		transition: all $transition-timing;
+	}
+
+	.stepLabel {
+		margin-top: 8px;
+		color: $text-color;
+		transition: all $transition-timing;
+	}
+
+	&.active {
+		.stepCircle {
+			background-color: $primary-color;
+			color: white;
+		}
+
+		.stepLabel {
+			color: $primary-color;
+		}
+	}
+}
+
+.progressLineContainer {
+	position: absolute;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: calc(100% - 80px);
+	height: 2px;
+	background-color: $inactive-color;
+	z-index: 1;
+
+	.progressLine {
+		height: 100%;
+		background-color: $primary-color;
+		width: 0;
+		transition: width $progress-timing;
+		transform-origin: left;
+	}
+}
