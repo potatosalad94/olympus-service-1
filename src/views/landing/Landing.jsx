@@ -106,11 +106,7 @@ const Landing = () => {
 	// * ====== NEW VIST CALL ======
 
 	const formattedStep =
-		step === "initial"
-			? "New Visit"
-			: step === "otp"
-			? "Otp Request"
-			: "Otp Confirm";
+		step === "initial" ? "New Visit" : step === "otp" ? "Otp Request" : "Otp Confirm";
 
 	const {
 		query: { data: displayData, isFetching },
@@ -176,11 +172,7 @@ const Landing = () => {
 	// !==== USE EFFECTS =====
 	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
 	useEffect(() => {
-		if (
-			modalFlow !== "full" &&
-			ctaMethod === "OtpConfirm" &&
-			!alreadySubscribed
-		) {
+		if (modalFlow !== "full" && ctaMethod === "OtpConfirm" && !alreadySubscribed) {
 			goToStep("otp");
 		}
 	}, [modalFlow, alreadySubscribed, ctaMethod, goToStep]);
@@ -209,14 +201,12 @@ const Landing = () => {
 	// }, [scrollPosition, isSuccess, isLoading]);
 
 	// TODO >> loading state
-	// if (isFetching || isCollecting)
-	// 	return (
-	// 		<div className={styles.loading_container}>
-	// 			<i
-	// 				className={`pi pi-spin pi-spinner-dotted ${styles.page_spinner}`}
-	// 			></i>
-	// 		</div>
-	// 	);
+	if (isFetching || isCollecting)
+		return (
+			<div className={styles.loading_container}>
+				<i className={`pi pi-spin pi-spinner-dotted ${styles.page_spinner}`}></i>
+			</div>
+		);
 
 	if (heRequired) return <div> Should do a HE redirect + call Post HE</div>; //TODO LATER
 
@@ -236,10 +226,7 @@ const Landing = () => {
 					fullscreenPlayer={fullscreenPlayer}
 					skipTopPriceDesc={skipTopPriceDesc}
 				>
-					<CustomStepper
-						currentStep={step === "otp" ? 2 : 1}
-						lang={currentLanguage}
-					/>
+					<CustomStepper currentStep={step === "otp" ? 2 : 1} lang={currentLanguage} />
 
 					<ServiceImage
 						playButton={playButton}
@@ -274,10 +261,7 @@ const Landing = () => {
 								ctaMethod={ctaMethod}
 								visitorId={visitorId}
 								onSuccess={() => {
-									if (
-										redirection &&
-										!subscriptionConfirmationPage
-									) {
+									if (redirection && !subscriptionConfirmationPage) {
 										window.location.replace(redirection);
 									} else {
 										goToStep("final");
@@ -313,9 +297,7 @@ const Landing = () => {
 
 					{acknowledgment && (
 						<div className={styles.acknowledgment_container}>
-							<i className={styles.acknowledgment}>
-								{acknowledgment}
-							</i>
+							<i className={styles.acknowledgment}>{acknowledgment}</i>
 						</div>
 					)}
 				</Layout>
