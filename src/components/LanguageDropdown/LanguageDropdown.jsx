@@ -3,28 +3,15 @@ import { queryKeys } from "@/app-keys-factory";
 import useApi from "@/hooks/useApi";
 import useVisitorId from "@/hooks/useVisitorId";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Dropdown } from "primereact/dropdown";
-import { useEffect, useState } from "react";
-import styles from "./LanguageDropdown.module.scss";
+import { Button } from "primereact/button";
 import arFlag from "@images/Ar-flag.png";
 import enFlag from "@images/En-flag.png";
+import styles from "./LanguageDropdown.module.scss";
+import { classNames } from "primereact/utils";
 
-const languages = [
-	{ name: "English", code: "En" },
-	{ name: "العربية", code: "Ar" },
-];
-
-const LanguageDropdown = ({ lang, step }) => {
+const LanguageDropdown = ({ lang, step, className }) => {
 	const { visitorId } = useVisitorId();
-
 	const queryClient = useQueryClient();
-
-	const [selectedLanguage, setSelectedLanguage] = useState({});
-
-	useEffect(() => {
-		if (lang) setSelectedLanguage(languages.find((item) => item.code === lang));
-	}, [lang]);
-
 	const changeLanguageApi = useApi(changeLanguage);
 
 	const mutation = useMutation({
@@ -34,55 +21,24 @@ const LanguageDropdown = ({ lang, step }) => {
 				language,
 			});
 		},
-
 		onSuccess: (response, lang) => {
 			queryClient.invalidateQueries(queryKeys.displayData(step, lang));
 		},
 	});
 
-	const selectedCountryTemplate = (option, props) => {
-		if (option) {
-			return (
-				<div className={styles.language_item}>
-					<img
-						// src={new URL(`../../images/${option.code}-flag.png`, import.meta.url).href}
-						src={option.code === "En" ? enFlag : arFlag}
-					/>
-					<div>{option.name}</div>
-				</div>
-			);
-		}
-
-		return <span>{props.placeholder}</span>;
-	};
-
-	const countryOptionTemplate = (option) => {
-		return (
-			<div className={styles.language_item}>
-				<img
-					src={option.code === "En" ? enFlag : arFlag}
-					// src={new URL(`../../images/${option.code}-flag.png`, import.meta.url).href}
-				/>
-				<div>{option.name}</div>
-			</div>
-		);
+	const toggleLanguage = (e) => {
+		e.stopPropagation();
+		const newLang = lang === "En" ? "Ar" : "En";
+		mutation.mutate(newLang);
 	};
 
 	return (
-		<>
-			<Dropdown
-				value={selectedLanguage}
-				onChange={(e) => {
-					mutation.mutate(e.value.code);
-					setSelectedLanguage(e.value);
-				}}
-				onClick={(e) => e.stopPropagation()}
-				options={languages}
-				optionLabel="name"
-				valueTemplate={selectedCountryTemplate}
-				itemTemplate={countryOptionTemplate}
+		<Button onClick={toggleLanguage} className={classNames(styles.language_button, className)}>
+			<img
+				src={lang === "En" ? arFlag : enFlag}
+				alt={lang === "En" ? "العربية" : "English"}
 			/>
-		</>
+		</Button>
 	);
 };
 

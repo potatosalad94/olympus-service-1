@@ -1,9 +1,16 @@
-.language_item {
-	display: flex;
-	align-items: center;
-	gap: 10px;
+.language_button {
+	padding: 0.5rem;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+
+	&:hover {
+		background: rgba(0, 0, 0, 0.1);
+	}
 
 	img {
 		width: 24px;
+		height: 24px;
+		border-radius: 50%;
 	}
 }

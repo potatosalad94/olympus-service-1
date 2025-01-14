@@ -12,6 +12,14 @@ const Header = ({ text, lang, step, logo, skipTopPriceDesc }) => {
 		<>
 			{text && (
 				<div className={styles.price_wrapper}>
+					<LanguageDropdown
+						lang={lang}
+						step={step}
+						className={classNames(styles.language_button, {
+							[styles.rtl]: lang === "Ar",
+							[styles.ltr]: lang === "En",
+						})}
+					/>
 					<p>{text}</p>
 				</div>
 			)}
@@ -34,8 +42,6 @@ const Header = ({ text, lang, step, logo, skipTopPriceDesc }) => {
 					height={300}
 					width={300}
 				/>
-
-				<LanguageDropdown lang={lang} step={step} />
 			</div>
 		</>
 	);
