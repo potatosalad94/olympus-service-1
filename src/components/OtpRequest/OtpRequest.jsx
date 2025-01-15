@@ -32,7 +32,9 @@ const OtpRequest = ({
 	const otpRequestApi = useApi(otpRequest);
 
 	// Add a state to manage the contact value separately
-	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
+	const [contactValue, setContactValue] = useState(
+		msisdnPrefill && msisdn ? msisdn : ""
+	);
 
 	const { mutate: requestOtp, isPending } = useMutation({
 		mutationFn: (msisdn = "") => {
@@ -45,7 +47,7 @@ const OtpRequest = ({
 	});
 
 	const { control, handleSubmit, setValue } = useForm({
-		resolver: joiResolver(otpRequestSchema(language?.toLowerCase())),
+		resolver: joiResolver(otpRequestSchema(language?.code?.toLowerCase())),
 		context: {
 			dialCode,
 			showInput: showInput || showModalInput,
@@ -137,7 +139,9 @@ const OtpRequest = ({
 					closable={closableModal}
 					draggable={false}
 					showHeader={closableModal}
-					contentClassName={!closableModal ? styles.no_header : undefined}
+					contentClassName={
+						!closableModal ? styles.no_header : undefined
+					}
 				>
 					<form onSubmit={handleSubmit(onSubmit)} noValidate>
 						{renderFormContent(showModal)}

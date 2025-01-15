@@ -4,12 +4,13 @@ import useApi from "@/hooks/useApi";
 import useVisitorId from "@/hooks/useVisitorId";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "primereact/button";
-import arFlag from "@images/Ar-flag.png";
-import enFlag from "@images/En-flag.png";
 import styles from "./LanguageDropdown.module.scss";
-import { classNames } from "primereact/utils";
 
-const LanguageDropdown = ({ lang, step, className }) => {
+const LanguageDropdown = ({ lang, step, availableLanguages }) => {
+	const languagesToDisplay = availableLanguages.filter(
+		(item) => item.code !== lang.code
+	);
+
 	const { visitorId } = useVisitorId();
 	const queryClient = useQueryClient();
 	const changeLanguageApi = useApi(changeLanguage);
@@ -21,24 +22,31 @@ const LanguageDropdown = ({ lang, step, className }) => {
 				language,
 			});
 		},
-		onSuccess: (response, lang) => {
-			queryClient.invalidateQueries(queryKeys.displayData(step, lang));
+		onSuccess: (response, langCode) => {
+			queryClient.invalidateQueries(
+				queryKeys.displayData(step, langCode)
+			);
 		},
 	});
 
-	const toggleLanguage = (e) => {
-		e.stopPropagation();
-		const newLang = lang === "En" ? "Ar" : "En";
-		mutation.mutate(newLang);
+	const handleSelect = (langCode) => {
+		mutation.mutate(langCode);
 	};
 
 	return (
-		<Button onClick={toggleLanguage} className={classNames(styles.language_button, className)}>
-			<img
-				src={lang === "En" ? arFlag : enFlag}
-				alt={lang === "En" ? "العربية" : "English"}
-			/>
-		</Button>
+		<div className={styles.container}>
+			{languagesToDisplay.map((language) => {
+				return (
+					<Button
+						key={language.code}
+						onClick={() => handleSelect(language.code)}
+						className={styles.language_button}
+					>
+						<img src={language.icon} alt={language.language} />
+					</Button>
+				);
+			})}
+		</div>
 	);
 };
 

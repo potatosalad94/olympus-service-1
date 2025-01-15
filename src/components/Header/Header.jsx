@@ -5,7 +5,14 @@ import { languages } from "@/utils/languages-dictionnary";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useScrollToElement } from "@/hooks/useScrollToElement";
 
-const Header = ({ text, lang, step, logo, skipTopPriceDesc }) => {
+const Header = ({
+	text,
+	lang,
+	step,
+	logo,
+	skipTopPriceDesc,
+	availableLanguages,
+}) => {
 	const divRef = useScrollToElement(skipTopPriceDesc);
 
 	return (
@@ -13,12 +20,9 @@ const Header = ({ text, lang, step, logo, skipTopPriceDesc }) => {
 			{text && (
 				<div className={styles.price_wrapper}>
 					<LanguageDropdown
+						availableLanguages={availableLanguages}
 						lang={lang}
 						step={step}
-						className={classNames(styles.language_button, {
-							[styles.rtl]: lang === "Ar",
-							[styles.ltr]: lang === "En",
-						})}
 					/>
 					<p>{text}</p>
 				</div>
@@ -27,7 +31,7 @@ const Header = ({ text, lang, step, logo, skipTopPriceDesc }) => {
 			<div
 				ref={divRef}
 				className={classNames(styles.container, {
-					[styles.reverse]: lang === languages.arabic,
+					[styles.reverse]: lang?.code === languages.arabic,
 					[styles.hasLogo]: !!logo,
 				})}
 			>

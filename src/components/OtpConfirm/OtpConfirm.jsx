@@ -21,8 +21,7 @@ const OtpConfirm = ({
 	setShowModal,
 	closableModal,
 	blurPx,
-	showInput,
-	showModalInput,
+	// showInput,
 }) => {
 	const [otpState, setOtpState] = useState("");
 
@@ -138,7 +137,7 @@ const OtpConfirm = ({
 
 			{countdown > 0 && (
 				<p>
-					{language === languages.arabic
+					{language?.code === languages.arabic
 						? `يمكنك طلب رمز التحقق مرة أخرى بعد ${countdown} ثانية`
 						: `You can request another OTP in ${countdown} seconds`}
 				</p>
@@ -148,11 +147,14 @@ const OtpConfirm = ({
 
 	return (
 		<>
-			{(showInput || cta) && (
-				<form onSubmit={handleSubmit(onSubmit)} onClick={(e) => e.stopPropagation()}>
-					{renderFormContent()}
-				</form>
-			)}
+			{/* {(showInput || cta) && ( */}
+			<form
+				onSubmit={handleSubmit(onSubmit)}
+				onClick={(e) => e.stopPropagation()}
+			>
+				{renderFormContent()}
+			</form>
+			{/* )} */}
 
 			<div onClick={(e) => e.stopPropagation()}>
 				<Dialog
@@ -174,7 +176,9 @@ const OtpConfirm = ({
 					closable={closableModal}
 					draggable={false}
 					showHeader={closableModal}
-					contentClassName={!closableModal ? styles.no_header : undefined}
+					contentClassName={
+						!closableModal ? styles.no_header : undefined
+					}
 				>
 					<form onSubmit={handleSubmit(onSubmit)} noValidate>
 						{renderFormContent(showModal)}

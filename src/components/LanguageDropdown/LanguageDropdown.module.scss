@@ -1,16 +1,26 @@
+.container {
+	position: absolute;
+	right: 5px;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
 .language_button {
-	padding: 0.5rem;
+	padding: 0;
 	background: transparent;
 	border: none;
 	cursor: pointer;
+	width: 24px;
+	height: 24px;
 
 	&:hover {
 		background: rgba(0, 0, 0, 0.1);
 	}
 
 	img {
-		width: 24px;
-		height: 24px;
-		border-radius: 50%;
+		width: 100%;
+		height: 100%;
+		// border-radius: 50%;
 	}
 }

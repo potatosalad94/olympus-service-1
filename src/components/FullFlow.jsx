@@ -1,4 +1,8 @@
-import { otpConfirm, otpRequest, resendOtp as resendOtpEndpoint } from "@/api/client";
+import {
+	otpConfirm,
+	otpRequest,
+	resendOtp as resendOtpEndpoint,
+} from "@/api/client";
 import Input from "@/components/Input/Input";
 import otpConfirmSchema from "@/components/OtpConfirm/otpConfirmSchema";
 import otpRequestSchema from "@/components/OtpRequest/otpRequestSchema";
@@ -39,7 +43,9 @@ const FullFlow = ({
 
 	const otpRequestApi = useApi(otpRequest);
 
-	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
+	const [contactValue, setContactValue] = useState(
+		msisdnPrefill && msisdn ? msisdn : ""
+	);
 
 	// * ==== RESEND OTP =====
 	const { countdown, startCountdown } = useOtpCountdown(otpConfirmTimer);
@@ -109,7 +115,7 @@ const FullFlow = ({
 	});
 
 	const { control, handleSubmit, setValue } = useForm({
-		resolver: joiResolver(otpRequestSchema(language?.toLowerCase())),
+		resolver: joiResolver(otpRequestSchema(language?.code?.toLowerCase())),
 		context: {
 			dialCode,
 			showInput: showModalInput,
@@ -218,7 +224,7 @@ const FullFlow = ({
 
 			{countdown > 0 && (
 				<p>
-					{language === languages.arabic
+					{language?.code === languages.arabic
 						? `يمكنك طلب رمز التحقق مرة أخرى بعد ${countdown} ثانية`
 						: `You can request another OTP in ${countdown} seconds`}
 				</p>
@@ -251,13 +257,19 @@ const FullFlow = ({
 				})}
 			>
 				{modalStep === "OtpRequest" && (
-					<form onSubmit={handleSubmit(onSubmitOtpRequest)} noValidate>
+					<form
+						onSubmit={handleSubmit(onSubmitOtpRequest)}
+						noValidate
+					>
 						{renderOtpRequestFormContent()}
 					</form>
 				)}
 
 				{modalStep === "OtpConfirm" && (
-					<form onSubmit={handleConfirmOtp(onSubmitOtpConfirm)} noValidate>
+					<form
+						onSubmit={handleConfirmOtp(onSubmitOtpConfirm)}
+						noValidate
+					>
 						{renderOtpConfirmFormContent()}
 					</form>
 				)}

@@ -2,7 +2,7 @@ import { classNames } from "primereact/utils";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import styles from "./Layout.module.scss";
-import { useScrollToElement } from "@/hooks/useScrollToElement";
+// import { useScrollToElement } from "@/hooks/useScrollToElement";
 
 const Layout = ({
 	children,
@@ -10,6 +10,7 @@ const Layout = ({
 	terms,
 	termsVisibility,
 	lang,
+	availableLanguages,
 	onRootClick,
 	step,
 	logo,
@@ -31,6 +32,7 @@ const Layout = ({
 					skipTopPriceDesc={skipTopPriceDesc}
 					text={headerPrice}
 					lang={lang}
+					availableLanguages={availableLanguages}
 					step={step}
 					logo={logo}
 				/>
