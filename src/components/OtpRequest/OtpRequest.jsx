@@ -6,7 +6,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpRequest.module.scss";
 
@@ -30,11 +30,22 @@ const OtpRequest = ({
 	blurPx,
 }) => {
 	const otpRequestApi = useApi(otpRequest);
+	const [disabled, setDisabled] = useState(
+		msisdn?.length === 10 ? false : true
+	);
 
 	// Add a state to manage the contact value separately
 	const [contactValue, setContactValue] = useState(
 		msisdnPrefill && msisdn ? msisdn : ""
 	);
+
+	useEffect(() => {
+		if (contactValue.match(/\d/g)?.length === 10) {
+			setDisabled(false);
+		} else {
+			setDisabled(true);
+		}
+	}, [contactValue]);
 
 	const { mutate: requestOtp, isPending } = useMutation({
 		mutationFn: (msisdn = "") => {
@@ -106,6 +117,7 @@ const OtpRequest = ({
 					}}
 					loading={isPending}
 					className={styles.submit_btn}
+					disabled={disabled}
 				/>
 			)}
 		</div>

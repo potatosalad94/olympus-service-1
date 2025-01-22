@@ -6,7 +6,20 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 
 const Input = forwardRef(
-	({ dialCode = "", onChange, onBlur, name, error, onClick, value, type }, ref) => {
+	(
+		{
+			dialCode = "",
+			onChange,
+			onBlur,
+			name,
+			error,
+			onClick,
+			value,
+			type,
+			onComplete,
+		},
+		ref
+	) => {
 		return (
 			<div className={styles.container}>
 				<IconField iconPosition="left" className={styles.input_wrapper}>
@@ -25,13 +38,16 @@ const Input = forwardRef(
 						onClick={onClick}
 						value={value}
 						type={type}
+						onComplete={onComplete}
 						autoComplete={"tel"} // TODO > not needed for OTP input ?
 						inputMode={"tel"} // TODO > not needed for OTP input ?
 					/>
 				</IconField>
 
 				{error && (
-					<small className={`p-error ${styles.animated_error}`}>{error.message}</small>
+					<small className={`p-error ${styles.animated_error}`}>
+						{error.message}
+					</small>
 				)}
 			</div>
 		);
