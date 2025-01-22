@@ -4,6 +4,31 @@
 	align-items: center;
 	width: 100%;
 
+	.checkmark_container {
+		position: absolute;
+		right: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.checkmark_animation {
+		animation: bubble 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+		color: var(--green-500);
+		font-size: 1.5rem;
+	}
+
+	@keyframes bubble {
+		0% {
+			transform: scale(0);
+		}
+		50% {
+			transform: scale(1.2);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
 	small {
 		margin-top: 5px;
 		text-align: center;

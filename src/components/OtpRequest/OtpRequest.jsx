@@ -102,6 +102,7 @@ const OtpRequest = ({
 							error={fieldState.error}
 							onClick={(e) => e.stopPropagation()}
 							type="tel"
+							disabled={disabled}
 						/>
 					)}
 				/>

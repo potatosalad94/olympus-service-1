@@ -16,7 +16,7 @@ const Input = forwardRef(
 			onClick,
 			value,
 			type,
-			onComplete,
+			disabled = false,
 		},
 		ref
 	) => {
@@ -38,10 +38,16 @@ const Input = forwardRef(
 						onClick={onClick}
 						value={value}
 						type={type}
-						onComplete={onComplete}
 						autoComplete={"tel"} // TODO > not needed for OTP input ?
 						inputMode={"tel"} // TODO > not needed for OTP input ?
 					/>
+					{!disabled && (
+						<div className={styles.checkmark_container}>
+							<i
+								className={`pi pi-check-circle ${styles.checkmark_animation}`}
+							></i>
+						</div>
+					)}
 				</IconField>
 
 				{error && (

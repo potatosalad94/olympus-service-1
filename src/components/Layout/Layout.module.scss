@@ -8,18 +8,22 @@
 		flex-basis: 100vh;
 
 		&.skipPriceHeader {
-			flex-basis: calc(100vh + 40px); //* 40px is the price top description
+			flex-basis: calc(
+				100vh + 40px
+			); //* 40px is the price top description
 		}
 
 		&.skipPriceHeader.fullscreenPlayer {
-			flex-basis: calc(100vh + 40px + 85px); //* 85px is the language + logo header
+			flex-basis: calc(
+				100vh + 40px + 85px
+			); //* 85px is the language + logo header
 		}
 	}
 
 	.children_wrapper {
 		width: 400px;
 		margin: auto;
-		padding: 1rem;
+		padding: 0 1rem;
 
 		&.isFullscreen {
 			width: 100%;
