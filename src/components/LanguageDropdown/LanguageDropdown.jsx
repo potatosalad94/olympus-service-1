@@ -26,6 +26,7 @@ const LanguageDropdown = ({ lang, step, availableLanguages }) => {
 			queryClient.invalidateQueries(
 				queryKeys.displayData(step, langCode)
 			);
+			document.body.setAttribute("lang", langCode);
 		},
 	});
 

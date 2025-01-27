@@ -1,3 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+body[lang="ar"] {
+	font-family: "Noto Sans Arabic", sans-serif;
+	direction: rtl;
+}
+
+body[lang="en"] {
+	font-family: "Roboto", sans-serif;
+	direction: ltr;
+}
+
 body {
 	margin: 0;
 	/* font-family: Inter, Arial, sans-serif; */

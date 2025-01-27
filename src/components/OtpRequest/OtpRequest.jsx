@@ -11,24 +11,42 @@ import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpRequest.module.scss";
 
 const OtpRequest = ({
-	msisdn,
-	dialCode,
-	userInstructions,
-	cta,
-	modalUserInstructions,
-	modalCta,
-	clickableZone,
+	css,
+	content,
 	showModal,
 	setShowModal,
-	closableModal,
 	visitorId,
 	onSuccess,
-	showInput,
-	showModalInput,
-	msisdnPrefill,
 	language,
-	blurPx,
 }) => {
+	const {
+		msisdn,
+		dialCode,
+		userInstructions,
+		cta,
+		ctaInfo,
+		modalUserInstructions,
+		modalCta,
+		ctaBackgroundColor,
+		ctaFontColor,
+		ctaFontFamily,
+		ctaFontSize,
+		ctaFontStyle,
+		ctaInfoFontColor,
+		ctaInfoFontFamily,
+		ctaInfoFontSize,
+		ctaInfoFontStyle,
+	} = content;
+
+	const {
+		closableModal,
+		clickableZone,
+		showMsisdnInput,
+		showModalInput,
+		msisdnPrefill,
+		blurPx,
+	} = css;
+
 	const otpRequestApi = useApi(otpRequest);
 	const [disabled, setDisabled] = useState(
 		msisdn?.length === 10 ? false : true
@@ -61,7 +79,7 @@ const OtpRequest = ({
 		resolver: joiResolver(otpRequestSchema(language?.code?.toLowerCase())),
 		context: {
 			dialCode,
-			showInput: showInput || showModalInput,
+			showInput: showMsisdnInput || showModalInput,
 		},
 		defaultValues: {
 			contact: contactValue,
@@ -85,7 +103,7 @@ const OtpRequest = ({
 			{!isModal && userInstructions && <p>{userInstructions}</p>}
 			{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-			{(showInput || showModalInput) && (
+			{(showMsisdnInput || showModalInput) && (
 				<Controller
 					name="contact"
 					control={control}
@@ -111,7 +129,15 @@ const OtpRequest = ({
 			{((isModal && modalCta) || (!isModal && cta)) && (
 				<Button
 					type="submit"
-					label={isModal ? modalCta : cta}
+					pt={{
+						root: {
+							style: {
+								border: "none",
+								backgroundColor: ctaBackgroundColor,
+							},
+						},
+					}}
+					// label={isModal ? modalCta : cta}
 					size={clickableZone === "Large" ? "large" : undefined}
 					onClick={(e) => {
 						e.stopPropagation();
@@ -119,14 +145,35 @@ const OtpRequest = ({
 					loading={isPending}
 					className={styles.submit_btn}
 					disabled={disabled}
-				/>
+				>
+					<span
+						style={{
+							color: ctaFontColor,
+							fontFamily: ctaFontFamily,
+							fontSize: ctaFontSize,
+							fontStyle: ctaFontStyle,
+						}}
+					>
+						{isModal ? modalCta : cta}
+					</span>
+					<span
+						style={{
+							color: ctaInfoFontColor,
+							fontFamily: ctaInfoFontFamily,
+							fontSize: ctaInfoFontSize,
+							fontStyle: ctaInfoFontStyle,
+						}}
+					>
+						{ctaInfo}
+					</span>
+				</Button>
 			)}
 		</div>
 	);
 
 	return (
 		<>
-			{(showInput || cta) && (
+			{(showMsisdnInput || cta) && (
 				<form onSubmit={handleSubmit(onSubmit)} noValidate>
 					{renderFormContent()}
 				</form>

@@ -21,7 +21,6 @@ const OtpConfirm = ({
 	setShowModal,
 	closableModal,
 	blurPx,
-	// showInput,
 }) => {
 	const [otpState, setOtpState] = useState("");
 
@@ -147,14 +146,12 @@ const OtpConfirm = ({
 
 	return (
 		<>
-			{/* {(showInput || cta) && ( */}
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				onClick={(e) => e.stopPropagation()}
 			>
 				{renderFormContent()}
 			</form>
-			{/* )} */}
 
 			<div onClick={(e) => e.stopPropagation()}>
 				<Dialog

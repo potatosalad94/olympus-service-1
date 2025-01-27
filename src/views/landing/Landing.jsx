@@ -57,18 +57,8 @@ const Landing = () => {
 			case "initial":
 				return (
 					<OtpRequest
-						showInput={showMsisdnInput}
-						showModalInput={showModalMsisdnInput}
-						clickableZone={clickableZone}
-						msisdnPrefill={msisdnPrefill}
-						closableModal={closableModal}
-						blurPx={blurPx}
-						msisdn={msisdn}
-						dialCode={dialCode}
-						userInstructions={userInstructions}
-						cta={cta}
-						modalUserInstructions={modalUserInstructions}
-						modalCta={modalCta}
+						css={css}
+						content={content}
 						language={currentLanguage}
 						showModal={showModal && modalFlow !== "full"}
 						setShowModal={setShowModal}
@@ -79,7 +69,6 @@ const Landing = () => {
 			case "otp":
 				return (
 					<OtpConfirm
-						// showInput={showMsisdnInput}
 						showModal={showModal && modalFlow !== "full"}
 						setShowModal={setShowModal}
 						content={content}
@@ -135,20 +124,18 @@ const Landing = () => {
 		termsV,
 		playButton,
 		closableModal,
-		showMsisdnInput,
 		showModalMsisdnInput,
 		msisdnPrefill,
 		blurPx,
 		skipTopPriceDesc,
 		showStepper,
 		fullscreenPlayer,
+		additionalInformation,
 	} = css || {};
 
 	const {
 		acknowledgment,
 		bottomPriceDescription,
-		cta,
-		userInstructions,
 		modalCta,
 		modalUserInstructions,
 		exitButton,
@@ -306,6 +293,10 @@ const Landing = () => {
 							/>
 						)}
 					</div>
+
+					{additionalInformation && (
+						<p>"SHOW ADDITIONAL INFORMATION"</p>
+					)}
 
 					{bottomPriceDescription && (
 						<div className={styles.price_wrapper}>

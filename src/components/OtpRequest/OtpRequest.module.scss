@@ -24,5 +24,11 @@
 
 	.submit_btn {
 		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		span:first-child {
+			font-weight: bold;
+		}
 	}
 }
