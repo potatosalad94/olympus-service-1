@@ -11,8 +11,10 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpConfirm.module.scss";
 import otpConfirmSchema from "./otpConfirmSchema";
+import { classNames } from "primereact/utils";
 
 const OtpConfirm = ({
+	css,
 	onSuccess,
 	visitorId,
 	content,
@@ -22,6 +24,8 @@ const OtpConfirm = ({
 	closableModal,
 	blurPx,
 }) => {
+	const { ctaFontColor, ctaFontSize, ctaFontStyle, ctaFontWeight } = css;
+
 	const [otpState, setOtpState] = useState("");
 
 	const {
@@ -43,7 +47,11 @@ const OtpConfirm = ({
 	// * ==== OTP CONFIRM =====
 	const otpConfirmApi = useApi(otpConfirm);
 
-	const { mutate: confirmOtp, isPending } = useMutation({
+	const {
+		mutate: confirmOtp,
+		isPending,
+		isError,
+	} = useMutation({
 		mutationFn: (otp) => {
 			return otpConfirmApi.request({
 				visitorId,
@@ -102,6 +110,13 @@ const OtpConfirm = ({
 				render={({ field }) => (
 					<InputOtp
 						{...field}
+						pt={{
+							root: {
+								className: classNames(styles["custom-otp-input"], {
+									[styles.error]: isError,
+								}),
+							},
+						}}
 						onChange={(e) => {
 							const newValue = e.value;
 							setOtpState(newValue);
@@ -115,21 +130,37 @@ const OtpConfirm = ({
 
 			{((isModal && modalCta) || (!isModal && cta)) && (
 				<>
-					<Button
-						loading={isPending}
-						className={styles.cta_btn}
-						disabled={otpWatcher.length !== 4}
-						label={isModal ? modalCta : cta}
-					></Button>
+					<Button className={styles.cta_btn} disabled={otpWatcher.length !== 4}>
+						{isPendingOtp ? (
+							<i className={`pi pi-spin pi-spinner-dotted`}></i>
+						) : (
+							<span
+								style={{
+									color: ctaFontColor,
+									fontSize: ctaFontSize,
+									fontStyle: ctaFontStyle,
+									fontWeight: ctaFontWeight,
+								}}
+							>
+								{isModal ? modalCta : cta}
+							</span>
+						)}
+					</Button>
 
 					<Button
 						type={"button"}
-						className={styles.cta_btn}
+						className={styles.resend_btn}
 						onClick={handleOtpRequest}
 						disabled={countdown > 0}
 						link
 					>
-						{newOtpRequest}
+						<span
+							style={{
+								fontSize: ctaFontSize,
+							}}
+						>
+							{newOtpRequest}
+						</span>
 					</Button>
 				</>
 			)}
@@ -146,10 +177,7 @@ const OtpConfirm = ({
 
 	return (
 		<>
-			<form
-				onSubmit={handleSubmit(onSubmit)}
-				onClick={(e) => e.stopPropagation()}
-			>
+			<form onSubmit={handleSubmit(onSubmit)} onClick={(e) => e.stopPropagation()}>
 				{renderFormContent()}
 			</form>
 
@@ -173,9 +201,7 @@ const OtpConfirm = ({
 					closable={closableModal}
 					draggable={false}
 					showHeader={closableModal}
-					contentClassName={
-						!closableModal ? styles.no_header : undefined
-					}
+					contentClassName={!closableModal ? styles.no_header : undefined}
 				>
 					<form onSubmit={handleSubmit(onSubmit)} noValidate>
 						{renderFormContent(showModal)}

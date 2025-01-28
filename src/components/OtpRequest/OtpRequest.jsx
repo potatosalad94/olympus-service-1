@@ -10,33 +10,9 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpRequest.module.scss";
 
-const OtpRequest = ({
-	css,
-	content,
-	showModal,
-	setShowModal,
-	visitorId,
-	onSuccess,
-	language,
-}) => {
-	const {
-		msisdn,
-		dialCode,
-		userInstructions,
-		cta,
-		ctaInfo,
-		modalUserInstructions,
-		modalCta,
-		ctaBackgroundColor,
-		ctaFontColor,
-		ctaFontFamily,
-		ctaFontSize,
-		ctaFontStyle,
-		ctaInfoFontColor,
-		ctaInfoFontFamily,
-		ctaInfoFontSize,
-		ctaInfoFontStyle,
-	} = content;
+const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSuccess, language }) => {
+	const { msisdn, dialCode, userInstructions, cta, ctaInfo, modalUserInstructions, modalCta } =
+		content;
 
 	const {
 		closableModal,
@@ -45,17 +21,23 @@ const OtpRequest = ({
 		showModalInput,
 		msisdnPrefill,
 		blurPx,
+
+		ctaFontColor,
+		ctaFontSize,
+		ctaFontStyle,
+		ctaFontWeight,
+
+		ctaInfoFontColor,
+		ctaInfoFontSize,
+		ctaInfoFontStyle,
+		ctaInfoFontWeight,
 	} = css;
 
 	const otpRequestApi = useApi(otpRequest);
-	const [disabled, setDisabled] = useState(
-		msisdn?.length === 10 ? false : true
-	);
+	const [disabled, setDisabled] = useState(msisdn?.length === 10 ? false : true);
 
 	// Add a state to manage the contact value separately
-	const [contactValue, setContactValue] = useState(
-		msisdnPrefill && msisdn ? msisdn : ""
-	);
+	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
 
 	useEffect(() => {
 		if (contactValue.match(/\d/g)?.length === 10) {
@@ -129,43 +111,39 @@ const OtpRequest = ({
 			{((isModal && modalCta) || (!isModal && cta)) && (
 				<Button
 					type="submit"
-					pt={{
-						root: {
-							style: {
-								border: "none",
-								backgroundColor: ctaBackgroundColor,
-							},
-						},
-					}}
-					// label={isModal ? modalCta : cta}
 					size={clickableZone === "Large" ? "large" : undefined}
 					onClick={(e) => {
 						e.stopPropagation();
 					}}
-					loading={isPending}
 					className={styles.submit_btn}
 					disabled={disabled}
 				>
-					<span
-						style={{
-							color: ctaFontColor,
-							fontFamily: ctaFontFamily,
-							fontSize: ctaFontSize,
-							fontStyle: ctaFontStyle,
-						}}
-					>
-						{isModal ? modalCta : cta}
-					</span>
-					<span
-						style={{
-							color: ctaInfoFontColor,
-							fontFamily: ctaInfoFontFamily,
-							fontSize: ctaInfoFontSize,
-							fontStyle: ctaInfoFontStyle,
-						}}
-					>
-						{ctaInfo}
-					</span>
+					{isPending ? (
+						<i className={`pi pi-spin pi-spinner-dotted`}></i>
+					) : (
+						<>
+							<span
+								style={{
+									color: ctaFontColor,
+									fontSize: ctaFontSize,
+									fontStyle: ctaFontStyle,
+									fontWeight: ctaFontWeight,
+								}}
+							>
+								{isModal ? modalCta : cta}
+							</span>
+							<span
+								style={{
+									color: ctaInfoFontColor,
+									fontSize: ctaInfoFontSize,
+									fontStyle: ctaInfoFontStyle,
+									fontWeight: ctaInfoFontWeight,
+								}}
+							>
+								{ctaInfo}
+							</span>
+						</>
+					)}
 				</Button>
 			)}
 		</div>
@@ -199,9 +177,7 @@ const OtpRequest = ({
 					closable={closableModal}
 					draggable={false}
 					showHeader={closableModal}
-					contentClassName={
-						!closableModal ? styles.no_header : undefined
-					}
+					contentClassName={!closableModal ? styles.no_header : undefined}
 				>
 					<form onSubmit={handleSubmit(onSubmit)} noValidate>
 						{renderFormContent(showModal)}

@@ -12,6 +12,7 @@ import { paramConfigs } from "@/utils/param-configs";
 import ServiceImage from "@/components/ServiceImage/ServiceImage";
 import FullFlow from "@/components/FullFlow";
 import CustomStepper from "@/components/CustomStepper/CustomStepper";
+import useTheme from "@/hooks/useTheme";
 
 const serviceName = "Service_1";
 
@@ -69,6 +70,7 @@ const Landing = () => {
 			case "otp":
 				return (
 					<OtpConfirm
+						css={css}
 						showModal={showModal && modalFlow !== "full"}
 						setShowModal={setShowModal}
 						content={content}
@@ -94,11 +96,7 @@ const Landing = () => {
 	// * ====== NEW VIST CALL ======
 
 	const formattedStep =
-		step === "initial"
-			? "New Visit"
-			: step === "otp"
-			? "Otp Request"
-			: "Otp Confirm";
+		step === "initial" ? "New Visit" : step === "otp" ? "Otp Request" : "Otp Confirm";
 
 	const {
 		query: { data: displayData, isFetching },
@@ -131,7 +129,10 @@ const Landing = () => {
 		showStepper,
 		fullscreenPlayer,
 		additionalInformation,
+		primaryColor,
 	} = css || {};
+
+	useTheme(primaryColor);
 
 	const {
 		acknowledgment,
@@ -163,11 +164,7 @@ const Landing = () => {
 	// !==== USE EFFECTS =====
 	//* Will redirect to step otp if user already previously entered his phone number && is not subscribed
 	useEffect(() => {
-		if (
-			modalFlow !== "full" &&
-			ctaMethod === "OtpConfirm" &&
-			!alreadySubscribed
-		) {
+		if (modalFlow !== "full" && ctaMethod === "OtpConfirm" && !alreadySubscribed) {
 			goToStep("otp");
 		}
 	}, [modalFlow, alreadySubscribed, ctaMethod, goToStep]);
@@ -198,9 +195,7 @@ const Landing = () => {
 	if (isFetching || isCollecting)
 		return (
 			<div className={styles.loading_container}>
-				<i
-					className={`pi pi-spin pi-spinner-dotted ${styles.page_spinner}`}
-				></i>
+				<i className={`pi pi-spin pi-spinner-dotted ${styles.page_spinner}`}></i>
 			</div>
 		);
 
@@ -222,6 +217,7 @@ const Landing = () => {
 					onRootClick={handleRootClick}
 					fullscreenPlayer={fullscreenPlayer}
 					skipTopPriceDesc={skipTopPriceDesc}
+					additionalInformation={additionalInformation}
 				>
 					{showStepper && (
 						<CustomStepper
@@ -263,10 +259,7 @@ const Landing = () => {
 								ctaMethod={ctaMethod}
 								visitorId={visitorId}
 								onSuccess={() => {
-									if (
-										redirection &&
-										!subscriptionConfirmationPage
-									) {
+									if (redirection && !subscriptionConfirmationPage) {
 										window.location.replace(redirection);
 									} else {
 										goToStep("final");
@@ -294,10 +287,6 @@ const Landing = () => {
 						)}
 					</div>
 
-					{additionalInformation && (
-						<p>"SHOW ADDITIONAL INFORMATION"</p>
-					)}
-
 					{bottomPriceDescription && (
 						<div className={styles.price_wrapper}>
 							<p>{bottomPriceDescription}</p>
@@ -306,9 +295,7 @@ const Landing = () => {
 
 					{acknowledgment && (
 						<div className={styles.acknowledgment_container}>
-							<i className={styles.acknowledgment}>
-								{acknowledgment}
-							</i>
+							<i className={styles.acknowledgment}>{acknowledgment}</i>
 						</div>
 					)}
 				</Layout>

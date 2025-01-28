@@ -16,6 +16,7 @@ const Layout = ({
 	logo,
 	fullscreenPlayer,
 	skipTopPriceDesc,
+	additionalInformation,
 }) => {
 	// const divRef = useScrollToElement(fullscreenPlayer);
 
@@ -46,7 +47,7 @@ const Layout = ({
 				</div>
 			</div>
 
-			<Footer content={terms} />
+			<Footer content={terms} additionalInformation={additionalInformation} />
 		</div>
 	);
 };

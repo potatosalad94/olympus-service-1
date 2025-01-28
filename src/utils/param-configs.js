@@ -33,4 +33,40 @@ export const paramConfigs = {
 	rsb: {
 		defaultValue: "",
 	},
+	campaign: {
+		defaultValue: "",
+	},
+	adgroup: {
+		defaultValue: "",
+	},
+	creative: {
+		defaultValue: "",
+	},
+	adid: {
+		defaultValue: "",
+	},
+	headline: {
+		defaultValue: "",
+	},
+	targetid: {
+		defaultValue: "",
+	},
+	keyword: {
+		defaultValue: "",
+	},
+	escapedkeyword: {
+		defaultValue: "",
+	},
+	placement: {
+		defaultValue: "",
+	},
+	target: {
+		defaultValue: "",
+	},
+	network: {
+		defaultValue: "",
+	},
+	isthirdpartyserved: {
+		defaultValue: "",
+	},
 };

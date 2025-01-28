@@ -4,23 +4,22 @@
 	display: flex;
 	align-items: center;
 	gap: 5px;
-}
+	.language_button {
+		padding: 0;
+		background: #fff !important;
+		border: none;
+		cursor: pointer;
+		width: 24px;
+		height: 24px;
 
-.language_button {
-	padding: 0;
-	background: transparent;
-	border: none;
-	cursor: pointer;
-	width: 24px;
-	height: 24px;
+		&:enabled:hover {
+			background: rgba(0, 0, 0, 0.1) !important;
+		}
 
-	&:hover {
-		background: rgba(0, 0, 0, 0.1);
-	}
-
-	img {
-		width: 100%;
-		height: 100%;
-		// border-radius: 50%;
+		img {
+			width: 100%;
+			height: 100%;
+			// border-radius: 50%;
+		}
 	}
 }

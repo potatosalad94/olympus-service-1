@@ -1,9 +1,11 @@
 import styles from "./Footer.module.scss";
 
-const Footer = ({ content }) => {
+const Footer = ({ content, additionalInformation }) => {
+	if (!content && !additionalInformation) return null;
 	return (
 		<div className={styles.container}>
-			<p>{content}</p>
+			{content && <p>{content}</p>}
+			{additionalInformation && <p>{additionalInformation}</p>}
 		</div>
 	);
 };
