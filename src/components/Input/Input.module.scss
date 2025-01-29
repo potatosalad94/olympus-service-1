@@ -40,6 +40,12 @@
 		width: 100%;
 	}
 
+	.input,
+	.input::placeholder {
+		font-weight: bold;
+		font-size: 16px;
+	}
+
 	.animated_error {
 		@keyframes moveLeftRight {
 			0% {

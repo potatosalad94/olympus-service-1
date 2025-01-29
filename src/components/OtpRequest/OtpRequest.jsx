@@ -18,7 +18,6 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 		closableModal,
 		clickableZone,
 		showMsisdnInput,
-		showModalInput,
 		msisdnPrefill,
 		blurPx,
 
@@ -34,18 +33,23 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 	} = css;
 
 	const otpRequestApi = useApi(otpRequest);
-	const [disabled, setDisabled] = useState(msisdn?.length === 10 ? false : true);
+
+	const [disabled, setDisabled] = useState(
+		showMsisdnInput ? (msisdn?.length === 10 ? false : true) : false
+	);
 
 	// Add a state to manage the contact value separately
 	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
 
 	useEffect(() => {
-		if (contactValue.match(/\d/g)?.length === 10) {
-			setDisabled(false);
-		} else {
-			setDisabled(true);
+		if (showMsisdnInput) {
+			if (contactValue.match(/\d/g)?.length === 10) {
+				setDisabled(false);
+			} else {
+				setDisabled(true);
+			}
 		}
-	}, [contactValue]);
+	}, [contactValue, showMsisdnInput]);
 
 	const { mutate: requestOtp, isPending } = useMutation({
 		mutationFn: (msisdn = "") => {
@@ -61,7 +65,7 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 		resolver: joiResolver(otpRequestSchema(language?.code?.toLowerCase())),
 		context: {
 			dialCode,
-			showInput: showMsisdnInput || showModalInput,
+			showInput: showMsisdnInput,
 		},
 		defaultValues: {
 			contact: contactValue,
@@ -85,7 +89,7 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 			{!isModal && userInstructions && <p>{userInstructions}</p>}
 			{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-			{(showMsisdnInput || showModalInput) && (
+			{showMsisdnInput && (
 				<Controller
 					name="contact"
 					control={control}

@@ -7,17 +7,7 @@ import { InputIcon } from "primereact/inputicon";
 
 const Input = forwardRef(
 	(
-		{
-			dialCode = "",
-			onChange,
-			onBlur,
-			name,
-			error,
-			onClick,
-			value,
-			type,
-			disabled = false,
-		},
+		{ dialCode = "", onChange, onBlur, name, error, onClick, value, type, disabled = false },
 		ref
 	) => {
 		return (
@@ -31,7 +21,7 @@ const Input = forwardRef(
 						onChange={onChange}
 						onBlur={onBlur}
 						mask={`${dialCode}9 999 9999`}
-						placeholder="05x xxx xxxx"
+						placeholder="05"
 						className={classNames(styles.input, {
 							"p-invalid": error,
 						})}
@@ -43,17 +33,13 @@ const Input = forwardRef(
 					/>
 					{!disabled && (
 						<div className={styles.checkmark_container}>
-							<i
-								className={`pi pi-check-circle ${styles.checkmark_animation}`}
-							></i>
+							<i className={`pi pi-check-circle ${styles.checkmark_animation}`}></i>
 						</div>
 					)}
 				</IconField>
 
 				{error && (
-					<small className={`p-error ${styles.animated_error}`}>
-						{error.message}
-					</small>
+					<small className={`p-error ${styles.animated_error}`}>{error.message}</small>
 				)}
 			</div>
 		);

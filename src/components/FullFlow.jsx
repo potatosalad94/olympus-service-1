@@ -1,8 +1,4 @@
-import {
-	otpConfirm,
-	otpRequest,
-	resendOtp as resendOtpEndpoint,
-} from "@/api/client";
+import { otpConfirm, otpRequest, resendOtp as resendOtpEndpoint } from "@/api/client";
 import Input from "@/components/Input/Input";
 import otpConfirmSchema from "@/components/OtpConfirm/otpConfirmSchema";
 import otpRequestSchema from "@/components/OtpRequest/otpRequestSchema";
@@ -14,38 +10,66 @@ import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputOtp } from "primereact/inputotp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./FullFlow.module.scss";
 import { classNames } from "primereact/utils";
 
 const FullFlow = ({
+	content,
+	css,
 	showModal,
 	setShowModal,
-	showModalInput,
-	clickableZone,
-	msisdnPrefill,
-	closableModal,
-	blurPx,
-	msisdn,
-	dialCode,
-	modalUserInstructions,
-	modalCta,
 	language,
 	ctaMethod,
 	visitorId,
 	onSuccess,
-	newOtpRequest,
-	otpConfirmTimer,
 	isLoadingDataDisplay,
 }) => {
+	const {
+		showMsisdnInput,
+		clickableZone,
+		msisdnPrefill,
+		closableModal,
+		blurPx,
+		modalCtaFontColor,
+		modalCtaFontSize,
+		modalCtaFontStyle,
+		modalCtaFontWeight,
+		modalCtaInfoFontColor,
+		modalCtaInfoFontSize,
+		modalCtaInfoFontStyle,
+		modalCtaInfoFontWeight,
+	} = css;
+
+	const {
+		msisdn,
+		dialCode,
+		modalUserInstructions,
+		modalCta,
+		modalCtaInfo,
+		newOtpRequest,
+		otpConfirmTimer,
+	} = content;
+
 	const [modalStep, setModalStep] = useState(ctaMethod);
 
 	const otpRequestApi = useApi(otpRequest);
-
-	const [contactValue, setContactValue] = useState(
-		msisdnPrefill && msisdn ? msisdn : ""
+	const [disabled, setDisabled] = useState(
+		showMsisdnInput ? (msisdn?.length === 10 ? false : true) : false
 	);
+
+	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
+
+	useEffect(() => {
+		if (showMsisdnInput) {
+			if (contactValue.match(/\d/g)?.length === 10) {
+				setDisabled(false);
+			} else {
+				setDisabled(true);
+			}
+		}
+	}, [contactValue, showMsisdnInput]);
 
 	// * ==== RESEND OTP =====
 	const { countdown, startCountdown } = useOtpCountdown(otpConfirmTimer);
@@ -85,7 +109,11 @@ const FullFlow = ({
 
 	const otpConfirmApi = useApi(otpConfirm);
 
-	const { mutate: confirmOtp, isPending: isPendingConfirm } = useMutation({
+	const {
+		mutate: confirmOtp,
+		isPending: isPendingConfirm,
+		isError,
+	} = useMutation({
 		mutationFn: (otp) => {
 			return otpConfirmApi.request({
 				visitorId,
@@ -118,7 +146,7 @@ const FullFlow = ({
 		resolver: joiResolver(otpRequestSchema(language?.code?.toLowerCase())),
 		context: {
 			dialCode,
-			showInput: showModalInput,
+			showInput: showMsisdnInput,
 		},
 		defaultValues: {
 			contact: contactValue,
@@ -134,7 +162,7 @@ const FullFlow = ({
 		<div className={styles.form_container}>
 			{modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-			{showModalInput && (
+			{showMsisdnInput && (
 				<div className={styles.input_wrapper}>
 					<Controller
 						name="contact"
@@ -152,6 +180,7 @@ const FullFlow = ({
 								error={fieldState.error}
 								onClick={(e) => e.stopPropagation()}
 								type="tel"
+								disabled={disabled}
 							/>
 						)}
 					/>
@@ -161,14 +190,40 @@ const FullFlow = ({
 			{modalCta && (
 				<Button
 					type="submit"
-					label={modalCta}
 					size={clickableZone === "Large" ? "large" : undefined}
+					disabled={disabled}
 					onClick={(e) => {
 						e.stopPropagation();
 					}}
-					loading={isPending}
 					className={styles.submit_btn}
-				/>
+				>
+					{isPending ? (
+						<i className={`pi pi-spin pi-spinner-dotted`}></i>
+					) : (
+						<>
+							<span
+								style={{
+									color: modalCtaFontColor,
+									fontSize: modalCtaFontSize,
+									fontStyle: modalCtaFontStyle,
+									fontWeight: modalCtaFontWeight,
+								}}
+							>
+								{modalCta}
+							</span>
+							<span
+								style={{
+									color: modalCtaInfoFontColor,
+									fontSize: modalCtaInfoFontSize,
+									fontStyle: modalCtaInfoFontStyle,
+									fontWeight: modalCtaInfoFontWeight,
+								}}
+							>
+								{modalCtaInfo}
+							</span>
+						</>
+					)}
+				</Button>
 			)}
 		</div>
 	);
@@ -177,50 +232,56 @@ const FullFlow = ({
 		<div className={styles.form_container}>
 			{modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-			{showModalInput && (
-				<Controller
-					name="otp"
-					control={controlOtp}
-					render={({ field }) => (
-						<InputOtp
-							{...field}
-							onChange={(e) => {
-								const newValue = e.value;
-								setOtpState(newValue);
-								setValueOtp("otp", newValue);
-							}}
-							integerOnly
-							// error={fieldState.error} //TODO >> ajouter ?
-						/>
-					)}
-				/>
-			)}
+			<Controller
+				name="otp"
+				control={controlOtp}
+				render={({ field }) => (
+					<InputOtp
+						{...field}
+						pt={{
+							root: {
+								className: classNames(styles["custom-otp-input"], {
+									[styles.error]: isError,
+								}),
+							},
+						}}
+						onChange={(e) => {
+							const newValue = e.value;
+							setOtpState(newValue);
+							setValueOtp("otp", newValue);
+						}}
+						integerOnly
+						// error={fieldState.error} //TODO >> ajouter ?
+					/>
+				)}
+			/>
 
-			{modalCta && (
-				<>
-					<Button
-						loading={isPendingConfirm}
-						className={styles.submit_btn}
-						disabled={otpWatcher.length !== 4}
-						label={modalCta}
-					></Button>
-
-					<Button
-						type={"button"}
-						className={styles.submit_btn}
-						onClick={() => resendOtp(contactValue)}
-						disabled={
-							countdown > 0 ||
-							isPendingOtp ||
-							isPendingConfirm ||
-							isLoadingDataDisplay
-						}
-						link
+			<Button className={styles.submit_btn} disabled={otpWatcher.length !== 4}>
+				{isPendingConfirm ? (
+					<i className={`pi pi-spin pi-spinner-dotted`}></i>
+				) : (
+					<span
+						style={{
+							color: modalCtaFontColor,
+							fontSize: modalCtaFontSize,
+							fontStyle: modalCtaFontStyle,
+							fontWeight: modalCtaFontWeight,
+						}}
 					>
-						{newOtpRequest}
-					</Button>
-				</>
-			)}
+						{modalCta}
+					</span>
+				)}
+			</Button>
+
+			<Button
+				type={"button"}
+				className={styles.resend_btn}
+				onClick={() => resendOtp(contactValue)}
+				disabled={countdown > 0 || isPendingOtp || isPendingConfirm || isLoadingDataDisplay}
+				link
+			>
+				{newOtpRequest}
+			</Button>
 
 			{countdown > 0 && (
 				<p>
@@ -257,19 +318,13 @@ const FullFlow = ({
 				})}
 			>
 				{modalStep === "OtpRequest" && (
-					<form
-						onSubmit={handleSubmit(onSubmitOtpRequest)}
-						noValidate
-					>
+					<form onSubmit={handleSubmit(onSubmitOtpRequest)} noValidate>
 						{renderOtpRequestFormContent()}
 					</form>
 				)}
 
 				{modalStep === "OtpConfirm" && (
-					<form
-						onSubmit={handleConfirmOtp(onSubmitOtpConfirm)}
-						noValidate
-					>
+					<form onSubmit={handleConfirmOtp(onSubmitOtpConfirm)} noValidate>
 						{renderOtpConfirmFormContent()}
 					</form>
 				)}

@@ -13,18 +13,8 @@ import styles from "./OtpConfirm.module.scss";
 import otpConfirmSchema from "./otpConfirmSchema";
 import { classNames } from "primereact/utils";
 
-const OtpConfirm = ({
-	css,
-	onSuccess,
-	visitorId,
-	content,
-	language,
-	showModal,
-	setShowModal,
-	closableModal,
-	blurPx,
-}) => {
-	const { ctaFontColor, ctaFontSize, ctaFontStyle, ctaFontWeight } = css;
+const OtpConfirm = ({ css, onSuccess, visitorId, content, language, showModal, setShowModal }) => {
+	const { closableModal, blurPx, ctaFontColor, ctaFontSize, ctaFontStyle, ctaFontWeight } = css;
 
 	const [otpState, setOtpState] = useState("");
 
@@ -49,7 +39,7 @@ const OtpConfirm = ({
 
 	const {
 		mutate: confirmOtp,
-		isPending,
+		isPending: isPendingConfirm,
 		isError,
 	} = useMutation({
 		mutationFn: (otp) => {
@@ -131,7 +121,7 @@ const OtpConfirm = ({
 			{((isModal && modalCta) || (!isModal && cta)) && (
 				<>
 					<Button className={styles.cta_btn} disabled={otpWatcher.length !== 4}>
-						{isPendingOtp ? (
+						{isPendingConfirm ? (
 							<i className={`pi pi-spin pi-spinner-dotted`}></i>
 						) : (
 							<span
@@ -151,16 +141,10 @@ const OtpConfirm = ({
 						type={"button"}
 						className={styles.resend_btn}
 						onClick={handleOtpRequest}
-						disabled={countdown > 0}
+						disabled={countdown > 0 || isPendingOtp || isPendingConfirm}
 						link
 					>
-						<span
-							style={{
-								fontSize: ctaFontSize,
-							}}
-						>
-							{newOtpRequest}
-						</span>
+						{newOtpRequest}
 					</Button>
 				</>
 			)}

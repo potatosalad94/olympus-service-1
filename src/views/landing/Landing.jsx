@@ -81,8 +81,6 @@ const Landing = () => {
 								goToStep("final");
 							}
 						}}
-						closableModal={closableModal}
-						blurPx={blurPx}
 						visitorId={visitorId}
 						language={currentLanguage}
 					/>
@@ -116,15 +114,11 @@ const Landing = () => {
 		subscriptionConfirmationPage,
 		modalFlow,
 	} = displayData || {};
+	console.log("🚀 ~ modalFlow >>", modalFlow);
 
 	const {
-		clickableZone,
 		termsV,
 		playButton,
-		closableModal,
-		showModalMsisdnInput,
-		msisdnPrefill,
-		blurPx,
 		skipTopPriceDesc,
 		showStepper,
 		fullscreenPlayer,
@@ -137,18 +131,12 @@ const Landing = () => {
 	const {
 		acknowledgment,
 		bottomPriceDescription,
-		modalCta,
-		modalUserInstructions,
 		exitButton,
 		logo,
 		image,
-		msisdn,
-		dialCode,
 		serviceDescription,
 		termsAndConditions,
 		topPriceDescription,
-		newOtpRequest,
-		otpConfirmTimer,
 	} = content || {};
 
 	const handleRootClick = () => {
@@ -244,17 +232,10 @@ const Landing = () => {
 					<div className={styles.main}>
 						{modalFlow === "full" && (
 							<FullFlow
+								content={content}
 								showModal={showModal}
 								setShowModal={setShowModal}
-								showModalInput={showModalMsisdnInput}
-								clickableZone={clickableZone}
-								msisdnPrefill={msisdnPrefill}
-								closableModal={closableModal}
-								blurPx={blurPx}
-								msisdn={msisdn}
-								dialCode={dialCode}
-								modalUserInstructions={modalUserInstructions}
-								modalCta={modalCta}
+								css={css}
 								language={currentLanguage}
 								ctaMethod={ctaMethod}
 								visitorId={visitorId}
@@ -266,8 +247,6 @@ const Landing = () => {
 									}
 								}}
 								isLoadingDataDisplay={isFetching}
-								newOtpRequest={newOtpRequest}
-								otpConfirmTimer={otpConfirmTimer}
 							/>
 						)}
 

@@ -1,18 +1,10 @@
 import { classNames } from "primereact/utils";
 import LanguageDropdown from "../LanguageDropdown/LanguageDropdown";
 import styles from "./Header.module.scss";
-import { languages } from "@/utils/languages-dictionnary";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useScrollToElement } from "@/hooks/useScrollToElement";
 
-const Header = ({
-	text,
-	lang,
-	step,
-	logo,
-	skipTopPriceDesc,
-	availableLanguages,
-}) => {
+const Header = ({ text, lang, step, logo, skipTopPriceDesc, availableLanguages }) => {
 	const divRef = useScrollToElement(skipTopPriceDesc);
 
 	return (
@@ -31,7 +23,6 @@ const Header = ({
 			<div
 				ref={divRef}
 				className={classNames(styles.container, {
-					[styles.reverse]: lang?.code === languages.arabic,
 					[styles.hasLogo]: !!logo,
 				})}
 			>
