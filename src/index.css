@@ -16,6 +16,11 @@ body {
 	/* font-family: Inter, Arial, sans-serif; */
 }
 
+.p-button:disabled {
+	background-color: #a6b1bc !important;
+	border-color: #a6b1bc !important;
+}
+
 /* button {
 	background: none;
 	border: none;
