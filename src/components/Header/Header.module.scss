@@ -1,36 +1,60 @@
-.price_wrapper {
+$logo-size: 70px;
+
+.header {
 	display: flex;
-	justify-content: center;
-	align-items: center;
-	// background-color: var(--primary-color);
-	color: #9d9d9d;
-	font-size: 12px;
-	height: 40px;
+	justify-content: space-between;
+	align-items: flex-start;
 	padding: 0.4rem;
 
-	p {
-		padding: 0 2rem;
-		text-align: center;
-	}
-}
-
-.container {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	padding: 1rem 1rem 0;
-	gap: 20px;
-	display: none;
-
-	&.hasLogo {
-		display: block;
-		justify-content: space-between;
+	.language_wrapper {
+		width: $logo-size;
+		display: flex;
+		justify-content: flex-end;
 	}
 
 	.logo {
-		width: 70px;
-		height: 70px;
-		aspect-ratio: 1;
+		max-width: $logo-size;
+		height: auto;
 		border-radius: 50%;
 	}
+
+	p {
+		padding: 0 0.5rem;
+		text-align: center;
+		width: 100%;
+		margin: 0;
+	}
 }
+
+@media screen and (max-width: 550px) {
+	.header {
+		.logo {
+			max-width: calc($logo-size - 20px);
+		}
+
+		.language_wrapper {
+			width: calc($logo-size - 20px);
+		}
+	}
+}
+
+// .container {
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: flex-end;
+// 	padding: 1rem 1rem 0;
+// 	gap: 20px;
+// 	display: none;
+
+// 	&.hasLogo {
+// 		display: block;
+// 		justify-content: space-between;
+// 	}
+
+// 	.logo {
+// 		width: 70px;
+// 		height: 70px;
+// 		aspect-ratio: 1;
+// 		border-radius: 50%;
+// 	}
+// }

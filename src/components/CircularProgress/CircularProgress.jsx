@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const CircularProgress = ({ color = "#06b6d4" }) => {
+const CircularProgress = ({ color = "#000" }) => {
 	const [progress, setProgress] = useState(0);
 	const [showArrow, setShowArrow] = useState(false);
 	const [arrowOffset, setArrowOffset] = useState(0);

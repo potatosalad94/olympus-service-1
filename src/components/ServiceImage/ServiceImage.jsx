@@ -6,7 +6,16 @@ import { classNames } from "primereact/utils";
 import { useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
-const ServiceImage = ({ playButton, isLoading, image, onShowModal, step, fullscreenPlayer }) => {
+const ServiceImage = ({
+	playButton,
+	isLoading,
+	image,
+	onShowModal,
+	step,
+	fullscreenPlayer,
+	primaryColor,
+	onLoad,
+}) => {
 	const [showPlaceholder, setShowPlaceholder] = useState(true);
 	const divRef = useScrollToElement(fullscreenPlayer && !showPlaceholder);
 
@@ -49,12 +58,15 @@ const ServiceImage = ({ playButton, isLoading, image, onShowModal, step, fullscr
 							// }}
 							src={image}
 							visibleByDefault={true}
-							onLoad={() => setShowPlaceholder(false)}
+							onLoad={() => {
+								setShowPlaceholder(false);
+								onLoad && onLoad();
+							}}
 						/>
 					</div>
 				</Button>
 			) : (
-				<CircularProgress />
+				<CircularProgress color={primaryColor} />
 			)}
 		</div>
 	);

@@ -32,6 +32,8 @@
 
 	.submit_btn {
 		width: 100%;
+		min-width: 193px;
+		max-width: 230px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -39,6 +41,8 @@
 
 	.resend_btn {
 		width: 100%;
+		min-width: 193px;
+		max-width: 230px;
 		display: flex;
 		justify-content: center;
 		background-color: transparent !important;

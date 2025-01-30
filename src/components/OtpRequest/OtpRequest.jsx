@@ -18,6 +18,7 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 		closableModal,
 		clickableZone,
 		showMsisdnInput,
+		showModalMsisdnInput,
 		msisdnPrefill,
 		blurPx,
 
@@ -34,22 +35,24 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 
 	const otpRequestApi = useApi(otpRequest);
 
+	const showInput = (!showModal && showMsisdnInput) || (showModal && showModalMsisdnInput);
+
 	const [disabled, setDisabled] = useState(
-		showMsisdnInput ? (msisdn?.length === 10 ? false : true) : false
+		showInput ? (msisdn?.length === 10 ? false : true) : false
 	);
 
 	// Add a state to manage the contact value separately
 	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
 
 	useEffect(() => {
-		if (showMsisdnInput) {
+		if (showInput) {
 			if (contactValue.match(/\d/g)?.length === 10) {
 				setDisabled(false);
 			} else {
 				setDisabled(true);
 			}
 		}
-	}, [contactValue, showMsisdnInput]);
+	}, [contactValue, showInput]);
 
 	const { mutate: requestOtp, isPending } = useMutation({
 		mutationFn: (msisdn = "") => {
@@ -65,7 +68,7 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 		resolver: joiResolver(otpRequestSchema(language?.code?.toLowerCase())),
 		context: {
 			dialCode,
-			showInput: showMsisdnInput,
+			showInput: showInput,
 		},
 		defaultValues: {
 			contact: contactValue,
@@ -89,7 +92,7 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 			{!isModal && userInstructions && <p>{userInstructions}</p>}
 			{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-			{showMsisdnInput && (
+			{showInput && (
 				<Controller
 					name="contact"
 					control={control}
@@ -171,7 +174,7 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 						},
 					}}
 					focusOnShow={false}
-					visible={showModal} //TODO >> ajouter aussi modalFlow !== "full" ?
+					visible={showModal}
 					maskStyle={{ padding: "20px" }}
 					blockScroll={true}
 					className={styles.dialog_container}

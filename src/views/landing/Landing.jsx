@@ -13,6 +13,7 @@ import ServiceImage from "@/components/ServiceImage/ServiceImage";
 import FullFlow from "@/components/FullFlow";
 import CustomStepper from "@/components/CustomStepper/CustomStepper";
 import useTheme from "@/hooks/useTheme";
+import { useScrollToElement } from "@/hooks/useScrollToElement";
 
 const serviceName = "Service_1";
 
@@ -114,16 +115,17 @@ const Landing = () => {
 		subscriptionConfirmationPage,
 		modalFlow,
 	} = displayData || {};
-	console.log("🚀 ~ modalFlow >>", modalFlow);
 
 	const {
-		termsV,
 		playButton,
-		skipTopPriceDesc,
 		showStepper,
 		fullscreenPlayer,
-		additionalInformation,
 		primaryColor,
+		skipTopPriceDesc,
+		bottomPriceDescFontColor,
+		bottomPriceDescFontSize,
+		bottomPriceDescFontStyle,
+		bottomPriceDescFontWeight,
 	} = css || {};
 
 	useTheme(primaryColor);
@@ -167,18 +169,8 @@ const Landing = () => {
 		}
 	}, [modalFlow, alreadySubscribed, ctaMethod, step]);
 
-	// const scrollPosition = 50;
-
-	// useEffect(() => {
-	// 	// Immediately set the scroll position without animation
-
-	// 	if (isSuccess && !isLoading)
-	// 		window.scrollTo({
-	// 			top: scrollPosition,
-	// 			left: 0,
-	// 			behavior: "instant", // This prevents smooth scrolling
-	// 		});
-	// }, [scrollPosition, isSuccess, isLoading]);
+	const [imgLoaded, setImgLoaded] = useState(false);
+	const divRef = useScrollToElement(skipTopPriceDesc && imgLoaded);
 
 	if (isFetching || isCollecting)
 		return (
@@ -197,86 +189,96 @@ const Landing = () => {
 				<Layout
 					headerPrice={topPriceDescription ?? ""}
 					terms={termsAndConditions ?? ""}
-					termsVisibility={termsV}
 					lang={currentLanguage}
 					availableLanguages={availableLanguages}
 					step={formattedStep}
 					logo={logo}
 					onRootClick={handleRootClick}
-					fullscreenPlayer={fullscreenPlayer}
-					skipTopPriceDesc={skipTopPriceDesc}
-					additionalInformation={additionalInformation}
+					css={css}
 				>
-					{showStepper && (
-						<CustomStepper
-							currentStep={step === "otp" ? 2 : 1}
-							lang={currentLanguage}
-						/>
-					)}
-
-					<ServiceImage
-						playButton={playButton}
-						isLoading={isLoading}
-						image={image}
-						onShowModal={handleShowModal}
-						step={step}
-						fullscreenPlayer={fullscreenPlayer}
-					/>
-
-					{serviceDescription && (
-						<div className={styles.desc}>
-							<p>{serviceDescription}</p>
-						</div>
-					)}
-
-					<div className={styles.main}>
-						{modalFlow === "full" && (
-							<FullFlow
-								content={content}
-								showModal={showModal}
-								setShowModal={setShowModal}
-								css={css}
-								language={currentLanguage}
-								ctaMethod={ctaMethod}
-								visitorId={visitorId}
-								onSuccess={() => {
-									if (redirection && !subscriptionConfirmationPage) {
-										window.location.replace(redirection);
-									} else {
-										goToStep("final");
-									}
-								}}
-								isLoadingDataDisplay={isFetching}
+					<div ref={divRef}>
+						{showStepper && (
+							<CustomStepper
+								currentStep={step === "otp" ? 2 : 1}
+								lang={currentLanguage}
 							/>
 						)}
 
-						{renderStep()}
+						<ServiceImage
+							playButton={playButton}
+							isLoading={isLoading}
+							image={image}
+							onShowModal={handleShowModal}
+							step={step}
+							fullscreenPlayer={fullscreenPlayer}
+							primaryColor={primaryColor}
+							onLoad={() => setImgLoaded(true)}
+						/>
 
-						{exitButton && (
-							<Button
-								type={"button"}
-								label={exitButton}
-								className={styles.exitBtn}
-								onClick={(e) => {
-									e.stopPropagation();
-									window.close();
-								}}
-								size="small"
-							/>
+						{serviceDescription && (
+							<div className={styles.desc}>
+								<p>{serviceDescription}</p>
+							</div>
+						)}
+
+						<div className={styles.main}>
+							{modalFlow === "full" && (
+								<FullFlow
+									content={content}
+									showModal={showModal}
+									setShowModal={setShowModal}
+									css={css}
+									language={currentLanguage}
+									ctaMethod={ctaMethod}
+									visitorId={visitorId}
+									onSuccess={() => {
+										if (redirection && !subscriptionConfirmationPage) {
+											window.location.replace(redirection);
+										} else {
+											goToStep("final");
+										}
+									}}
+									isLoadingDataDisplay={isFetching}
+								/>
+							)}
+
+							{renderStep()}
+
+							{exitButton && (
+								<Button
+									type={"button"}
+									label={exitButton}
+									className={styles.exitBtn}
+									onClick={(e) => {
+										e.stopPropagation();
+										window.close();
+									}}
+									size="small"
+								/>
+							)}
+						</div>
+
+						{bottomPriceDescription && (
+							<div className={styles.price_wrapper}>
+								<p
+									style={{
+										color: bottomPriceDescFontColor,
+										fontSize: bottomPriceDescFontSize,
+										fontStyle: bottomPriceDescFontStyle,
+										fontWeight: bottomPriceDescFontWeight,
+									}}
+								>
+									{bottomPriceDescription}
+								</p>
+							</div>
+						)}
+
+						{acknowledgment && (
+							<div className={styles.acknowledgment_container}>
+								<i className={styles.acknowledgment}>{acknowledgment}</i>
+							</div>
 						)}
 					</div>
-
-					{bottomPriceDescription && (
-						<div className={styles.price_wrapper}>
-							<p>{bottomPriceDescription}</p>
-						</div>
-					)}
-
-					{acknowledgment && (
-						<div className={styles.acknowledgment_container}>
-							<i className={styles.acknowledgment}>{acknowledgment}</i>
-						</div>
-					)}
 				</Layout>
 			)}
 		</>

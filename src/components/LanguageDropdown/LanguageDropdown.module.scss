@@ -1,9 +1,17 @@
 .container {
-	position: absolute;
-	right: 5px;
+	// position: absolute;
+
+	// &.align_left {
+	// 	left: 5px;
+	// }
+	// &.align_right {
+	// 	right: 5px;
+	// }
+
 	display: flex;
 	align-items: center;
 	gap: 5px;
+
 	.language_button {
 		padding: 0;
 		background: #fff !important;

@@ -27,7 +27,7 @@ const FullFlow = ({
 	isLoadingDataDisplay,
 }) => {
 	const {
-		showMsisdnInput,
+		showModalMsisdnInput,
 		clickableZone,
 		msisdnPrefill,
 		closableModal,
@@ -48,6 +48,7 @@ const FullFlow = ({
 		modalUserInstructions,
 		modalCta,
 		modalCtaInfo,
+		modalCtaSecondStep,
 		newOtpRequest,
 		otpConfirmTimer,
 	} = content;
@@ -56,20 +57,20 @@ const FullFlow = ({
 
 	const otpRequestApi = useApi(otpRequest);
 	const [disabled, setDisabled] = useState(
-		showMsisdnInput ? (msisdn?.length === 10 ? false : true) : false
+		showModalMsisdnInput ? (msisdn?.length === 10 ? false : true) : false
 	);
 
 	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
 
 	useEffect(() => {
-		if (showMsisdnInput) {
+		if (showModalMsisdnInput) {
 			if (contactValue.match(/\d/g)?.length === 10) {
 				setDisabled(false);
 			} else {
 				setDisabled(true);
 			}
 		}
-	}, [contactValue, showMsisdnInput]);
+	}, [contactValue, showModalMsisdnInput]);
 
 	// * ==== RESEND OTP =====
 	const { countdown, startCountdown } = useOtpCountdown(otpConfirmTimer);
@@ -146,7 +147,7 @@ const FullFlow = ({
 		resolver: joiResolver(otpRequestSchema(language?.code?.toLowerCase())),
 		context: {
 			dialCode,
-			showInput: showMsisdnInput,
+			showInput: showModalMsisdnInput,
 		},
 		defaultValues: {
 			contact: contactValue,
@@ -162,7 +163,7 @@ const FullFlow = ({
 		<div className={styles.form_container}>
 			{modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-			{showMsisdnInput && (
+			{showModalMsisdnInput && (
 				<div className={styles.input_wrapper}>
 					<Controller
 						name="contact"
@@ -268,7 +269,7 @@ const FullFlow = ({
 							fontWeight: modalCtaFontWeight,
 						}}
 					>
-						{modalCta}
+						{modalCtaSecondStep}
 					</span>
 				)}
 			</Button>

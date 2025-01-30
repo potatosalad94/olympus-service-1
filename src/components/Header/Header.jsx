@@ -1,26 +1,52 @@
-import { classNames } from "primereact/utils";
+import { forwardRef } from "react";
 import LanguageDropdown from "../LanguageDropdown/LanguageDropdown";
 import styles from "./Header.module.scss";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useScrollToElement } from "@/hooks/useScrollToElement";
 
-const Header = ({ text, lang, step, logo, skipTopPriceDesc, availableLanguages }) => {
-	const divRef = useScrollToElement(skipTopPriceDesc);
+const Header = forwardRef(({ text, lang, step, logo, availableLanguages, css }, ref) => {
+	const {
+		topPriceDescFontColor,
+		topPriceDescFontSize,
+		topPriceDescFontStyle,
+		topPriceDescFontWeight,
+	} = css || {};
 
 	return (
 		<>
 			{text && (
-				<div className={styles.price_wrapper}>
-					<LanguageDropdown
-						availableLanguages={availableLanguages}
-						lang={lang}
-						step={step}
+				<div ref={ref} className={styles.header}>
+					<LazyLoadImage
+						alt={"logo"}
+						className={styles.logo}
+						effect="blur"
+						wrapperProps={{
+							style: { transitionDelay: "1s" },
+						}}
+						src={logo}
+						height={300}
+						width={300}
 					/>
-					<p>{text}</p>
+					<p
+						style={{
+							color: topPriceDescFontColor,
+							fontSize: topPriceDescFontSize,
+							fontStyle: topPriceDescFontStyle,
+							fontWeight: topPriceDescFontWeight,
+						}}
+					>
+						{text}
+					</p>
+					<div className={styles.language_wrapper}>
+						<LanguageDropdown
+							availableLanguages={availableLanguages}
+							lang={lang}
+							step={step}
+						/>
+					</div>
 				</div>
 			)}
 
-			<div
+			{/* <div
 				ref={divRef}
 				className={classNames(styles.container, {
 					[styles.hasLogo]: !!logo,
@@ -37,9 +63,9 @@ const Header = ({ text, lang, step, logo, skipTopPriceDesc, availableLanguages }
 					height={300}
 					width={300}
 				/>
-			</div>
+			</div> */}
 		</>
 	);
-};
+});
 
 export default Header;
