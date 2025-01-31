@@ -46,6 +46,7 @@ const FullFlow = ({
 		msisdn,
 		dialCode,
 		modalUserInstructions,
+		modalUserInstructionsSecondStep,
 		modalCta,
 		modalCtaInfo,
 		modalCtaSecondStep,
@@ -231,7 +232,7 @@ const FullFlow = ({
 
 	const renderOtpConfirmFormContent = () => (
 		<div className={styles.form_container}>
-			{modalUserInstructions && <p>{modalUserInstructions}</p>}
+			{modalUserInstructionsSecondStep && <p>{modalUserInstructionsSecondStep}</p>}
 
 			<Controller
 				name="otp"
