@@ -69,4 +69,7 @@ export const paramConfigs = {
 	isthirdpartyserved: {
 		defaultValue: "",
 	},
+	test: {
+		defaultValue: "",
+	},
 };

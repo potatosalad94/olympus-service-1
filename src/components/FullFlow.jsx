@@ -1,4 +1,8 @@
-import { otpConfirm, otpRequest, resendOtp as resendOtpEndpoint } from "@/api/client";
+import {
+	otpConfirm,
+	otpRequest,
+	resendOtp as resendOtpEndpoint,
+} from "@/api/client";
 import Input from "@/components/Input/Input";
 import otpConfirmSchema from "@/components/OtpConfirm/otpConfirmSchema";
 import otpRequestSchema from "@/components/OtpRequest/otpRequestSchema";
@@ -10,7 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputOtp } from "primereact/inputotp";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./FullFlow.module.scss";
 import { classNames } from "primereact/utils";
@@ -61,7 +65,9 @@ const FullFlow = ({
 		showModalMsisdnInput ? (msisdn?.length === 10 ? false : true) : false
 	);
 
-	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
+	const [contactValue, setContactValue] = useState(
+		msisdnPrefill && msisdn ? msisdn : ""
+	);
 
 	useEffect(() => {
 		if (showModalMsisdnInput) {
@@ -160,6 +166,20 @@ const FullFlow = ({
 		requestOtp(contact);
 	};
 
+	const otpInputRef = useRef(null);
+
+	useEffect(() => {
+		if (modalStep === "OtpConfirm") {
+			setTimeout(() => {
+				const inputs =
+					document.getElementsByClassName("p-inputotp-input");
+				if (inputs && inputs.length > 0) {
+					inputs[0].focus();
+				}
+			}, 100);
+		}
+	}, [modalStep]);
+
 	const renderOtpRequestFormContent = () => (
 		<div className={styles.form_container}>
 			{modalUserInstructions && <p>{modalUserInstructions}</p>}
@@ -232,7 +252,9 @@ const FullFlow = ({
 
 	const renderOtpConfirmFormContent = () => (
 		<div className={styles.form_container}>
-			{modalUserInstructionsSecondStep && <p>{modalUserInstructionsSecondStep}</p>}
+			{modalUserInstructionsSecondStep && (
+				<p>{modalUserInstructionsSecondStep}</p>
+			)}
 
 			<Controller
 				name="otp"
@@ -240,11 +262,15 @@ const FullFlow = ({
 				render={({ field }) => (
 					<InputOtp
 						{...field}
+						ref={otpInputRef}
 						pt={{
 							root: {
-								className: classNames(styles["custom-otp-input"], {
-									[styles.error]: isError,
-								}),
+								className: classNames(
+									styles["custom-otp-input"],
+									{
+										[styles.error]: isError,
+									}
+								),
 							},
 						}}
 						onChange={(e) => {
@@ -258,7 +284,10 @@ const FullFlow = ({
 				)}
 			/>
 
-			<Button className={styles.submit_btn} disabled={otpWatcher.length !== 4}>
+			<Button
+				className={styles.submit_btn}
+				disabled={otpWatcher.length !== 4}
+			>
 				{isPendingConfirm ? (
 					<i className={`pi pi-spin pi-spinner-dotted`}></i>
 				) : (
@@ -279,7 +308,12 @@ const FullFlow = ({
 				type={"button"}
 				className={styles.resend_btn}
 				onClick={() => resendOtp(contactValue)}
-				disabled={countdown > 0 || isPendingOtp || isPendingConfirm || isLoadingDataDisplay}
+				disabled={
+					countdown > 0 ||
+					isPendingOtp ||
+					isPendingConfirm ||
+					isLoadingDataDisplay
+				}
 				link
 			>
 				{newOtpRequest}
@@ -320,13 +354,19 @@ const FullFlow = ({
 				})}
 			>
 				{modalStep === "OtpRequest" && (
-					<form onSubmit={handleSubmit(onSubmitOtpRequest)} noValidate>
+					<form
+						onSubmit={handleSubmit(onSubmitOtpRequest)}
+						noValidate
+					>
 						{renderOtpRequestFormContent()}
 					</form>
 				)}
 
 				{modalStep === "OtpConfirm" && (
-					<form onSubmit={handleConfirmOtp(onSubmitOtpConfirm)} noValidate>
+					<form
+						onSubmit={handleConfirmOtp(onSubmitOtpConfirm)}
+						noValidate
+					>
 						{renderOtpConfirmFormContent()}
 					</form>
 				)}
