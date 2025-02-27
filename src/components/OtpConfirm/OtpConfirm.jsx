@@ -38,6 +38,7 @@ const OtpConfirm = ({
 			const inputs = document.getElementsByClassName("p-inputotp-input");
 			if (inputs && inputs.length > 0) {
 				inputs[0].focus();
+				inputs[0].click();
 			}
 		}, 100);
 	}, []);
@@ -193,10 +194,7 @@ const OtpConfirm = ({
 
 	return (
 		<>
-			<form
-				onSubmit={handleSubmit(onSubmit)}
-				onClick={(e) => e.stopPropagation()}
-			>
+			<form onSubmit={handleSubmit(onSubmit)} onClick={(e) => e.stopPropagation()}>
 				{/* {renderFormContent()} */}
 
 				<div className={styles.container}>
@@ -211,12 +209,9 @@ const OtpConfirm = ({
 								ref={otpInputRef}
 								pt={{
 									root: {
-										className: classNames(
-											styles["custom-otp-input"],
-											{
-												[styles.error]: isError,
-											}
-										),
+										className: classNames(styles["custom-otp-input"], {
+											[styles.error]: isError,
+										}),
 									},
 								}}
 								onChange={(e) => {
@@ -233,14 +228,9 @@ const OtpConfirm = ({
 
 					{cta && (
 						<>
-							<Button
-								className={styles.cta_btn}
-								disabled={otpWatcher.length !== 4}
-							>
+							<Button className={styles.cta_btn} disabled={otpWatcher.length !== 4}>
 								{isPendingConfirm ? (
-									<i
-										className={`pi pi-spin pi-spinner-dotted`}
-									></i>
+									<i className={`pi pi-spin pi-spinner-dotted`}></i>
 								) : (
 									<span
 										style={{
@@ -259,11 +249,7 @@ const OtpConfirm = ({
 								type={"button"}
 								className={styles.resend_btn}
 								onClick={handleOtpRequest}
-								disabled={
-									countdown > 0 ||
-									isPendingOtp ||
-									isPendingConfirm
-								}
+								disabled={countdown > 0 || isPendingOtp || isPendingConfirm}
 								link
 							>
 								{newOtpRequest}
