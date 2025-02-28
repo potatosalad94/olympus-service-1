@@ -34,16 +34,11 @@ const useDataCollection = (enabled = true, collectionWindow = 1000) => {
 	// Audio fingerprint generator
 	const getAudioFingerprint = () => {
 		try {
-			const audioContext = new (window.AudioContext ||
-				window.webkitAudioContext)();
+			const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 			const oscillator = audioContext.createOscillator();
 			const analyser = audioContext.createAnalyser();
 			const gainNode = audioContext.createGain();
-			const scriptProcessor = audioContext.createScriptProcessor(
-				4096,
-				1,
-				1
-			);
+			const scriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
 
 			let audioData = "";
 
@@ -72,9 +67,7 @@ const useDataCollection = (enabled = true, collectionWindow = 1000) => {
 	// Get installed plugins and mime types
 	const getPluginsAndMimeTypes = () => {
 		const plugins = Array.from(navigator.plugins || []).map((p) => p.name);
-		const mimeTypes = Array.from(navigator.mimeTypes || []).map(
-			(mt) => mt.type
-		);
+		const mimeTypes = Array.from(navigator.mimeTypes || []).map((mt) => mt.type);
 		return { plugins, mimeTypes };
 	};
 
@@ -105,22 +98,14 @@ const useDataCollection = (enabled = true, collectionWindow = 1000) => {
 		const getWebGLInfo = () => {
 			try {
 				const canvas = document.createElement("canvas");
-				const gl =
-					canvas.getContext("webgl") ||
-					canvas.getContext("experimental-webgl");
+				const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 
 				if (gl) {
-					const debugInfo = gl.getExtension(
-						"WEBGL_debug_renderer_info"
-					);
+					const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
 					if (debugInfo) {
 						return {
-							webglVendor: gl.getParameter(
-								debugInfo.UNMASKED_VENDOR_WEBGL
-							),
-							webglRenderer: gl.getParameter(
-								debugInfo.UNMASKED_RENDERER_WEBGL
-							),
+							webglVendor: gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL),
+							webglRenderer: gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL),
 						};
 					}
 				}
@@ -169,13 +154,9 @@ const useDataCollection = (enabled = true, collectionWindow = 1000) => {
 			navigatorLanguage: navigator.language,
 			languages: navigator.languages,
 
-			doNotTrack: navigator.doNotTrack,
-
 			initialViewportWidth: window.innerWidth,
 			initialViewportHeight: window.innerHeight,
-			currentOrientation: screen.orientation
-				? screen.orientation.type
-				: "landscape",
+			currentOrientation: screen.orientation ? screen.orientation.type : "landscape",
 
 			touchPoints: navigator.maxTouchPoints,
 			hasTouchScreen: "ontouchstart" in window,
@@ -194,9 +175,7 @@ const useDataCollection = (enabled = true, collectionWindow = 1000) => {
 
 		const getNetworkInfo = () => {
 			const connection =
-				navigator.connection ||
-				navigator.mozConnection ||
-				navigator.webkitConnection;
+				navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 
 			if (connection) {
 				return {
@@ -223,11 +202,8 @@ const useDataCollection = (enabled = true, collectionWindow = 1000) => {
 							navigation.responseStart - navigation.requestStart
 						),
 						domLoadTime:
-							navigation.domContentLoadedEventEnd -
-							navigation.navigationStart,
-						pageLoadTime:
-							navigation.loadEventEnd -
-							navigation.navigationStart,
+							navigation.domContentLoadedEventEnd - navigation.navigationStart,
+						pageLoadTime: navigation.loadEventEnd - navigation.navigationStart,
 				  }
 				: {
 						//* not using default values
