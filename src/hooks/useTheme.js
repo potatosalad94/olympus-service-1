@@ -35,7 +35,10 @@ const useTheme = (primaryColor) => {
 
 	useEffect(() => {
 		if (primaryColor) {
-			document.documentElement.style.setProperty("--primary-color", primaryColor);
+			document.documentElement.style.setProperty(
+				"--primary-color",
+				primaryColor
+			);
 			// Create a <style> element
 			const style = document.createElement("style");
 			style.innerHTML = `
@@ -46,11 +49,17 @@ const useTheme = (primaryColor) => {
               color: #ffffff !important; /* Ensure text is readable */
             }
             .p-button:enabled:hover  {
-              background-color: ${darkenColor(primaryColor, 10)} !important; /* Darken on hover */
+              background-color: ${darkenColor(
+					primaryColor,
+					10
+				)} !important; /* Darken on hover */
               border-color: ${darkenColor(primaryColor, 10)} !important;
             }
             .p-button:enabled:focus {
-                box-shadow: 0 0 0 0.2rem ${lightenColor(primaryColor, 50)} !important;
+                box-shadow: 0 0 0 0.2rem ${lightenColor(
+					primaryColor,
+					50
+				)} !important;
             }
 
             /* Inputs */
@@ -69,7 +78,10 @@ const useTheme = (primaryColor) => {
             /* Dropdowns */
             .p-dropdown:not(.p-disabled).p-focus {
               border-color: ${primaryColor} !important;
-              box-shadow: 0 0 0 0.2rem ${lightenColor(primaryColor, 50)} !important;
+              box-shadow: 0 0 0 0.2rem ${lightenColor(
+					primaryColor,
+					50
+				)} !important;
             }
             .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
               background-color: ${primaryColor} !important;
@@ -98,7 +110,10 @@ const useTheme = (primaryColor) => {
 
             /* Menus */
             .p-menuitem-link:focus {
-              box-shadow: 0 0 0 0.2rem ${lightenColor(primaryColor, 50)} !important;
+              box-shadow: 0 0 0 0.2rem ${lightenColor(
+					primaryColor,
+					50
+				)} !important;
             }
             .p-menuitem-link.p-menuitem-link-active {
               background-color: ${primaryColor} !important;
@@ -126,6 +141,13 @@ const useTheme = (primaryColor) => {
               color: ${primaryColor} !important;
             }
 
+            /* dialog */
+            .p-dialog {
+            box-shadow: 0 0 0 0.2rem ${lightenColor(
+				primaryColor,
+				50
+			)} !important; /* Add a focus glow */
+            }
           `;
 
 			// Append the <style> element to the document head
