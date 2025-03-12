@@ -34,6 +34,11 @@ body {
 	left: 0.5rem;
 }
 
+.p-inputtext,
+.p-dialog,
+.p-button {
+	border-radius: 12px;
+}
 /* button {
 	background: none;
 	border: none;
