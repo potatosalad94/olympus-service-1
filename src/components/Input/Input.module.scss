@@ -4,6 +4,16 @@
 	align-items: center;
 	width: 100%;
 
+	.smartphone_icon {
+		width: 27px;
+		height: auto;
+		fill: #4b5563;
+	}
+
+	label {
+		padding-left: 30px;
+	}
+
 	.checkmark_container {
 		position: absolute;
 		right: 12px;

@@ -21,6 +21,19 @@ body {
 	border-color: #a6b1bc !important;
 }
 
+.p-float-label:has(input:focus) label,
+.p-float-label:has(input.p-filled) label {
+	padding: 0px;
+}
+
+.p-icon-field > .p-input-icon {
+	display: flex;
+	align-items: center;
+	margin-top: 0;
+	transform: translateY(-50%);
+	left: 0.5rem;
+}
+
 /* button {
 	background: none;
 	border: none;
