@@ -19,6 +19,7 @@
 		cursor: pointer;
 		width: 24px;
 		height: 24px;
+		border-radius: 6px !important;
 
 		&:enabled:hover {
 			background: rgba(0, 0, 0, 0.1) !important;

@@ -23,7 +23,7 @@ body {
 
 .p-float-label:has(input:focus) label,
 .p-float-label:has(input.p-filled) label {
-	padding: 0px;
+	padding: 0px !important;
 }
 
 .p-icon-field > .p-input-icon {

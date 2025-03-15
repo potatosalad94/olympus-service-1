@@ -57,6 +57,7 @@
 		border: none;
 		padding: 5px;
 		font-size: 12px;
+		border-radius: 6px !important;
 
 		&:enabled:hover {
 			background-color: darken(#e7e7e7, 20%) !important;

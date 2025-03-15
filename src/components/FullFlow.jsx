@@ -207,6 +207,8 @@ const FullFlow = ({
 								type="tel"
 								disabled={disabled}
 								isAnimated={dynamicMsisdnEntryBox}
+								phoneNumberNative={phoneNumberNative}
+								langCode={language?.code}
 							/>
 						)}
 					/>

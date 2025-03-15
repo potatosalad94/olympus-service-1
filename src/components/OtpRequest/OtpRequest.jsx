@@ -29,6 +29,7 @@ const OtpRequest = ({
 		modalCta,
 		phoneNumberNative, //TODO
 	} = content;
+	console.log("🚀 ~ phoneNumberNative >>", phoneNumberNative);
 
 	const {
 		closableModal,
@@ -131,6 +132,8 @@ const OtpRequest = ({
 							type="tel"
 							disabled={disabled}
 							isAnimated={dynamicMsisdnEntryBox}
+							phoneNumberNative={phoneNumberNative}
+							langCode={language?.code}
 						/>
 					)}
 				/>

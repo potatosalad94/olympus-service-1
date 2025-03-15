@@ -88,6 +88,7 @@ const Layout = ({
 			</div>
 
 			<Footer
+				lang={lang}
 				content={terms}
 				additionalInformation={additionalInformation}
 			/>
