@@ -130,9 +130,10 @@ const Landing = () => {
 		bottomPriceDescFontSize,
 		bottomPriceDescFontStyle,
 		bottomPriceDescFontWeight,
+		pageBackgroundColor,
 	} = css || {};
 
-	useTheme(primaryColor);
+	useTheme(primaryColor, pageBackgroundColor);
 
 	const {
 		acknowledgment,
@@ -198,7 +199,7 @@ const Landing = () => {
 			) : (
 				<Layout
 					headerPrice={topPriceDescription ?? ""}
-					terms={termsAndConditions ?? ""}
+					terms={termsAndConditions}
 					lang={currentLanguage}
 					availableLanguages={availableLanguages}
 					step={formattedStep}

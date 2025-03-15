@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const useTheme = (primaryColor) => {
+const useTheme = (primaryColor, pageBackgroundColor) => {
 	const lightenColor = (color, percent) => {
 		const num = parseInt(color.replace("#", ""), 16);
 		const amt = Math.round(2.55 * percent);
@@ -38,6 +38,10 @@ const useTheme = (primaryColor) => {
 			document.documentElement.style.setProperty(
 				"--primary-color",
 				primaryColor
+			);
+			document.body.style.setProperty(
+				"background-color",
+				pageBackgroundColor
 			);
 			// Create a <style> element
 			const style = document.createElement("style");

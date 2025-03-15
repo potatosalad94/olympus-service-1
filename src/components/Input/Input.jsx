@@ -19,11 +19,16 @@ const Input = forwardRef(
 			value,
 			type,
 			disabled = false,
+			isAnimated = true,
 		},
 		ref
 	) => {
 		return (
-			<div className={styles.container}>
+			<div
+				className={classNames(styles.container, {
+					[styles.heartbeat_animation]: isAnimated && !error,
+				})}
+			>
 				<FloatLabel pt={{ root: { style: { width: "100%" } } }}>
 					<IconField
 						iconPosition="left"

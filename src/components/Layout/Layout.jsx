@@ -15,8 +15,12 @@ const Layout = ({
 	logo,
 	css,
 }) => {
-	const { termsVisibility, fullscreenPlayer, skipTopPriceDesc, additionalInformation } =
-		css || {};
+	const {
+		termsVisibility,
+		fullscreenPlayer,
+		skipTopPriceDesc,
+		additionalInformation,
+	} = css || {};
 
 	const [headerHeight, setHeaderHeight] = useState(0);
 	const headerRef = useRef(null);
@@ -83,7 +87,10 @@ const Layout = ({
 				</div>
 			</div>
 
-			<Footer content={terms} additionalInformation={additionalInformation} />
+			<Footer
+				content={terms}
+				additionalInformation={additionalInformation}
+			/>
 		</div>
 	);
 };

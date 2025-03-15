@@ -10,15 +10,32 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpRequest.module.scss";
 
-const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSuccess, language }) => {
-	const { msisdn, dialCode, userInstructions, cta, ctaInfo, modalUserInstructions, modalCta } =
-		content;
+const OtpRequest = ({
+	css,
+	content,
+	showModal,
+	setShowModal,
+	visitorId,
+	onSuccess,
+	language,
+}) => {
+	const {
+		msisdn,
+		dialCode,
+		userInstructions,
+		cta,
+		ctaInfo,
+		modalUserInstructions,
+		modalCta,
+		phoneNumberNative, //TODO
+	} = content;
 
 	const {
 		closableModal,
 		clickableZone,
 		showMsisdnInput,
 		showModalMsisdnInput,
+		dynamicMsisdnEntryBox,
 		msisdnPrefill,
 		blurPx,
 
@@ -35,14 +52,17 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 
 	const otpRequestApi = useApi(otpRequest);
 
-	const showInput = (!showModal && showMsisdnInput) || (showModal && showModalMsisdnInput);
+	const showInput =
+		(!showModal && showMsisdnInput) || (showModal && showModalMsisdnInput);
 
 	const [disabled, setDisabled] = useState(
 		showInput ? (msisdn?.length === 10 ? false : true) : false
 	);
 
 	// Add a state to manage the contact value separately
-	const [contactValue, setContactValue] = useState(msisdnPrefill && msisdn ? msisdn : "");
+	const [contactValue, setContactValue] = useState(
+		msisdnPrefill && msisdn ? msisdn : ""
+	);
 
 	useEffect(() => {
 		if (showInput) {
@@ -110,6 +130,7 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 							onClick={(e) => e.stopPropagation()}
 							type="tel"
 							disabled={disabled}
+							isAnimated={dynamicMsisdnEntryBox}
 						/>
 					)}
 				/>
@@ -184,7 +205,9 @@ const OtpRequest = ({ css, content, showModal, setShowModal, visitorId, onSucces
 					closable={closableModal}
 					draggable={false}
 					showHeader={closableModal}
-					contentClassName={!closableModal ? styles.no_header : undefined}
+					contentClassName={
+						!closableModal ? styles.no_header : undefined
+					}
 				>
 					<form onSubmit={handleSubmit(onSubmit)} noValidate>
 						{renderFormContent(showModal)}
