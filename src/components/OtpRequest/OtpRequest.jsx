@@ -29,7 +29,6 @@ const OtpRequest = ({
 		modalCta,
 		phoneNumberNative, //TODO
 	} = content;
-	console.log("🚀 ~ phoneNumberNative >>", phoneNumberNative);
 
 	const {
 		closableModal,
