@@ -15,7 +15,7 @@ import CustomStepper from "@/components/CustomStepper/CustomStepper";
 import useTheme from "@/hooks/useTheme";
 import { useScrollToElement } from "@/hooks/useScrollToElement";
 
-const serviceName = "Service_1";
+const serviceName = "ARE_E1";
 
 const Landing = () => {
 	const navigate = useNavigate();
