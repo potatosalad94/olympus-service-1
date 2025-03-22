@@ -131,6 +131,14 @@ const Landing = () => {
 		bottomPriceDescFontStyle,
 		bottomPriceDescFontWeight,
 		pageBackgroundColor,
+		middlePriceDesc1FontColor,
+		middlePriceDesc1FontSize,
+		middlePriceDesc1FontStyle,
+		middlePriceDesc1FontWeight,
+		middlePriceDesc2FontColor,
+		middlePriceDesc2FontSize,
+		middlePriceDesc2FontStyle,
+		middlePriceDesc2FontWeight,
 	} = css || {};
 
 	useTheme(primaryColor, pageBackgroundColor);
@@ -144,6 +152,8 @@ const Landing = () => {
 		serviceDescription,
 		termsAndConditions,
 		topPriceDescription,
+		middlePriceDescription1,
+		middlePriceDescription2,
 	} = content || {};
 
 	const handleRootClick = () => {
@@ -232,6 +242,20 @@ const Landing = () => {
 							</div>
 						)}
 
+						{middlePriceDescription1 && (
+							<p
+								style={{
+									textAlign: "center",
+									color: middlePriceDesc1FontColor,
+									fontSize: middlePriceDesc1FontSize,
+									fontStyle: middlePriceDesc1FontStyle,
+									fontWeight: middlePriceDesc1FontWeight,
+								}}
+							>
+								{middlePriceDescription1}
+							</p>
+						)}
+
 						<div className={styles.main}>
 							{modalFlow === "full" && (
 								<FullFlow
@@ -259,6 +283,19 @@ const Landing = () => {
 							)}
 
 							{renderStep()}
+
+							{middlePriceDescription2 && (
+								<p
+									style={{
+										color: middlePriceDesc2FontColor,
+										fontSize: middlePriceDesc2FontSize,
+										fontStyle: middlePriceDesc2FontStyle,
+										fontWeight: middlePriceDesc2FontWeight,
+									}}
+								>
+									{middlePriceDescription2}
+								</p>
+							)}
 
 							{exitButton && (
 								<Button

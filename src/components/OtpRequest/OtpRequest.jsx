@@ -27,7 +27,7 @@ const OtpRequest = ({
 		ctaInfo,
 		modalUserInstructions,
 		modalCta,
-		phoneNumberNative, //TODO
+		phoneNumberNative,
 	} = content;
 
 	const {

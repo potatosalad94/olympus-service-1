@@ -57,7 +57,7 @@ const FullFlow = ({
 		modalCtaSecondStep,
 		newOtpRequest,
 		otpConfirmTimer,
-		phoneNumberNative, //TODO
+		phoneNumberNative,
 	} = content;
 
 	const [modalStep, setModalStep] = useState(ctaMethod);
