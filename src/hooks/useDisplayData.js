@@ -9,7 +9,7 @@ import useVisitorId from "./useVisitorId";
 
 const enabled = true;
 
-const useDisplayData = (serviceName, step, params) => {
+const useDisplayData = (step, params) => {
 	const isNewVisit = step === "New Visit";
 	const { step: stepParams, ...restParams } = params || {};
 
@@ -24,7 +24,6 @@ const useDisplayData = (serviceName, step, params) => {
 		const [_, step] = queryKey;
 		const response = await displayDataApi.request(
 			{
-				serviceName,
 				step,
 				connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
 				...(isNewVisit && !isCollecting && visitorInfo),

@@ -15,8 +15,6 @@ import CustomStepper from "@/components/CustomStepper/CustomStepper";
 import useTheme from "@/hooks/useTheme";
 import { useScrollToElement } from "@/hooks/useScrollToElement";
 
-const serviceName = "ARE_E1";
-
 const Landing = () => {
 	const navigate = useNavigate();
 
@@ -105,7 +103,7 @@ const Landing = () => {
 		query: { data: displayData, isFetching },
 		isCollecting,
 		storedVisitorId: visitorId,
-	} = useDisplayData(serviceName, formattedStep, params);
+	} = useDisplayData(formattedStep, params);
 
 	const {
 		css,
