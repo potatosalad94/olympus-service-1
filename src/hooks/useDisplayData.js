@@ -2,7 +2,7 @@ import { displayData } from "@api/client";
 import useApi from "./useApi";
 import { queryKeys } from "@/app-keys-factory";
 import { useQuery } from "@tanstack/react-query";
-import useConnectionInfo from "./useConnectionInfo";
+// import useConnectionInfo from "./useConnectionInfo";
 import useDataCollection from "./useDataCollection";
 import { useEffect } from "react";
 import useVisitorId from "./useVisitorId";
@@ -14,7 +14,7 @@ const useDisplayData = (step, params) => {
 	const { step: stepParams, ...restParams } = params || {};
 
 	const { visitorId: storedVisitorId, updateVisitorId } = useVisitorId();
-	const { type } = useConnectionInfo();
+	// const { type } = useConnectionInfo();
 
 	const { visitorInfo, isCollecting } = useDataCollection(isNewVisit);
 
@@ -25,7 +25,7 @@ const useDisplayData = (step, params) => {
 		const response = await displayDataApi.request(
 			{
 				step,
-				connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
+				// connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
 				...(isNewVisit && !isCollecting && visitorInfo),
 				...(storedVisitorId && { visitorId: storedVisitorId }),
 				// TODO >> pass the params

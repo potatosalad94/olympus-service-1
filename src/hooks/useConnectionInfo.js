@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+//! not used anymore
 const useConnectionInfo = () => {
 	const [connectionInfo, setConnectionInfo] = useState({
 		type: "unknown",

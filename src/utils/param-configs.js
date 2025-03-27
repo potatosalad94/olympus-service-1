@@ -72,4 +72,10 @@ export const paramConfigs = {
 	test: {
 		defaultValue: "",
 	},
+	cid: {
+		defaultValue: "",
+	},
+	cpc: {
+		defaultValue: "",
+	},
 };
