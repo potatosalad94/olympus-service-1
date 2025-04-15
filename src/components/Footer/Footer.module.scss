@@ -15,3 +15,109 @@
 		margin: 0;
 	}
 }
+
+.additionalInformationContainer {
+	max-width: 64rem;
+	margin: 0 auto;
+	padding: 2rem 1rem;
+	color: #1f2937;
+	font-family: sans-serif;
+}
+
+.textCenter {
+	text-align: center;
+	margin-bottom: 2.5rem;
+}
+
+.heroTitle {
+	font-size: 1.875rem;
+	font-weight: bold;
+	margin-bottom: 1rem;
+}
+
+.heroImage {
+	width: 100%;
+	height: auto;
+	border-radius: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.highlightText {
+	color: #2563eb;
+	font-size: 1rem;
+}
+
+.paragraph {
+	margin-top: 0.5rem;
+	font-size: 0.875rem;
+}
+
+.section {
+	margin-bottom: 2.5rem;
+}
+
+.sectionTitle {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.subTitle {
+	font-size: 1rem;
+	font-weight: 500;
+	margin-bottom: 1rem;
+}
+
+.grid {
+	display: grid;
+	gap: 1rem;
+}
+
+.gridCols1 {
+	grid-template-columns: repeat(1, 1fr);
+}
+
+.gridCols2 {
+	@media (min-width: 640px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+.gridCols3 {
+	@media (min-width: 768px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+.imageThumb {
+	border-radius: 0.5rem;
+}
+
+.videoTime {
+	font-size: 0.75rem;
+}
+
+.videoTitle {
+	font-size: 0.875rem;
+	font-weight: 500;
+}
+
+.pricingBox {
+	background-color: #f9fafb;
+	padding: 1rem;
+	border-radius: 0.5rem;
+}
+
+.list {
+	list-style-type: disc;
+	margin-left: 1.25rem;
+	font-size: 0.875rem;
+}
+
+.testimonials {
+	font-size: 0.875rem;
+}
+
+.testimonialName {
+	font-weight: 500;
+}
