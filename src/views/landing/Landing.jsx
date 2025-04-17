@@ -285,6 +285,7 @@ const Landing = () => {
 							{middlePriceDescription2 && (
 								<p
 									style={{
+										textAlign: "center",
 										color: middlePriceDesc2FontColor,
 										fontSize: middlePriceDesc2FontSize,
 										fontStyle: middlePriceDesc2FontStyle,

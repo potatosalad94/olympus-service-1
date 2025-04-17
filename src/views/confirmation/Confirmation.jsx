@@ -4,8 +4,11 @@ import styles from "./Confirmation.module.scss";
 const SECONDS = 10;
 
 const Confirmation = ({ data }) => {
-	const { subscriptionConfirmationPageText, subscriptionConfirmationPageTitle, redirection } =
-		data;
+	const {
+		subscriptionConfirmationPageText,
+		subscriptionConfirmationPageTitle,
+		redirection,
+	} = data;
 
 	const [countdown, setCountdown] = useState(SECONDS);
 
@@ -21,6 +24,25 @@ const Confirmation = ({ data }) => {
 
 		return () => clearInterval(timer);
 	}, [countdown, redirection]);
+
+	const renderContent = (content) => {
+		if (typeof content === "string") {
+			return content;
+		} else if (content) {
+			return (
+				<>
+					{content.text_before && content.text_before}
+					{content.link_url && content.link_text && (
+						<a href={content.link_url} className={styles.link}>
+							{content.link_text}
+						</a>
+					)}
+					{content.text_after && content.text_after}
+				</>
+			);
+		}
+		return null;
+	};
 
 	return (
 		<div className={styles.container}>
@@ -39,14 +61,20 @@ const Confirmation = ({ data }) => {
 						</svg>
 					</div>
 
-					<h1 className={styles.title}>{subscriptionConfirmationPageTitle}</h1>
-					<p>{subscriptionConfirmationPageText}</p>
+					<h1 className={styles.title}>
+						{renderContent(subscriptionConfirmationPageTitle)}
+					</h1>
+					<p>{renderContent(subscriptionConfirmationPageText)}</p>
 
 					<div className={styles.redirectTimer}>
 						<p className={styles.message}>
 							{`You will be redirected in ${countdown} seconds`}
 						</p>
-						<a href={redirection} target={"_self"} className={styles.fallbackLink}>
+						<a
+							href={redirection}
+							target={"_self"}
+							className={styles.fallbackLink}
+						>
 							Click here if you are not redirected automatically
 						</a>
 					</div>

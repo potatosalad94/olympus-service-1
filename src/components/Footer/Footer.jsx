@@ -14,21 +14,68 @@ const Footer = ({ content, additionalInformation, lang }) => {
 	const renderContent = () => {
 		if (!content) return null;
 
-		return Object.values(content).map((item, index) => {
-			if (typeof item === "string") {
-				return <p key={index}>{item}</p>;
-			} else if (Array.isArray(item)) {
-				return (
-					<ul key={index} className={styles.bulletList}>
-						{item.map((bulletPoint, bulletIndex) => (
-							<li key={bulletIndex} className={styles.bulletItem}>
-								{bulletPoint}
-							</li>
-						))}
-					</ul>
-				);
-			}
-			return null;
+		return content.map((block, blockIndex) => {
+			const contentSection = block.content;
+			const bulletPoints = block.bulletPoints || [];
+
+			return (
+				<div key={blockIndex} className={styles.contentBlock}>
+					{/* Render the content section */}
+					{typeof contentSection === "string" ? (
+						<p>{contentSection}</p>
+					) : contentSection ? (
+						<p>
+							{contentSection.text_before &&
+								contentSection.text_before}
+							{contentSection.link_url &&
+								contentSection.link_text && (
+									<a
+										href={contentSection.link_url}
+										className={styles.link}
+									>
+										{contentSection.link_text}
+									</a>
+								)}
+							{contentSection.text_after &&
+								contentSection.text_after}
+						</p>
+					) : null}
+
+					{/* Render bulletpoints if they exist */}
+					{bulletPoints.length > 0 && (
+						<ul className={styles.bulletList}>
+							{bulletPoints.map((bulletPoint, bulletIndex) => (
+								<li
+									key={bulletIndex}
+									className={styles.bulletItem}
+								>
+									{typeof bulletPoint === "string" ? (
+										bulletPoint
+									) : (
+										<>
+											{bulletPoint.text_before &&
+												bulletPoint.text_before}
+											{bulletPoint.link_url &&
+												bulletPoint.link_text && (
+													<a
+														href={
+															bulletPoint.link_url
+														}
+														className={styles.link}
+													>
+														{bulletPoint.link_text}
+													</a>
+												)}
+											{bulletPoint.text_after &&
+												bulletPoint.text_after}
+										</>
+									)}
+								</li>
+							))}
+						</ul>
+					)}
+				</div>
+			);
 		});
 	};
 
@@ -53,7 +100,7 @@ const Footer = ({ content, additionalInformation, lang }) => {
 							className={styles.heroImage}
 						/>
 						<p className={styles.highlightText}>
-							Discover E1 The World’s First All-Electric{" "}
+							Discover E1 The World's First All-Electric{" "}
 							<span className="underline">Raceboat</span>{" "}
 							Championship
 						</p>
@@ -70,7 +117,7 @@ const Footer = ({ content, additionalInformation, lang }) => {
 					{/* Inside E1 Section */}
 					<section className={styles.section}>
 						<h2 className={styles.sectionTitle}>
-							What’s on UAE E1 Prime
+							What's on UAE E1 Prime
 						</h2>
 						<h3 className={styles.subTitle}>Inside E1</h3>
 						<div
@@ -207,8 +254,8 @@ const Footer = ({ content, additionalInformation, lang }) => {
 								</p>
 								<p>
 									"I've been a subscriber since day one and
-									haven’t missed a single race! E1 Series is
-									more than just a championship — it’s the
+									haven't missed a single race! E1 Series is
+									more than just a championship — it's the
 									future of water sports. The format is
 									thrilling, the visuals are stunning, and you
 									can really feel the environmental
@@ -221,7 +268,7 @@ const Footer = ({ content, additionalInformation, lang }) => {
 									Saeed M. – Dubai 🇦🇪
 								</p>
 								<p>
-									"I’ve always loved high-speed sports, but
+									"I've always loved high-speed sports, but
 									this is something else. The E1 Series blends
 									innovation, sustainability, and pure
 									excitement. The subscription is super
@@ -235,10 +282,10 @@ const Footer = ({ content, additionalInformation, lang }) => {
 									Fatima R. – Sharjah 🇦🇪
 								</p>
 								<p>
-									"It’s amazing to follow such a cutting-edge
+									"It's amazing to follow such a cutting-edge
 									championship right from my phone. The videos
 									are high quality, the exclusive content is
-									engaging, and I’ve discovered a whole new
+									engaging, and I've discovered a whole new
 									world of racing. Huge respect to E1 Series
 									for creating such a futuristic experience."
 								</p>
