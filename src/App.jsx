@@ -5,6 +5,8 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import GlobalError from "./GlobalError";
+import TermsConditions from "./views/legal/TermsConditions";
+import PrivacyPolicy from "./views/legal/PrivacyPolicy";
 
 const router = createBrowserRouter([
 	{
@@ -14,6 +16,14 @@ const router = createBrowserRouter([
 			{
 				path: "",
 				element: <Landing />,
+			},
+			{
+				path: ":languageCode/terms_and_conditions",
+				element: <TermsConditions />,
+			},
+			{
+				path: ":languageCode/privacy_policy",
+				element: <PrivacyPolicy />,
 			},
 		],
 	},

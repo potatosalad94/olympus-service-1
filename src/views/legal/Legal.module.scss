@@ -1,0 +1,35 @@
+.legalContent {
+	font-size: 1rem;
+	line-height: 1.6;
+	color: #333;
+
+	h2 {
+		margin-top: 24px;
+		margin-bottom: 16px;
+		font-weight: 600;
+		color: #222;
+	}
+
+	p {
+		margin-bottom: 16px;
+	}
+
+	ul,
+	ol {
+		margin-bottom: 16px;
+		padding-left: 20px;
+
+		:global([dir="rtl"]) & {
+			padding-left: 0;
+			padding-right: 20px;
+		}
+	}
+
+	li {
+		margin-bottom: 8px;
+	}
+
+	strong {
+		font-weight: 600;
+	}
+}
