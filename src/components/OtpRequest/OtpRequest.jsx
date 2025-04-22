@@ -187,35 +187,33 @@ const OtpRequest = ({
 				</form>
 			)}
 
-			<div onClick={(e) => e.stopPropagation()}>
-				<Dialog
-					pt={{
-						mask: {
-							style: {
-								backdropFilter: `blur(${blurPx}px)`,
-							},
+			{/* <div onClick={(e) => e.stopPropagation()}> */}
+			<Dialog
+				pt={{
+					mask: {
+						style: {
+							backdropFilter: `blur(${blurPx}px)`,
 						},
-					}}
-					focusOnShow={false}
-					visible={showModal}
-					maskStyle={{ padding: "20px" }}
-					blockScroll={true}
-					className={styles.dialog_container}
-					onHide={() => {
-						setShowModal(false);
-					}}
-					closable={closableModal}
-					draggable={false}
-					showHeader={closableModal}
-					contentClassName={
-						!closableModal ? styles.no_header : undefined
-					}
-				>
-					<form onSubmit={handleSubmit(onSubmit)} noValidate>
-						{renderFormContent(showModal)}
-					</form>
-				</Dialog>
-			</div>
+					},
+				}}
+				focusOnShow={false}
+				visible={showModal}
+				maskStyle={{ padding: "20px" }}
+				blockScroll={true}
+				className={styles.dialog_container}
+				onHide={() => {
+					setShowModal(false);
+				}}
+				closable={closableModal}
+				draggable={false}
+				showHeader={closableModal}
+				contentClassName={!closableModal ? styles.no_header : undefined}
+			>
+				<form onSubmit={handleSubmit(onSubmit)} noValidate>
+					{renderFormContent(showModal)}
+				</form>
+			</Dialog>
+			{/* </div> */}
 		</>
 	);
 };

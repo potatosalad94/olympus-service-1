@@ -242,8 +242,8 @@ const Landing = () => {
 
 						{middlePriceDescription1 && (
 							<p
+								className={styles.middle_price_desc}
 								style={{
-									textAlign: "center",
 									color: middlePriceDesc1FontColor,
 									fontSize: middlePriceDesc1FontSize,
 									fontStyle: middlePriceDesc1FontStyle,
@@ -284,8 +284,8 @@ const Landing = () => {
 
 							{middlePriceDescription2 && (
 								<p
+									className={styles.middle_price_desc}
 									style={{
-										textAlign: "center",
 										color: middlePriceDesc2FontColor,
 										fontSize: middlePriceDesc2FontSize,
 										fontStyle: middlePriceDesc2FontStyle,
