@@ -9,7 +9,7 @@
 
 	p {
 		text-align: justify;
-		margin: 0;
+		// margin: 0;
 	}
 	.bulletList {
 		margin: 0;
@@ -19,7 +19,7 @@
 .additionalInformationContainer {
 	max-width: 64rem;
 	margin: 0 auto;
-	padding: 0rem 1rem;
+	padding: 1rem;
 	color: #1f2937;
 	font-family: sans-serif;
 }
@@ -32,24 +32,27 @@
 .heroTitle {
 	font-size: 1.875rem;
 	font-weight: bold;
+	margin-top: 0;
 	margin-bottom: 1rem;
 }
 
 .heroImage {
 	width: 100%;
+	max-width: 48rem;
 	height: auto;
 	border-radius: 0.5rem;
-	margin-bottom: 1rem;
+	margin: 0 auto 1rem auto;
+	display: block;
 }
 
 .highlightText {
-	color: #2563eb;
 	font-size: 1rem;
 }
 
 .paragraph {
 	margin-top: 0.5rem;
 	font-size: 0.875rem;
+	text-align: center;
 }
 
 .section {
@@ -64,50 +67,37 @@
 
 .subTitle {
 	font-size: 1rem;
-	font-weight: 500;
 	margin-bottom: 1rem;
 }
 
 .grid {
 	display: grid;
 	gap: 1rem;
-	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .gridCols1 {
-	grid-template-columns: 1fr;
+	grid-template-columns: repeat(1, 1fr);
 }
 
 .gridCols2 {
 	@media (min-width: 640px) {
-		grid-template-columns: repeat(
-			auto-fit,
-			minmax(calc(50% - 0.5rem), 1fr)
-		);
+		grid-template-columns: repeat(2, 1fr);
 	}
 }
 
 .gridCols3 {
 	@media (min-width: 768px) {
-		grid-template-columns: repeat(
-			auto-fit,
-			minmax(calc(33.333% - 0.667rem), 1fr)
-		);
+		grid-template-columns: repeat(3, 1fr);
 	}
 }
 
-.imageThumb {
-	border-radius: 0.5rem;
+.imageThumbSmall {
 	width: 100%;
-}
-
-.videoTime {
-	font-size: 0.75rem;
-}
-
-.videoTitle {
-	font-size: 0.875rem;
-	font-weight: 500;
+	height: auto;
+	max-width: 300px;
+	margin: 0 auto;
+	display: block;
+	border-radius: 0.5rem;
 }
 
 .pricingBox {
@@ -161,7 +151,6 @@
 
 .testimonialName {
 	font-weight: 600;
-	color: #2563eb;
 	margin-bottom: 0.75rem;
 	font-size: 1rem;
 	display: flex;
@@ -171,7 +160,7 @@
 		content: "";
 		display: block;
 		height: 2px;
-		background: linear-gradient(90deg, #2563eb, transparent);
+		background: linear-gradient(90deg, #000, transparent);
 		flex-grow: 1;
 		margin-left: 0.75rem;
 	}
@@ -180,14 +169,7 @@
 .contentBlock {
 	font-size: 10px;
 	p {
+		margin-top: 0;
 		margin-bottom: 15px;
 	}
-}
-
-.legalLinksContainer {
-	display: flex;
-	justify-content: center;
-	margin-top: 20px;
-	padding-top: 20px;
-	border-top: 1px solid #ccc;
 }

@@ -1,12 +1,12 @@
 import { languages } from "@/utils/languages-dictionnary";
 import styles from "./Footer.module.scss";
-import e1Hero from "@images/e1-hero.png";
-import inside1 from "@images/inside1.png";
-import inside2 from "@images/inside2.png";
-import inside3 from "@images/inside3.png";
-import champ1 from "@images/champ1.png";
-import champ2 from "@images/champ2.png";
-import champ3 from "@images/champ3.png";
+import e1Hero from "@images/Hero.png";
+import inside1 from "@images/Inside_1.png";
+import inside2 from "@images/Inside_2.png";
+import inside3 from "@images/Inside_3.png";
+import champ1 from "@images/Champ_1.png";
+import champ2 from "@images/Champ_2.png";
+import champ3 from "@images/Champ_3.png";
 
 const Footer = ({ content, additionalInformation, lang }) => {
 	if (!content && !additionalInformation) return null;
@@ -100,7 +100,7 @@ const Footer = ({ content, additionalInformation, lang }) => {
 							className={styles.heroImage}
 						/>
 						<p className={styles.highlightText}>
-							Discover E1 The World's First All-Electric{" "}
+							Discover E1 The World’s First All-Electric{" "}
 							<span className="underline">Raceboat</span>{" "}
 							Championship
 						</p>
@@ -117,7 +117,7 @@ const Footer = ({ content, additionalInformation, lang }) => {
 					{/* Inside E1 Section */}
 					<section className={styles.section}>
 						<h2 className={styles.sectionTitle}>
-							What's on UAE E1 Prime
+							What’s on UAE E1 Prime
 						</h2>
 						<h3 className={styles.subTitle}>Inside E1</h3>
 						<div
@@ -127,34 +127,22 @@ const Footer = ({ content, additionalInformation, lang }) => {
 								<img
 									src={inside1}
 									alt="Episode 3"
-									className={styles.imageThumb}
+									className={styles.imageThumbSmall}
 								/>
-								<p className={styles.videoTime}>00:07:06</p>
-								<p className={styles.videoTitle}>
-									Inside E1 | Episode 3
-								</p>
 							</div>
 							<div>
 								<img
 									src={inside2}
 									alt="Episode 2"
-									className={styles.imageThumb}
+									className={styles.imageThumbSmall}
 								/>
-								<p className={styles.videoTime}>00:08:35</p>
-								<p className={styles.videoTitle}>
-									Inside E1 | Episode 2
-								</p>
 							</div>
 							<div>
 								<img
 									src={inside3}
 									alt="Episode 1"
-									className={styles.imageThumb}
+									className={styles.imageThumbSmall}
 								/>
-								<p className={styles.videoTime}>00:10:02</p>
-								<p className={styles.videoTitle}>
-									Inside E1 | Episode 1
-								</p>
 							</div>
 						</div>
 						<p className={styles.highlightText}>
@@ -169,7 +157,7 @@ const Footer = ({ content, additionalInformation, lang }) => {
 						<h3 className={styles.subTitle}>
 							Champions of the Water
 						</h3>
-						<p className={styles.paragraph}>
+						<p className={styles.highlightText}>
 							Go behind the scenes and get the full story from
 							those involved in the world's first ever electric
 							raceboat championship
@@ -179,36 +167,24 @@ const Footer = ({ content, additionalInformation, lang }) => {
 						>
 							<div>
 								<img
-									src={champ3}
-									alt="Champions Episode 3"
-									className={styles.imageThumb}
+									src={champ1}
+									alt="Champions Episode 1"
+									className={styles.imageThumbSmall}
 								/>
-								<p className={styles.videoTime}>00:25:17</p>
-								<p className={styles.videoTitle}>
-									Champions of the Water | Episode 3
-								</p>
 							</div>
 							<div>
 								<img
 									src={champ2}
 									alt="Champions Episode 2"
-									className={styles.imageThumb}
+									className={styles.imageThumbSmall}
 								/>
-								<p className={styles.videoTime}>00:25:21</p>
-								<p className={styles.videoTitle}>
-									Champions of the Water | Episode 2
-								</p>
 							</div>
 							<div>
 								<img
-									src={champ1}
-									alt="Champions Episode 1"
-									className={styles.imageThumb}
+									src={champ3}
+									alt="Champions Episode 3"
+									className={styles.imageThumbSmall}
 								/>
-								<p className={styles.videoTime}>00:25:32</p>
-								<p className={styles.videoTitle}>
-									Champions of the Water | Episode 1
-								</p>
 							</div>
 						</div>
 					</section>
@@ -254,8 +230,8 @@ const Footer = ({ content, additionalInformation, lang }) => {
 								</p>
 								<p>
 									"I've been a subscriber since day one and
-									haven't missed a single race! E1 Series is
-									more than just a championship — it's the
+									haven’t missed a single race! E1 Series is
+									more than just a championship — it’s the
 									future of water sports. The format is
 									thrilling, the visuals are stunning, and you
 									can really feel the environmental
@@ -268,7 +244,7 @@ const Footer = ({ content, additionalInformation, lang }) => {
 									Saeed M. – Dubai 🇦🇪
 								</p>
 								<p>
-									"I've always loved high-speed sports, but
+									"I’ve always loved high-speed sports, but
 									this is something else. The E1 Series blends
 									innovation, sustainability, and pure
 									excitement. The subscription is super
@@ -282,10 +258,10 @@ const Footer = ({ content, additionalInformation, lang }) => {
 									Fatima R. – Sharjah 🇦🇪
 								</p>
 								<p>
-									"It's amazing to follow such a cutting-edge
+									"It’s amazing to follow such a cutting-edge
 									championship right from my phone. The videos
 									are high quality, the exclusive content is
-									engaging, and I've discovered a whole new
+									engaging, and I’ve discovered a whole new
 									world of racing. Huge respect to E1 Series
 									for creating such a futuristic experience."
 								</p>
