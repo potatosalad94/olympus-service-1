@@ -13,261 +13,291 @@ import otpConfirmSchema from "./otpConfirmSchema";
 import { classNames } from "primereact/utils";
 
 const OtpConfirm = ({
-	css,
-	onSuccess,
-	visitorId,
-	content,
-	language,
-	// showModal,
-	//  setShowModal
+    css,
+    onSuccess,
+    visitorId,
+    content,
+    language,
+    // showModal,
+    //  setShowModal
 }) => {
-	const {
-		//  closableModal,
-		//  blurPx,
-		ctaFontColor,
-		ctaFontSize,
-		ctaFontStyle,
-		ctaFontWeight,
-	} = css;
+    const {
+        //  closableModal,
+        //  blurPx,
+        ctaFontColor,
+        ctaFontSize,
+        ctaFontStyle,
+        ctaFontWeight,
+    } = css;
 
-	const [otpState, setOtpState] = useState("");
-	const otpInputRef = useRef(null);
+    const [otpState, setOtpState] = useState("");
+    const otpInputRef = useRef(null);
 
-	useEffect(() => {
-		setTimeout(() => {
-			const inputs = document.getElementsByClassName("p-inputotp-input");
-			if (inputs && inputs.length > 0) {
-				inputs[0].focus();
-				inputs[0].click();
-			}
-		}, 100);
-	}, []);
+    useEffect(() => {
+        setTimeout(() => {
+            const inputs = document.getElementsByClassName("p-inputotp-input");
+            if (inputs && inputs.length > 0) {
+                inputs[0].focus();
+                inputs[0].click();
+            }
+        }, 100);
+    }, []);
 
-	const {
-		msisdn,
-		userInstructions,
-		cta,
-		// modalCta,
-		// modalUserInstructions,
-		newOtpRequest,
-		otpConfirmTimer,
-	} = content || {};
+    const {
+        msisdn,
+        userInstructions,
+        cta,
+        // modalCta,
+        // modalUserInstructions,
+        newOtpRequest,
+        otpConfirmTimer,
+    } = content || {};
 
-	const { countdown, startCountdown } = useOtpCountdown(otpConfirmTimer);
+    const { countdown, startCountdown } = useOtpCountdown(otpConfirmTimer);
 
-	const handleOtpRequest = () => {
-		resendOtp(msisdn);
-	};
+    const handleOtpRequest = () => {
+        resendOtp(msisdn);
+    };
 
-	// * ==== OTP CONFIRM =====
-	const otpConfirmApi = useApi(otpConfirm);
+    // * ==== OTP CONFIRM =====
+    const otpConfirmApi = useApi(otpConfirm);
 
-	const {
-		mutate: confirmOtp,
-		isPending: isPendingConfirm,
-		isError,
-	} = useMutation({
-		mutationFn: (otp) => {
-			return otpConfirmApi.request({
-				visitorId,
-				otp,
-			});
-		},
-		onSuccess,
-		onError: () => reset(),
-	});
+    const {
+        mutate: confirmOtp,
+        isPending: isPendingConfirm,
+        isError,
+    } = useMutation({
+        mutationFn: (otp) => {
+            return otpConfirmApi.request({
+                visitorId,
+                otp,
+            });
+        },
+        onSuccess,
+        onError: () => reset(),
+    });
 
-	// * ==== RESEND OTP =====
+    // * ==== RESEND OTP =====
 
-	const resendOtpApi = useApi(resendOtpEndpoint);
+    const resendOtpApi = useApi(resendOtpEndpoint);
 
-	const { mutate: resendOtp, isPending: isPendingOtp } = useMutation({
-		mutationFn: (msisdn) => {
-			return resendOtpApi.request({
-				visitorId,
-				msisdn,
-			});
-		},
-		onSuccess: () => startCountdown(),
-	});
+    const { mutate: resendOtp, isPending: isPendingOtp } = useMutation({
+        mutationFn: (msisdn) => {
+            return resendOtpApi.request({
+                visitorId,
+                msisdn,
+            });
+        },
+        onSuccess: () => startCountdown(),
+    });
 
-	// * =================
+    // * =================
 
-	const {
-		control,
-		handleSubmit,
-		reset,
-		setValue,
-		// formState: { errors },
-		watch,
-	} = useForm({
-		resolver: joiResolver(otpConfirmSchema),
-		mode: "onSubmit",
-		defaultValues: {
-			otp: otpState,
-		},
-	});
+    const {
+        control,
+        handleSubmit,
+        reset,
+        setValue,
+        // formState: { errors },
+        watch,
+    } = useForm({
+        resolver: joiResolver(otpConfirmSchema),
+        mode: "onSubmit",
+        defaultValues: {
+            otp: otpState,
+        },
+    });
 
-	const otpWatcher = watch("otp");
+    const otpWatcher = watch("otp");
 
-	const onSubmit = ({ otp }) => {
-		confirmOtp(otp);
-	};
+    const onSubmit = ({ otp }) => {
+        confirmOtp(otp);
+    };
 
-	// const renderFormContent = (isModal = false) => (
-	// 	<div className={styles.container}>
-	// 		{!isModal && userInstructions && <p>{userInstructions}</p>}
-	// 		{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
+    // const renderFormContent = (isModal = false) => (
+    // 	<div className={styles.container}>
+    // 		{!isModal && userInstructions && <p>{userInstructions}</p>}
+    // 		{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
 
-	// 		<Controller
-	// 			name="otp"
-	// 			control={control}
-	// 			render={({ field }) => (
-	// 				<InputOtp
-	// 					{...field}
-	// 					pt={{
-	// 						root: {
-	// 							className: classNames(
-	// 								styles["custom-otp-input"],
-	// 								{
-	// 									[styles.error]: isError,
-	// 								}
-	// 							),
-	// 						},
-	// 					}}
-	// 					onChange={(e) => {
-	// 						const newValue = e.value;
-	// 						setOtpState(newValue);
-	// 						setValue("otp", newValue);
-	// 					}}
-	// 					integerOnly
-	// 					// error={fieldState.error} //TODO >> ajouter ?
-	// 				/>
-	// 			)}
-	// 		/>
+    // 		<Controller
+    // 			name="otp"
+    // 			control={control}
+    // 			render={({ field }) => (
+    // 				<InputOtp
+    // 					{...field}
+    // 					pt={{
+    // 						root: {
+    // 							className: classNames(
+    // 								styles["custom-otp-input"],
+    // 								{
+    // 									[styles.error]: isError,
+    // 								}
+    // 							),
+    // 						},
+    // 					}}
+    // 					onChange={(e) => {
+    // 						const newValue = e.value;
+    // 						setOtpState(newValue);
+    // 						setValue("otp", newValue);
+    // 					}}
+    // 					integerOnly
+    // 					// error={fieldState.error} //TODO >> ajouter ?
+    // 				/>
+    // 			)}
+    // 		/>
 
-	// 		{((isModal && modalCta) || (!isModal && cta)) && (
-	// 			<>
-	// 				<Button
-	// 					className={styles.cta_btn}
-	// 					disabled={otpWatcher.length !== 4}
-	// 				>
-	// 					{isPendingConfirm ? (
-	// 						<i className={`pi pi-spin pi-spinner-dotted`}></i>
-	// 					) : (
-	// 						<span
-	// 							style={{
-	// 								color: ctaFontColor,
-	// 								fontSize: ctaFontSize,
-	// 								fontStyle: ctaFontStyle,
-	// 								fontWeight: ctaFontWeight,
-	// 							}}
-	// 						>
-	// 							{isModal ? modalCta : cta}
-	// 						</span>
-	// 					)}
-	// 				</Button>
+    // 		{((isModal && modalCta) || (!isModal && cta)) && (
+    // 			<>
+    // 				<Button
+    // 					className={styles.cta_btn}
+    // 					disabled={otpWatcher.length !== 4}
+    // 				>
+    // 					{isPendingConfirm ? (
+    // 						<i className={`pi pi-spin pi-spinner-dotted`}></i>
+    // 					) : (
+    // 						<span
+    // 							style={{
+    // 								color: ctaFontColor,
+    // 								fontSize: ctaFontSize,
+    // 								fontStyle: ctaFontStyle,
+    // 								fontWeight: ctaFontWeight,
+    // 							}}
+    // 						>
+    // 							{isModal ? modalCta : cta}
+    // 						</span>
+    // 					)}
+    // 				</Button>
 
-	// 				<Button
-	// 					type={"button"}
-	// 					className={styles.resend_btn}
-	// 					onClick={handleOtpRequest}
-	// 					disabled={
-	// 						countdown > 0 || isPendingOtp || isPendingConfirm
-	// 					}
-	// 					link
-	// 				>
-	// 					{newOtpRequest}
-	// 				</Button>
-	// 			</>
-	// 		)}
+    // 				<Button
+    // 					type={"button"}
+    // 					className={styles.resend_btn}
+    // 					onClick={handleOtpRequest}
+    // 					disabled={
+    // 						countdown > 0 || isPendingOtp || isPendingConfirm
+    // 					}
+    // 					link
+    // 				>
+    // 					{newOtpRequest}
+    // 				</Button>
+    // 			</>
+    // 		)}
 
-	// 		{countdown > 0 && (
-	// 			<p>
-	// 				{language?.code === languages.arabic
-	// 					? `يمكنك طلب رمز التحقق مرة أخرى بعد ${countdown} ثانية`
-	// 					: `You can request another OTP in ${countdown} seconds`}
-	// 			</p>
-	// 		)}
-	// 	</div>
-	// );
+    // 		{countdown > 0 && (
+    // 			<p>
+    // 				{language?.code === languages.arabic
+    // 					? `يمكنك طلب رمز التحقق مرة أخرى بعد ${countdown} ثانية`
+    // 					: `You can request another OTP in ${countdown} seconds`}
+    // 			</p>
+    // 		)}
+    // 	</div>
+    // );
 
-	return (
-		<>
-			<form onSubmit={handleSubmit(onSubmit)} onClick={(e) => e.stopPropagation()}>
-				{/* {renderFormContent()} */}
+    return (
+        <>
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                onClick={(e) => e.stopPropagation()}
+            >
+                {/* {renderFormContent()} */}
 
-				<div className={styles.container}>
-					{userInstructions && <p>{userInstructions}</p>}
+                <div className={styles.container}>
+                    {userInstructions && <p>{userInstructions}</p>}
 
-					<Controller
-						name="otp"
-						control={control}
-						render={({ field }) => (
-							<InputOtp
-								{...field}
-								ref={otpInputRef}
-								pt={{
-									root: {
-										className: classNames(styles["custom-otp-input"], {
-											[styles.error]: isError,
-										}),
-									},
-								}}
-								onChange={(e) => {
-									const newValue = e.value;
-									setOtpState(newValue);
-									setValue("otp", newValue);
-								}}
-								integerOnly
-								autoFocus={true}
-								// error={fieldState.error} //TODO >> ajouter ?
-							/>
-						)}
-					/>
+                    <div className={styles.otp_container}>
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            autoComplete="one-time-code"
+                            className={styles.hidden_input}
+                            maxLength={4}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (value && value.length === 4) {
+                                    setOtpState(value);
+                                    setValue("otp", value);
+                                }
+                            }}
+                        />
+                        <Controller
+                            name="otp"
+                            control={control}
+                            render={({ field }) => (
+                                <InputOtp
+                                    {...field}
+                                    ref={otpInputRef}
+                                    pt={{
+                                        root: {
+                                            className: classNames(
+                                                styles["custom-otp-input"],
+                                                {
+                                                    [styles.error]: isError,
+                                                }
+                                            ),
+                                        },
+                                    }}
+                                    onChange={(e) => {
+                                        const newValue = e.value;
+                                        setOtpState(newValue);
+                                        setValue("otp", newValue);
+                                    }}
+                                    integerOnly
+                                    autoFocus={true}
+                                />
+                            )}
+                        />
+                    </div>
 
-					{cta && (
-						<>
-							<Button className={styles.cta_btn} disabled={otpWatcher.length !== 4}>
-								{isPendingConfirm ? (
-									<i className={`pi pi-spin pi-spinner-dotted`}></i>
-								) : (
-									<span
-										style={{
-											color: ctaFontColor,
-											fontSize: ctaFontSize,
-											fontStyle: ctaFontStyle,
-											fontWeight: ctaFontWeight,
-										}}
-									>
-										{cta}
-									</span>
-								)}
-							</Button>
+                    {cta && (
+                        <>
+                            <Button
+                                className={styles.cta_btn}
+                                disabled={otpWatcher.length !== 4}
+                            >
+                                {isPendingConfirm ? (
+                                    <i
+                                        className={`pi pi-spin pi-spinner-dotted`}
+                                    ></i>
+                                ) : (
+                                    <span
+                                        style={{
+                                            color: ctaFontColor,
+                                            fontSize: ctaFontSize,
+                                            fontStyle: ctaFontStyle,
+                                            fontWeight: ctaFontWeight,
+                                        }}
+                                    >
+                                        {cta}
+                                    </span>
+                                )}
+                            </Button>
 
-							<Button
-								type={"button"}
-								className={styles.resend_btn}
-								onClick={handleOtpRequest}
-								disabled={countdown > 0 || isPendingOtp || isPendingConfirm}
-								link
-							>
-								{newOtpRequest}
-							</Button>
-						</>
-					)}
+                            <Button
+                                type={"button"}
+                                className={styles.resend_btn}
+                                onClick={handleOtpRequest}
+                                disabled={
+                                    countdown > 0 ||
+                                    isPendingOtp ||
+                                    isPendingConfirm
+                                }
+                                link
+                            >
+                                {newOtpRequest}
+                            </Button>
+                        </>
+                    )}
 
-					{countdown > 0 && (
-						<p>
-							{language?.code === languages.arabic
-								? `يمكنك طلب رمز التحقق مرة أخرى بعد ${countdown} ثانية`
-								: `You can request another OTP in ${countdown} seconds`}
-						</p>
-					)}
-				</div>
-			</form>
+                    {countdown > 0 && (
+                        <p>
+                            {language?.code === languages.arabic
+                                ? `يمكنك طلب رمز التحقق مرة أخرى بعد ${countdown} ثانية`
+                                : `You can request another OTP in ${countdown} seconds`}
+                        </p>
+                    )}
+                </div>
+            </form>
 
-			{/* <div onClick={(e) => e.stopPropagation()}>
+            {/* <div onClick={(e) => e.stopPropagation()}>
 				<Dialog
 					pt={{
 						mask: {
@@ -294,8 +324,8 @@ const OtpConfirm = ({
 					</form>
 				</Dialog>
 			</div> */}
-		</>
-	);
+        </>
+    );
 };
 
 export default OtpConfirm;

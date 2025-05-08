@@ -1,6 +1,6 @@
 .no_header {
-	padding: 2rem 1.5rem;
-	border-radius: 6px;
+    padding: 2rem 1.5rem;
+    border-radius: 6px;
 }
 
 // .dialog_container {
@@ -8,59 +8,75 @@
 // }
 
 .dialog_content {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	height: 300px;
-	width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 300px;
+    width: 400px;
 }
 
 .form_container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 
-	p {
-		margin: 0 0 10px;
-		text-align: center;
-	}
+    p {
+        margin: 0 0 10px;
+        text-align: center;
+    }
 
-	.input_wrapper {
-		width: 100%;
-	}
+    .input_wrapper {
+        width: 100%;
+    }
 
-	.submit_btn {
-		width: 100%;
-		min-width: 193px;
-		max-width: 230px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
+    .submit_btn {
+        width: 100%;
+        min-width: 193px;
+        max-width: 230px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-	.resend_btn {
-		width: 100%;
-		min-width: 193px;
-		max-width: 230px;
-		display: flex;
-		justify-content: center;
-		background-color: transparent !important;
-		color: #000 !important;
+    .resend_btn {
+        width: 100%;
+        min-width: 193px;
+        max-width: 230px;
+        display: flex;
+        justify-content: center;
+        background-color: transparent !important;
+        color: #000 !important;
 
-		&:enabled:hover {
-			background-color: #eaeaea !important;
-		}
-	}
+        &:enabled:hover {
+            background-color: #eaeaea !important;
+        }
+    }
 }
 
 .custom-otp-input {
-	input {
-		width: 50px;
-		height: 50px;
-	}
-	&.error input {
-		border: 2px solid red;
-		animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-	}
+    input {
+        width: 50px;
+        height: 50px;
+    }
+    &.error input {
+        border: 2px solid red;
+        animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+}
+
+.otp_container {
+    position: relative;
+    width: 100%;
+
+    .hidden_input {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        caret-color: transparent;
+    }
 }
