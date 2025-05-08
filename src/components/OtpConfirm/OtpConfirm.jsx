@@ -6,58 +6,26 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { InputOtp } from "primereact/inputotp";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./OtpConfirm.module.scss";
 import otpConfirmSchema from "./otpConfirmSchema";
 import { classNames } from "primereact/utils";
 
-const OtpConfirm = ({
-    css,
-    onSuccess,
-    visitorId,
-    content,
-    language,
-    // showModal,
-    //  setShowModal
-}) => {
-    const {
-        //  closableModal,
-        //  blurPx,
-        ctaFontColor,
-        ctaFontSize,
-        ctaFontStyle,
-        ctaFontWeight,
-    } = css;
+// Helper function to detect iOS
+const isIOS = () => {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+};
+
+const OtpConfirm = ({ css, onSuccess, visitorId, content, language }) => {
+    const { ctaFontColor, ctaFontSize, ctaFontStyle, ctaFontWeight } = css;
 
     const [otpState, setOtpState] = useState("");
-    const otpInputRef = useRef(null);
 
-    useEffect(() => {
-        setTimeout(() => {
-            const inputs = document.getElementsByClassName("p-inputotp-input");
-            if (inputs && inputs.length > 0) {
-                inputs[0].focus();
-                inputs[0].click();
-            }
-        }, 100);
-    }, []);
-
-    const {
-        msisdn,
-        userInstructions,
-        cta,
-        // modalCta,
-        // modalUserInstructions,
-        newOtpRequest,
-        otpConfirmTimer,
-    } = content || {};
+    const { msisdn, userInstructions, cta, newOtpRequest, otpConfirmTimer } =
+        content || {};
 
     const { countdown, startCountdown } = useOtpCountdown(otpConfirmTimer);
-
-    const handleOtpRequest = () => {
-        resendOtp(msisdn);
-    };
 
     // * ==== OTP CONFIRM =====
     const otpConfirmApi = useApi(otpConfirm);
@@ -78,7 +46,6 @@ const OtpConfirm = ({
     });
 
     // * ==== RESEND OTP =====
-
     const resendOtpApi = useApi(resendOtpEndpoint);
 
     const { mutate: resendOtp, isPending: isPendingOtp } = useMutation({
@@ -91,16 +58,12 @@ const OtpConfirm = ({
         onSuccess: () => startCountdown(),
     });
 
-    // * =================
+    const handleOtpRequest = () => {
+        resendOtp(msisdn);
+    };
 
-    const {
-        control,
-        handleSubmit,
-        reset,
-        setValue,
-        // formState: { errors },
-        watch,
-    } = useForm({
+    // * ==== FORM HANDLING =====
+    const { control, handleSubmit, reset, setValue, watch } = useForm({
         resolver: joiResolver(otpConfirmSchema),
         mode: "onSubmit",
         defaultValues: {
@@ -114,83 +77,40 @@ const OtpConfirm = ({
         confirmOtp(otp);
     };
 
-    // const renderFormContent = (isModal = false) => (
-    // 	<div className={styles.container}>
-    // 		{!isModal && userInstructions && <p>{userInstructions}</p>}
-    // 		{isModal && modalUserInstructions && <p>{modalUserInstructions}</p>}
+    // Handle iOS autofill detection
+    useEffect(() => {
+        if (isIOS()) {
+            const handleIosAutofill = () => {
+                // iOS autofill affects the value of inputs
+                // We check if any inputs suddenly have values
+                const inputs = document.querySelectorAll(".p-inputotp-input");
+                if (inputs.length === 4) {
+                    // Check if any input has a value, indicating possible autofill
+                    const values = Array.from(inputs).map(
+                        (input) => input.value
+                    );
+                    if (values.some((val) => val)) {
+                        // Combine the values into a single string
+                        const combined = values.join("");
+                        if (combined.length === 4) {
+                            // Set the combined value to our state
+                            setOtpState(combined);
+                            setValue("otp", combined);
+                        }
+                    }
+                }
+            };
 
-    // 		<Controller
-    // 			name="otp"
-    // 			control={control}
-    // 			render={({ field }) => (
-    // 				<InputOtp
-    // 					{...field}
-    // 					pt={{
-    // 						root: {
-    // 							className: classNames(
-    // 								styles["custom-otp-input"],
-    // 								{
-    // 									[styles.error]: isError,
-    // 								}
-    // 							),
-    // 						},
-    // 					}}
-    // 					onChange={(e) => {
-    // 						const newValue = e.value;
-    // 						setOtpState(newValue);
-    // 						setValue("otp", newValue);
-    // 					}}
-    // 					integerOnly
-    // 					// error={fieldState.error} //TODO >> ajouter ?
-    // 				/>
-    // 			)}
-    // 		/>
+            // Check for autofill shortly after rendering
+            setTimeout(handleIosAutofill, 300);
+            // Also check when the document changes which happens during autofill
+            document.addEventListener("input", handleIosAutofill);
 
-    // 		{((isModal && modalCta) || (!isModal && cta)) && (
-    // 			<>
-    // 				<Button
-    // 					className={styles.cta_btn}
-    // 					disabled={otpWatcher.length !== 4}
-    // 				>
-    // 					{isPendingConfirm ? (
-    // 						<i className={`pi pi-spin pi-spinner-dotted`}></i>
-    // 					) : (
-    // 						<span
-    // 							style={{
-    // 								color: ctaFontColor,
-    // 								fontSize: ctaFontSize,
-    // 								fontStyle: ctaFontStyle,
-    // 								fontWeight: ctaFontWeight,
-    // 							}}
-    // 						>
-    // 							{isModal ? modalCta : cta}
-    // 						</span>
-    // 					)}
-    // 				</Button>
-
-    // 				<Button
-    // 					type={"button"}
-    // 					className={styles.resend_btn}
-    // 					onClick={handleOtpRequest}
-    // 					disabled={
-    // 						countdown > 0 || isPendingOtp || isPendingConfirm
-    // 					}
-    // 					link
-    // 				>
-    // 					{newOtpRequest}
-    // 				</Button>
-    // 			</>
-    // 		)}
-
-    // 		{countdown > 0 && (
-    // 			<p>
-    // 				{language?.code === languages.arabic
-    // 					? `يمكنك طلب رمز التحقق مرة أخرى بعد ${countdown} ثانية`
-    // 					: `You can request another OTP in ${countdown} seconds`}
-    // 			</p>
-    // 		)}
-    // 	</div>
-    // );
+            return () => {
+                document.removeEventListener("input", handleIosAutofill);
+            };
+        }
+    }, [setValue]);
 
     return (
         <>
@@ -198,33 +118,16 @@ const OtpConfirm = ({
                 onSubmit={handleSubmit(onSubmit)}
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* {renderFormContent()} */}
-
                 <div className={styles.container}>
                     {userInstructions && <p>{userInstructions}</p>}
 
-                    <div className={styles.otp_container}>
-                        <input
-                            type="text"
-                            inputMode="numeric"
-                            autoComplete="one-time-code"
-                            className={styles.hidden_input}
-                            maxLength={4}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                if (value && value.length === 4) {
-                                    setOtpState(value);
-                                    setValue("otp", value);
-                                }
-                            }}
-                        />
-                        <Controller
-                            name="otp"
-                            control={control}
-                            render={({ field }) => (
+                    <Controller
+                        name="otp"
+                        control={control}
+                        render={({ field }) => (
+                            <div className={styles.otp_wrapper}>
                                 <InputOtp
                                     {...field}
-                                    ref={otpInputRef}
                                     pt={{
                                         root: {
                                             className: classNames(
@@ -240,12 +143,25 @@ const OtpConfirm = ({
                                         setOtpState(newValue);
                                         setValue("otp", newValue);
                                     }}
+                                    onPaste={(e) => {
+                                        e.preventDefault();
+                                        const pasteData = e.clipboardData
+                                            .getData("text/plain")
+                                            .trim();
+                                        if (
+                                            pasteData &&
+                                            /^\d{4}$/.test(pasteData)
+                                        ) {
+                                            setOtpState(pasteData);
+                                            setValue("otp", pasteData);
+                                        }
+                                    }}
+                                    autoFocus
                                     integerOnly
-                                    autoFocus={true}
                                 />
-                            )}
-                        />
-                    </div>
+                            </div>
+                        )}
+                    />
 
                     {cta && (
                         <>
@@ -296,34 +212,6 @@ const OtpConfirm = ({
                     )}
                 </div>
             </form>
-
-            {/* <div onClick={(e) => e.stopPropagation()}>
-				<Dialog
-					pt={{
-						mask: {
-							style: {
-								backdropFilter: `blur(${blurPx}px)`,
-							},
-						},
-					}}
-					focusOnShow={false}
-					visible={showModal} //TODO >> ajouter aussi modalFlow !== "full" ?
-					maskStyle={{ padding: "20px" }}
-					blockScroll={true}
-					className={styles.dialog_container}
-					onHide={() => {
-						setShowModal(false);
-					}}
-					closable={closableModal}
-					draggable={false}
-					showHeader={closableModal}
-					contentClassName={!closableModal ? styles.no_header : undefined}
-				>
-					<form onSubmit={handleSubmit(onSubmit)} noValidate>
-						{renderFormContent(showModal)}
-					</form>
-				</Dialog>
-			</div> */}
         </>
     );
 };

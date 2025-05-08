@@ -14,10 +14,15 @@ import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputOtp } from "primereact/inputotp";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./FullFlow.module.scss";
 import { classNames } from "primereact/utils";
+
+// Helper function to detect iOS
+const isIOS = () => {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+};
 
 const FullFlow = ({
     content,
@@ -61,16 +66,14 @@ const FullFlow = ({
     } = content;
 
     const [modalStep, setModalStep] = useState(ctaMethod);
-
-    const otpRequestApi = useApi(otpRequest);
+    const [contactValue, setContactValue] = useState(
+        msisdnPrefill && msisdn ? msisdn : ""
+    );
     const [disabled, setDisabled] = useState(
         showModalMsisdnInput ? (msisdn?.length === 10 ? false : true) : false
     );
 
-    const [contactValue, setContactValue] = useState(
-        msisdnPrefill && msisdn ? msisdn : ""
-    );
-
+    // Check if phone number has 10 digits to enable/disable submit button
     useEffect(() => {
         if (showModalMsisdnInput) {
             if (contactValue.match(/\d/g)?.length === 10) {
@@ -81,11 +84,15 @@ const FullFlow = ({
         }
     }, [contactValue, showModalMsisdnInput]);
 
-    // * ==== RESEND OTP =====
-    const { countdown, startCountdown } = useOtpCountdown(otpConfirmTimer);
-
+    // * ==== API Services =====
+    const otpRequestApi = useApi(otpRequest);
+    const otpConfirmApi = useApi(otpConfirm);
     const resendOtpApi = useApi(resendOtpEndpoint);
 
+    // * ==== Countdown Timer =====
+    const { countdown, startCountdown } = useOtpCountdown(otpConfirmTimer);
+
+    // * ==== RESEND OTP MUTATION =====
     const { mutate: resendOtp, isPending: isPendingOtp } = useMutation({
         mutationFn: (msisdn) => {
             return resendOtpApi.request({
@@ -96,50 +103,7 @@ const FullFlow = ({
         onSuccess: () => startCountdown(),
     });
 
-    // * ==== OTP CONFIRM =====
-
-    const [otpState, setOtpState] = useState("");
-
-    const {
-        control: controlOtp,
-        handleSubmit: handleConfirmOtp,
-        reset: resetOtpForm,
-        setValue: setValueOtp,
-        // formState: { errors },
-        watch,
-    } = useForm({
-        resolver: joiResolver(otpConfirmSchema),
-        mode: "onSubmit",
-        defaultValues: {
-            otp: otpState,
-        },
-    });
-
-    const otpWatcher = watch("otp");
-
-    const otpConfirmApi = useApi(otpConfirm);
-
-    const {
-        mutate: confirmOtp,
-        isPending: isPendingConfirm,
-        isError,
-    } = useMutation({
-        mutationFn: (otp) => {
-            return otpConfirmApi.request({
-                visitorId,
-                otp,
-            });
-        },
-        onSuccess,
-        onError: () => resetOtpForm(),
-    });
-
-    const onSubmitOtpConfirm = ({ otp }) => {
-        confirmOtp(otp);
-    };
-
-    // * ==== OTP REQUEST =====
-
+    // * ==== OTP REQUEST FORM & MUTATION =====
     const { mutate: requestOtp, isPending } = useMutation({
         mutationFn: (msisdn = "") => {
             return otpRequestApi.request({
@@ -168,21 +132,80 @@ const FullFlow = ({
         requestOtp(contact);
     };
 
-    const otpInputRef = useRef(null);
+    // * ==== OTP CONFIRM FORM & MUTATION =====
+    const [otpState, setOtpState] = useState("");
 
+    const {
+        mutate: confirmOtp,
+        isPending: isPendingConfirm,
+        isError,
+    } = useMutation({
+        mutationFn: (otp) => {
+            return otpConfirmApi.request({
+                visitorId,
+                otp,
+            });
+        },
+        onSuccess,
+        onError: () => resetOtpForm(),
+    });
+
+    const {
+        control: controlOtp,
+        handleSubmit: handleConfirmOtp,
+        reset: resetOtpForm,
+        setValue: setValueOtp,
+        watch,
+    } = useForm({
+        resolver: joiResolver(otpConfirmSchema),
+        mode: "onSubmit",
+        defaultValues: {
+            otp: otpState,
+        },
+    });
+
+    const otpWatcher = watch("otp");
+
+    const onSubmitOtpConfirm = ({ otp }) => {
+        confirmOtp(otp);
+    };
+
+    // Handle iOS autofill detection
     useEffect(() => {
-        if (modalStep === "OtpConfirm") {
-            setTimeout(() => {
-                const inputs =
-                    document.getElementsByClassName("p-inputotp-input");
-                if (inputs && inputs.length > 0) {
-                    inputs[0].focus();
-                    inputs[0].click();
+        if (modalStep === "OtpConfirm" && isIOS()) {
+            const handleIosAutofill = () => {
+                // iOS autofill affects the value of inputs
+                // We check if any inputs suddenly have values
+                const inputs = document.querySelectorAll(".p-inputotp-input");
+                if (inputs.length === 4) {
+                    // Check if any input has a value, indicating possible autofill
+                    const values = Array.from(inputs).map(
+                        (input) => input.value
+                    );
+                    if (values.some((val) => val)) {
+                        // Combine the values into a single string
+                        const combined = values.join("");
+                        if (combined.length === 4) {
+                            // Set the combined value to our state
+                            setOtpState(combined);
+                            setValueOtp("otp", combined);
+                        }
+                    }
                 }
-            }, 100);
-        }
-    }, [modalStep]);
+            };
 
+            // Check for autofill shortly after rendering
+            setTimeout(handleIosAutofill, 300);
+            // Also check when the document changes which happens during autofill
+            document.addEventListener("input", handleIosAutofill);
+
+            return () => {
+                document.removeEventListener("input", handleIosAutofill);
+            };
+        }
+    }, [modalStep, setValueOtp]);
+
+    // * ==== RENDER METHODS =====
     const renderOtpRequestFormContent = () => (
         <div className={styles.form_container}>
             {modalUserInstructions && <p>{modalUserInstructions}</p>}
@@ -262,28 +285,13 @@ const FullFlow = ({
                 <p>{modalUserInstructionsSecondStep}</p>
             )}
 
-            <div className={styles.otp_container}>
-                <input
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    className={styles.hidden_input}
-                    maxLength={4}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        if (value && value.length === 4) {
-                            setOtpState(value);
-                            setValueOtp("otp", value);
-                        }
-                    }}
-                />
-                <Controller
-                    name="otp"
-                    control={controlOtp}
-                    render={({ field }) => (
+            <Controller
+                name="otp"
+                control={controlOtp}
+                render={({ field }) => (
+                    <div className={styles.otp_wrapper}>
                         <InputOtp
                             {...field}
-                            ref={otpInputRef}
                             pt={{
                                 root: {
                                     className: classNames(
@@ -299,11 +307,22 @@ const FullFlow = ({
                                 setOtpState(newValue);
                                 setValueOtp("otp", newValue);
                             }}
+                            onPaste={(e) => {
+                                e.preventDefault();
+                                const pasteData = e.clipboardData
+                                    .getData("text/plain")
+                                    .trim();
+                                if (pasteData && /^\d{4}$/.test(pasteData)) {
+                                    setOtpState(pasteData);
+                                    setValueOtp("otp", pasteData);
+                                }
+                            }}
+                            autoFocus
                             integerOnly
                         />
-                    )}
-                />
-            </div>
+                    </div>
+                )}
+            />
 
             <Button
                 className={styles.submit_btn}
