@@ -2,42 +2,46 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 body[lang="ar"] {
-	font-family: "Noto Sans Arabic", sans-serif;
-	direction: rtl;
+    font-family: "Noto Sans Arabic", sans-serif;
+    direction: rtl;
 }
 
 body[lang="en"] {
-	font-family: "Roboto", sans-serif;
-	direction: ltr;
+    font-family: "Roboto", sans-serif;
+    direction: ltr;
 }
 
 body {
-	margin: 0;
-	/* font-family: Inter, Arial, sans-serif; */
+    margin: 0;
+    /* font-family: Inter, Arial, sans-serif; */
 }
 
 .p-button:disabled {
-	background-color: #a6b1bc !important;
-	border-color: #a6b1bc !important;
+    background-color: #a6b1bc !important;
+    border-color: #a6b1bc !important;
 }
 
 .p-float-label:has(input:focus) label,
 .p-float-label:has(input.p-filled) label {
-	padding: 0px !important;
+    padding: 0px !important;
 }
 
 .p-icon-field > .p-input-icon {
-	display: flex;
-	align-items: center;
-	margin-top: 0;
-	transform: translateY(-50%);
-	left: 0.5rem;
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+    transform: translateY(-50%);
+    left: 0.5rem;
+}
+
+.p-inputtext {
+    border: 2px solid #000;
 }
 
 .p-inputtext,
 .p-dialog,
 .p-button {
-	border-radius: 12px;
+    border-radius: 12px;
 }
 /* button {
 	background: none;

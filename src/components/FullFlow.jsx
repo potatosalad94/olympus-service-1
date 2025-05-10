@@ -69,20 +69,6 @@ const FullFlow = ({
     const [contactValue, setContactValue] = useState(
         msisdnPrefill && msisdn ? msisdn : ""
     );
-    const [disabled, setDisabled] = useState(
-        showModalMsisdnInput ? (msisdn?.length === 10 ? false : true) : false
-    );
-
-    // Check if phone number has 10 digits to enable/disable submit button
-    useEffect(() => {
-        if (showModalMsisdnInput) {
-            if (contactValue.match(/\d/g)?.length === 10) {
-                setDisabled(false);
-            } else {
-                setDisabled(true);
-            }
-        }
-    }, [contactValue, showModalMsisdnInput]);
 
     // * ==== API Services =====
     const otpRequestApi = useApi(otpRequest);
@@ -116,17 +102,34 @@ const FullFlow = ({
         },
     });
 
-    const { control, handleSubmit, setValue } = useForm({
+    const {
+        control,
+        handleSubmit,
+        setValue,
+        formState: { isValid },
+    } = useForm({
         resolver: joiResolver(otpRequestSchema(language?.code?.toLowerCase())),
         context: {
-            dialCode,
             showInput: showModalMsisdnInput,
         },
         defaultValues: {
             contact: contactValue,
         },
-        mode: "onSubmit",
+        mode: "onChange",
     });
+
+    const [isFormValid, setIsFormValid] = useState(false);
+
+    useEffect(() => {
+        // Check if the form is valid based on regex pattern
+        if (showModalMsisdnInput) {
+            const phoneRegex = /^(\+9715\d{8}|9715\d{8}|009715\d{8}|05\d{8})$/;
+            const isValidNumber = phoneRegex.test(contactValue);
+            setIsFormValid(isValidNumber && isValid);
+        } else {
+            setIsFormValid(true);
+        }
+    }, [contactValue, showModalMsisdnInput, isValid]);
 
     const onSubmitOtpRequest = ({ contact }) => {
         requestOtp(contact);
@@ -222,13 +225,15 @@ const FullFlow = ({
                                 onChange={(e) => {
                                     const newValue = e.target.value;
                                     setContactValue(newValue);
-                                    setValue("contact", newValue);
+                                    setValue("contact", newValue, {
+                                        shouldValidate: true,
+                                    });
                                 }}
                                 dialCode={dialCode}
                                 error={fieldState.error}
                                 onClick={(e) => e.stopPropagation()}
                                 type="tel"
-                                disabled={disabled}
+                                disabled={isPending}
                                 isAnimated={dynamicMsisdnEntryBox}
                                 phoneNumberNative={phoneNumberNative}
                                 langCode={language?.code}
@@ -242,7 +247,7 @@ const FullFlow = ({
                 <Button
                     type="submit"
                     size={clickableZone === "Large" ? "large" : undefined}
-                    disabled={disabled}
+                    disabled={!isFormValid || isPending}
                     onClick={(e) => {
                         e.stopPropagation();
                     }}
@@ -289,7 +294,11 @@ const FullFlow = ({
                 name="otp"
                 control={controlOtp}
                 render={({ field }) => (
-                    <div className={styles.otp_wrapper}>
+                    <div
+                        className={classNames(styles.otp_wrapper, {
+                            [styles.heartbeat_animation]: dynamicMsisdnEntryBox,
+                        })}
+                    >
                         <InputOtp
                             {...field}
                             pt={{

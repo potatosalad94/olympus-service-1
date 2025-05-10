@@ -18,7 +18,13 @@ const isIOS = () => {
 };
 
 const OtpConfirm = ({ css, onSuccess, visitorId, content, language }) => {
-    const { ctaFontColor, ctaFontSize, ctaFontStyle, ctaFontWeight } = css;
+    const {
+        ctaFontColor,
+        ctaFontSize,
+        ctaFontStyle,
+        ctaFontWeight,
+        dynamicMsisdnEntryBox,
+    } = css;
 
     const [otpState, setOtpState] = useState("");
 
@@ -125,7 +131,12 @@ const OtpConfirm = ({ css, onSuccess, visitorId, content, language }) => {
                         name="otp"
                         control={control}
                         render={({ field }) => (
-                            <div className={styles.otp_wrapper}>
+                            <div
+                                className={classNames(styles.otp_wrapper, {
+                                    [styles.heartbeat_animation]:
+                                        dynamicMsisdnEntryBox,
+                                })}
+                            >
                                 <InputOtp
                                     {...field}
                                     pt={{

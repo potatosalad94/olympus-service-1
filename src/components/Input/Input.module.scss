@@ -1,107 +1,107 @@
 .container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	width: 100%;
-	// margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    // margin-top: 10px;
 
-	&.heartbeat_animation {
-		animation: heartbeat 1.5s ease-in-out infinite;
-	}
+    &.heartbeat_animation {
+        animation: heartbeat 1.5s ease-in-out infinite;
+    }
 
-	@keyframes heartbeat {
-		0% {
-			transform: scale(1);
-		}
-		14% {
-			transform: scale(1.07);
-		}
-		28% {
-			transform: scale(1);
-		}
-		42% {
-			transform: scale(1.07);
-		}
-		70% {
-			transform: scale(1);
-		}
-		100% {
-			transform: scale(1);
-		}
-	}
+    @keyframes heartbeat {
+        0% {
+            transform: scale(1);
+        }
+        14% {
+            transform: scale(1.07);
+        }
+        28% {
+            transform: scale(1);
+        }
+        42% {
+            transform: scale(1.07);
+        }
+        70% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
 
-	.smartphone_icon {
-		width: 27px;
-		height: auto;
-		fill: #4b5563;
-	}
+    .smartphone_icon {
+        width: 27px;
+        height: auto;
+        fill: #4b5563;
+    }
 
-	// label {
-	// 	padding-left: 30px;
-	// }
+    // label {
+    // 	padding-left: 30px;
+    // }
 
-	.checkmark_container {
-		position: absolute;
-		right: 12px;
-		top: 50%;
-		transform: translateY(-50%);
-		&.checkmark_container_rtl {
-			right: unset;
-			left: 12px;
-		}
-	}
+    .checkmark_container {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        &.checkmark_container_rtl {
+            right: unset;
+            left: 12px;
+        }
+    }
 
-	.checkmark_animation {
-		animation: bubble 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-		color: var(--green-500);
-		font-size: 1.5rem;
-	}
+    .checkmark_animation {
+        animation: bubble 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        color: var(--green-500);
+        font-size: 1.5rem;
+    }
 
-	@keyframes bubble {
-		0% {
-			transform: scale(0);
-		}
-		50% {
-			transform: scale(1.2);
-		}
-		100% {
-			transform: scale(1);
-		}
-	}
+    @keyframes bubble {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
 
-	small {
-		margin-top: 5px;
-		text-align: center;
-		animation: moveLeftRight 0.5s;
-	}
+    small {
+        margin-top: 5px;
+        text-align: center;
+        animation: moveLeftRight 0.5s;
+    }
 
-	.input_wrapper,
-	.input {
-		width: 100%;
-		// min-width: 193px;
-		// max-width: 230px;
-	}
+    .input_wrapper,
+    .input {
+        width: 100%;
+        // min-width: 193px;
+        // max-width: 230px;
+    }
 
-	.input,
-	.input::placeholder {
-		font-weight: bold;
-		font-size: 20px;
-	}
+    .input,
+    .input::placeholder {
+        font-weight: bold;
+        font-size: 20px;
+    }
 
-	.animated_error {
-		@keyframes moveLeftRight {
-			0% {
-				transform: translateX(0px);
-			}
-			33% {
-				transform: translateX(-20px);
-			}
-			66% {
-				transform: translateX(20px);
-			}
-			100% {
-				transform: translateX(0px);
-			}
-		}
-	}
+    .animated_error {
+        @keyframes moveLeftRight {
+            0% {
+                transform: translateX(0px);
+            }
+            33% {
+                transform: translateX(-20px);
+            }
+            66% {
+                transform: translateX(20px);
+            }
+            100% {
+                transform: translateX(0px);
+            }
+        }
+    }
 }
