@@ -233,7 +233,7 @@ const FullFlow = ({
                                 error={fieldState.error}
                                 onClick={(e) => e.stopPropagation()}
                                 type="tel"
-                                disabled={isPending}
+                                disabled={!isFormValid}
                                 isAnimated={dynamicMsisdnEntryBox}
                                 phoneNumberNative={phoneNumberNative}
                                 langCode={language?.code}
