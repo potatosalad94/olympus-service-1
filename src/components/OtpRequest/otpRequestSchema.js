@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { UAE_PHONE_REGEX } from "@/utils/phoneValidation";
 
 const errorMessages = {
     en: {
@@ -21,7 +22,7 @@ const otpRequestSchema = (language) =>
                 then: Joi.any().optional(),
                 otherwise: Joi.string()
                     .required()
-                    .pattern(/^(\+9715\d{8}|9715\d{8}|009715\d{8}|05\d{8})$/)
+                    .pattern(UAE_PHONE_REGEX)
                     .messages(errorMessages[language]),
             })
             .label("Phone number"),

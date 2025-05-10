@@ -9,6 +9,7 @@ import otpRequestSchema from "@/components/OtpRequest/otpRequestSchema";
 import useApi from "@/hooks/useApi";
 import useOtpCountdown from "@/hooks/useOtpCountdown";
 import { languages } from "@/utils/languages-dictionnary";
+import { UAE_PHONE_REGEX } from "@/utils/phoneValidation";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
@@ -123,8 +124,7 @@ const FullFlow = ({
     useEffect(() => {
         // Check if the form is valid based on regex pattern
         if (showModalMsisdnInput) {
-            const phoneRegex = /^(\+9715\d{8}|9715\d{8}|009715\d{8}|05\d{8})$/;
-            const isValidNumber = phoneRegex.test(contactValue);
+            const isValidNumber = UAE_PHONE_REGEX.test(contactValue);
             setIsFormValid(isValidNumber && isValid);
         } else {
             setIsFormValid(true);
