@@ -14,16 +14,16 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { InputOtp } from "primereact/inputotp";
+import OtpInput from "react-otp-input";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import styles from "./FullFlow.module.scss";
 import { classNames } from "primereact/utils";
 
 // Helper function to detect iOS
-const isIOS = () => {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-};
+// const isIOS = () => {
+//     return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+// };
 
 const FullFlow = ({
     content,
@@ -174,39 +174,39 @@ const FullFlow = ({
     };
 
     // Handle iOS autofill detection
-    useEffect(() => {
-        if (modalStep === "OtpConfirm" && isIOS()) {
-            const handleIosAutofill = () => {
-                // iOS autofill affects the value of inputs
-                // We check if any inputs suddenly have values
-                const inputs = document.querySelectorAll(".p-inputotp-input");
-                if (inputs.length === 4) {
-                    // Check if any input has a value, indicating possible autofill
-                    const values = Array.from(inputs).map(
-                        (input) => input.value
-                    );
-                    if (values.some((val) => val)) {
-                        // Combine the values into a single string
-                        const combined = values.join("");
-                        if (combined.length === 4) {
-                            // Set the combined value to our state
-                            setOtpState(combined);
-                            setValueOtp("otp", combined);
-                        }
-                    }
-                }
-            };
+    // useEffect(() => {
+    //     if (modalStep === "OtpConfirm" && isIOS()) {
+    //         const handleIosAutofill = () => {
+    //             // iOS autofill affects the value of inputs
+    //             // We check if any inputs suddenly have values
+    //             const inputs = document.querySelectorAll(".otp-input");
+    //             if (inputs.length === 4) {
+    //                 // Check if any input has a value, indicating possible autofill
+    //                 const values = Array.from(inputs).map(
+    //                     (input) => input.value
+    //                 );
+    //                 if (values.some((val) => val)) {
+    //                     // Combine the values into a single string
+    //                     const combined = values.join("");
+    //                     if (combined.length === 4) {
+    //                         // Set the combined value to our state
+    //                         setOtpState(combined);
+    //                         setValueOtp("otp", combined);
+    //                     }
+    //                 }
+    //             }
+    //         };
 
-            // Check for autofill shortly after rendering
-            setTimeout(handleIosAutofill, 300);
-            // Also check when the document changes which happens during autofill
-            document.addEventListener("input", handleIosAutofill);
+    //         // Check for autofill shortly after rendering
+    //         setTimeout(handleIosAutofill, 300);
+    //         // Also check when the document changes which happens during autofill
+    //         document.addEventListener("input", handleIosAutofill);
 
-            return () => {
-                document.removeEventListener("input", handleIosAutofill);
-            };
-        }
-    }, [modalStep, setValueOtp]);
+    //         return () => {
+    //             document.removeEventListener("input", handleIosAutofill);
+    //         };
+    //     }
+    // }, [modalStep, setValueOtp]);
 
     // * ==== RENDER METHODS =====
     const renderOtpRequestFormContent = () => (
@@ -299,35 +299,23 @@ const FullFlow = ({
                             [styles.heartbeat_animation]: dynamicMsisdnEntryBox,
                         })}
                     >
-                        <InputOtp
-                            {...field}
-                            pt={{
-                                root: {
-                                    className: classNames(
-                                        styles["custom-otp-input"],
-                                        {
-                                            [styles.error]: isError,
-                                        }
-                                    ),
-                                },
+                        <OtpInput
+                            value={field.value}
+                            onChange={(value) => {
+                                setOtpState(value);
+                                setValueOtp("otp", value);
                             }}
-                            onChange={(e) => {
-                                const newValue = e.value;
-                                setOtpState(newValue);
-                                setValueOtp("otp", newValue);
+                            numInputs={4}
+                            renderInput={(props) => {
+                                return <input {...props} />;
                             }}
-                            onPaste={(e) => {
-                                e.preventDefault();
-                                const pasteData = e.clipboardData
-                                    .getData("text/plain")
-                                    .trim();
-                                if (pasteData && /^\d{4}$/.test(pasteData)) {
-                                    setOtpState(pasteData);
-                                    setValueOtp("otp", pasteData);
-                                }
-                            }}
-                            autoFocus
-                            integerOnly
+                            inputStyle={classNames(styles.otp_input, {
+                                [styles.error]: isError,
+                            })}
+                            inputType="tel"
+                            shouldAutoFocus
+                            containerStyle={styles.otp_container}
+                            isInputNum
                         />
                     </div>
                 )}

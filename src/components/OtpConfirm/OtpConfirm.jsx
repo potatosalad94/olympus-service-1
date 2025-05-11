@@ -156,26 +156,6 @@ const OtpConfirm = ({ css, onSuccess, visitorId, content, language }) => {
                                     inputType="tel"
                                     shouldAutoFocus
                                     containerStyle={styles.otp_container}
-                                    // containerClass={classNames(
-                                    //     styles["custom-otp-input"],
-                                    //     {
-                                    //         [styles.error]: isError,
-                                    //     }
-                                    // )}
-                                    // inputClass={styles.otp_input}
-                                    // onPaste={(e) => {
-                                    //     e.preventDefault();
-                                    //     const pasteData = e.clipboardData
-                                    //         .getData("text/plain")
-                                    //         .trim();
-                                    //     if (
-                                    //         pasteData &&
-                                    //         /^\d{4}$/.test(pasteData)
-                                    //     ) {
-                                    //         setOtpState(pasteData);
-                                    //         setValue("otp", pasteData);
-                                    //     }
-                                    // }}
                                     isInputNum
                                 />
                             </div>
