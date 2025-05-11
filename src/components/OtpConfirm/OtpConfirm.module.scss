@@ -35,16 +35,42 @@
     }
 }
 
-.custom-otp-input {
-    input {
-        width: 50px;
-        height: 50px;
+// .custom-otp-input {
+//     input {
+//         width: 50px;
+//         height: 50px;
+//     }
+//     &.error input {
+//         border: 2px solid red;
+//         animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+//     }
+// }
+
+.otp_container {
+    gap: 10px;
+}
+
+.otp_input {
+    width: 50px !important;
+    height: 50px !important;
+    border: 2px solid #000 !important;
+    border-radius: 12px !important;
+    &:focus,
+    &:focus-visible {
+        border: 1px solid var(--primary-color) !important;
+        outline: 1px solid var(--primary-color) !important;
     }
-    &.error input {
-        border: 2px solid red;
+    &.error {
+        border: 2px solid red !important;
         animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     }
 }
+
+// input:focus,
+// input:focus-visible {
+//     border: 1px solid var(--primary-color) !important;
+//     outline: 1px solid var(--primary-color) !important;
+// }
 
 @keyframes shake {
     0%,
