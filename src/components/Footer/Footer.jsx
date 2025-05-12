@@ -51,6 +51,44 @@ const Footer = ({ content, additionalInformation, lang }) => {
                                 >
                                     {typeof bulletPoint === "string" ? (
                                         bulletPoint
+                                    ) : Array.isArray(bulletPoint) ? (
+                                        <span
+                                            className={styles.inlineBulletItems}
+                                        >
+                                            {bulletPoint.map(
+                                                (subItem, subIndex) => (
+                                                    <span key={subIndex}>
+                                                        {subIndex > 0 && " "}
+                                                        {typeof subItem ===
+                                                        "string" ? (
+                                                            subItem
+                                                        ) : (
+                                                            <>
+                                                                {subItem.text_before &&
+                                                                    subItem.text_before}
+                                                                {subItem.link_url &&
+                                                                    subItem.link_text && (
+                                                                        <a
+                                                                            href={
+                                                                                subItem.link_url
+                                                                            }
+                                                                            className={
+                                                                                styles.link
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                subItem.link_text
+                                                                            }
+                                                                        </a>
+                                                                    )}
+                                                                {subItem.text_after &&
+                                                                    subItem.text_after}
+                                                            </>
+                                                        )}
+                                                    </span>
+                                                )
+                                            )}
+                                        </span>
                                     ) : (
                                         <>
                                             {bulletPoint.text_before &&
