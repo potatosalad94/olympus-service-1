@@ -200,6 +200,47 @@ const Landing = () => {
 
     if (heRequired) return <div>HE REDIRECT</div>; //TODO LATER
 
+    const handleExit = (e) => {
+        e.stopPropagation();
+
+        // Try window.close() first
+        const originalWindow = window.open("", "_self");
+
+        // Fallback methods
+        try {
+            window.close();
+
+            // If we got here, close might not have worked
+            // Check if the window is still open after a short delay
+            setTimeout(() => {
+                if (!window.closed) {
+                    // For Android/Samsung devices
+                    if (navigator.userAgent.match(/Android/i)) {
+                        // Redirect to previous page if exists
+                        if (window.history.length > 1) {
+                            window.history.back();
+                        } else {
+                            // Redirect to a blank page or home
+                            window.location.href = redirection || "/";
+                        }
+                    } else {
+                        // Try closing via self-named window reference
+                        if (originalWindow) {
+                            originalWindow.close();
+                        }
+                    }
+                }
+            }, 300);
+        } catch (e) {
+            // Final fallback - history or redirect
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = redirection || "/";
+            }
+        }
+    };
+
     return (
         <>
             {step === "final" ? (
@@ -301,18 +342,7 @@ const Landing = () => {
                                     type={"button"}
                                     label={exitButton}
                                     className={styles.exitBtn}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        // Try multiple approaches to close the window
-                                        if (window.opener) {
-                                            window.close();
-                                        } else {
-                                            // For mobile browsers that don't support window.close()
-                                            window.location.href =
-                                                "about:blank";
-                                            window.close();
-                                        }
-                                    }}
+                                    onClick={handleExit}
                                     size="small"
                                 />
                             )}
