@@ -109,6 +109,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    direction: ltr;
 
     &.heartbeat_animation {
         animation: heartbeat 1.5s ease-in-out infinite;
