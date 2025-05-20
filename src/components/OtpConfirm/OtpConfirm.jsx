@@ -148,7 +148,7 @@ const OtpConfirm = ({ css, onSuccess, visitorId, content, language }) => {
                                     }}
                                     numInputs={4}
                                     renderInput={(props) => {
-                                        return <input {...props} />;
+                                        return <input {...props} dir="ltr" />;
                                     }}
                                     inputStyle={classNames(styles.otp_input, {
                                         [styles.error]: isError,
