@@ -231,7 +231,7 @@ const Footer = ({ content, additionalInformation, lang }) => {
                                     سياسة التسعير – مباشرة وشفافة
                                 </h3>
                                 <p className={styles.paragraph}>
-                                    مجانًا لمدة 24 ساعة ثم 3.25 دراهم يوميًا
+                                    مجانًا لمدة 24 ساعة ثم 3.50 دراهم يوميًا
                                     (شامل ضريبة القيمة المضافة)
                                 </p>
                                 <ul className={styles.list}>
@@ -408,7 +408,7 @@ const Footer = ({ content, additionalInformation, lang }) => {
                                     Pricing Policy – Direct and transparent
                                 </h3>
                                 <p className={styles.paragraph}>
-                                    Free for 24h then 3.25AED Daily (VAT
+                                    Free for 24h then 3.50AED Daily (VAT
                                     inclusive)
                                 </p>
                                 <ul className={styles.list}>
