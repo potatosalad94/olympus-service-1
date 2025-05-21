@@ -137,6 +137,10 @@ const Landing = () => {
         middlePriceDesc2FontSize,
         middlePriceDesc2FontStyle,
         middlePriceDesc2FontWeight,
+        middlePriceDesc3FontColor,
+        middlePriceDesc3FontSize,
+        middlePriceDesc3FontStyle,
+        middlePriceDesc3FontWeight,
     } = css || {};
 
     useTheme(primaryColor, pageBackgroundColor);
@@ -152,6 +156,7 @@ const Landing = () => {
         topPriceDescription,
         middlePriceDescription1,
         middlePriceDescription2,
+        middlePriceDescription3,
     } = content || {};
 
     const handleRootClick = () => {
@@ -334,6 +339,20 @@ const Landing = () => {
                                     }}
                                 >
                                     {middlePriceDescription2}
+                                </p>
+                            )}
+
+                            {middlePriceDescription3 && (
+                                <p
+                                    className={styles.middle_price_desc}
+                                    style={{
+                                        color: middlePriceDesc3FontColor,
+                                        fontSize: middlePriceDesc3FontSize,
+                                        fontStyle: middlePriceDesc3FontStyle,
+                                        fontWeight: middlePriceDesc3FontWeight,
+                                    }}
+                                >
+                                    {middlePriceDescription3}
                                 </p>
                             )}
 
