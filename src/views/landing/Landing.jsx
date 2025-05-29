@@ -288,7 +288,7 @@ const Landing = () => {
 
                         {middlePriceDescription1 && (
                             <p
-                                className={styles.middle_price_desc}
+                                className={styles.price_desc}
                                 style={{
                                     color: middlePriceDesc1FontColor,
                                     fontSize: middlePriceDesc1FontSize,
@@ -330,7 +330,7 @@ const Landing = () => {
 
                             {middlePriceDescription2 && (
                                 <p
-                                    className={styles.middle_price_desc}
+                                    className={styles.price_desc}
                                     style={{
                                         color: middlePriceDesc2FontColor,
                                         fontSize: middlePriceDesc2FontSize,
@@ -344,7 +344,7 @@ const Landing = () => {
 
                             {middlePriceDescription3 && (
                                 <p
-                                    className={styles.middle_price_desc}
+                                    className={styles.price_desc}
                                     style={{
                                         color: middlePriceDesc3FontColor,
                                         fontSize: middlePriceDesc3FontSize,
@@ -365,11 +365,10 @@ const Landing = () => {
                                     size="small"
                                 />
                             )}
-                        </div>
 
-                        {bottomPriceDescription && (
-                            <div className={styles.price_wrapper}>
+                            {bottomPriceDescription && (
                                 <p
+                                    className={styles.price_desc}
                                     style={{
                                         color: bottomPriceDescFontColor,
                                         fontSize: bottomPriceDescFontSize,
@@ -379,8 +378,8 @@ const Landing = () => {
                                 >
                                     {bottomPriceDescription}
                                 </p>
-                            </div>
-                        )}
+                            )}
+                        </div>
 
                         {acknowledgment && (
                             <div className={styles.acknowledgment_container}>

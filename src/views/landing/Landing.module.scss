@@ -32,7 +32,7 @@
     }
 }
 
-.middle_price_desc {
+.price_desc {
     text-align: center;
     margin: 0px;
 }
@@ -73,14 +73,6 @@
             background-color: darken(#e7e7e7, 20%) !important;
         }
     }
-}
-
-.price_wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
-    // font-size: 12px;
-    // color: #9d9d9d;
 }
 
 .acknowledgment_container {
