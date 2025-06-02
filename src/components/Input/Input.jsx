@@ -31,7 +31,10 @@ const Input = forwardRef(
                 })}
             >
                 <FloatLabel pt={{ root: { style: { width: "100%" } } }}>
-                    <IconField className={styles.input_wrapper}>
+                    <IconField
+                        iconPosition={"left"}
+                        className={styles.input_wrapper}
+                    >
                         <InputIcon
                             style={{
                                 left: "0.5rem",

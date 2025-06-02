@@ -1,5 +1,6 @@
 import { languages } from "@/utils/languages-dictionnary";
 import styles from "./Footer.module.scss";
+
 import e1Hero from "@images/Hero.jpeg";
 import inside1 from "@images/Inside_1.jpeg";
 import inside2 from "@images/Inside_2.jpeg";
