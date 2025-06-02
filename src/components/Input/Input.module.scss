@@ -48,10 +48,10 @@
         display: flex;
         align-items: center;
 
-        &.checkmark_container_rtl {
-            right: unset;
-            left: 12px;
-        }
+        // &.checkmark_container_rtl {
+        //     right: unset;
+        //     left: 12px;
+        // }
     }
 
     .checkmark_animation {

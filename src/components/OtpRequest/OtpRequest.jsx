@@ -130,7 +130,6 @@ const OtpRequest = ({
                             disabled={!isFormValid}
                             isAnimated={dynamicMsisdnEntryBox}
                             phoneNumberNative={phoneNumberNative}
-                            langCode={language?.code}
                             data-format-detection="telephone=no"
                         />
                     )}

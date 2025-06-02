@@ -236,7 +236,6 @@ const FullFlow = ({
                                 disabled={!isFormValid}
                                 isAnimated={dynamicMsisdnEntryBox}
                                 phoneNumberNative={phoneNumberNative}
-                                langCode={language?.code}
                             />
                         )}
                     />
