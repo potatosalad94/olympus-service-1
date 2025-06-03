@@ -1,13 +1,13 @@
 import { languages } from "@/utils/languages-dictionnary";
 import styles from "./Footer.module.scss";
 
-import e1Hero from "@images/Hero.jpeg";
-import inside1 from "@images/Inside_1.jpeg";
-import inside2 from "@images/Inside_2.jpeg";
-import inside3 from "@images/Inside_3.jpeg";
-import champ1 from "@images/Champ_1.jpeg";
-import champ2 from "@images/Champ_2.jpeg";
-import champ3 from "@images/Champ_3.jpeg";
+import e1Hero from "@images/Hero.webp";
+import inside1 from "@images/Inside_1.webp";
+import inside2 from "@images/Inside_2.webp";
+import inside3 from "@images/Inside_3.webp";
+import champ1 from "@images/Champ_1.webp";
+import champ2 from "@images/Champ_2.webp";
+import champ3 from "@images/Champ_3.webp";
 
 const Footer = ({ content, additionalInformation, lang }) => {
     if (!content && !additionalInformation) return null;
