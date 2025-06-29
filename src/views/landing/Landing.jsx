@@ -101,7 +101,7 @@ const Landing = () => {
 
     const {
         query: { data: displayData, isFetching },
-        isCollecting,
+        // isCollecting,
         storedVisitorId: visitorId,
     } = useDisplayData(formattedStep, params);
 
@@ -194,7 +194,10 @@ const Landing = () => {
     const [imgLoaded, setImgLoaded] = useState(false);
     const divRef = useScrollToElement(skipTopPriceDesc && imgLoaded);
 
-    if (isFetching || isCollecting)
+    if (
+        isFetching
+        // || isCollecting
+    )
         return (
             <div className={styles.loading_container}>
                 <i

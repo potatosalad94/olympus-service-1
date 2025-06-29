@@ -10,49 +10,50 @@ import useVisitorId from "./useVisitorId";
 const enabled = true;
 
 const useDisplayData = (step, params) => {
-	const isNewVisit = step === "New Visit";
-	const { step: stepParams, ...restParams } = params || {};
+    const isNewVisit = step === "New Visit";
+    console.log("🚀 ~ isNewVisit >>", isNewVisit);
+    const { step: stepParams, ...restParams } = params || {};
 
-	const { visitorId: storedVisitorId, updateVisitorId } = useVisitorId();
-	// const { type } = useConnectionInfo();
+    const { visitorId: storedVisitorId, updateVisitorId } = useVisitorId();
+    // const { type } = useConnectionInfo();
 
-	const { visitorInfo, isCollecting } = useDataCollection(isNewVisit);
+    const { visitorInfo } = useDataCollection(isNewVisit);
 
-	const displayDataApi = useApi(displayData);
+    const displayDataApi = useApi(displayData);
 
-	const getData = async ({ queryKey }) => {
-		const [_, step] = queryKey;
-		const response = await displayDataApi.request(
-			{
-				step,
-				// connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
-				...(isNewVisit && !isCollecting && visitorInfo),
-				...(storedVisitorId && { visitorId: storedVisitorId }),
-				// TODO >> pass the params
-			},
-			step === "New Visit" && restParams
-		);
-		return response.data;
-	};
+    const getData = async ({ queryKey }) => {
+        const [_, step] = queryKey;
+        const response = await displayDataApi.request(
+            {
+                step,
+                // connectionType: type.charAt(0).toUpperCase() + type.slice(1), //~ MANDATORY
+                ...(isNewVisit && visitorInfo),
+                ...(storedVisitorId && { visitorId: storedVisitorId }),
+                // TODO >> pass the params
+            },
+            step === "New Visit" && restParams
+        );
+        return response.data;
+    };
 
-	const query = useQuery({
-		queryKey: queryKeys.displayData(step),
-		queryFn: getData,
-		enabled: isNewVisit ? enabled && !isCollecting : enabled,
-		retry: 2,
-		throwOnError: true,
-		meta: {
-			enableError: false, //! for notification
-		},
-	});
+    const query = useQuery({
+        queryKey: queryKeys.displayData(step),
+        queryFn: getData,
+        enabled: enabled,
+        retry: 2,
+        throwOnError: true,
+        meta: {
+            enableError: false, //! for notification
+        },
+    });
 
-	useEffect(() => {
-		if (query?.data?.visitorId) {
-			updateVisitorId(query?.data?.visitorId);
-		}
-	}, [query?.data?.visitorId]);
+    useEffect(() => {
+        if (query?.data?.visitorId) {
+            updateVisitorId(query?.data?.visitorId);
+        }
+    }, [query?.data?.visitorId]);
 
-	return { query, storedVisitorId, isCollecting };
+    return { query, storedVisitorId };
 };
 
 export default useDisplayData;
