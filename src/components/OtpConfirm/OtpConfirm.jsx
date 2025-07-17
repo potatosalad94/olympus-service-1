@@ -50,7 +50,16 @@ const OtpConfirm = ({ css, onSuccess, visitorId, content, language }) => {
                 otp,
             });
         },
-        onSuccess,
+        onSuccess: () => {
+            if (window.dataLayer) {
+                window.dataLayer.push({
+                    event: "subscriptionConversion",
+                    value: "success",
+                });
+            }
+
+            onSuccess();
+        },
         onError: () => reset(),
     });
 
